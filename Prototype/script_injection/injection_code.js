@@ -94,7 +94,7 @@ Drawer.prototype = {
     }
 };
 
-var a = new Drawer("mon titre");
+var a = new Drawer("mon titre 2");
 a.show();
 
 
