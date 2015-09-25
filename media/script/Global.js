@@ -70,19 +70,20 @@ userMan = undefined;
 Tools.include('media/script/PageBundle.js', function(){ page = new PageBundle();});
 Tools.include('media/script/UserManager.js', function(){ userMan = new UserManager();});
 Tools.include('media/script/Message.js', function (){});
-Tools.include('media/script/User.js', function (){ });
-
-document.addEventListener("click", function (){
-  var target = event.getTarget();
-  if(target.id == "ValiderConnexion"){
-    var inputPseudo = page.divConnection.getElementsByTagName("input")[0];
-    var inputPassword = page.divConnection.getElementsByTagName("input")[1];
-    if(userMan.addUser(inputPseudo.value, inputPassword.value))
-      page.toggleConnection();
-      setTimeout(page.toggleLoader(), 3000);
-      page.toggleContent();
-    }
-    else{
-      alert("Ce pseudo est indisponible!\nVeuillez entrer un pseudo différent.");
-    }
-}, false);
+Tools.include('media/script/User.js', function (){});
+//
+//document.addEventListener("click", function (evt){
+//  var target = evt.getTarget();
+//  if(target.id == "ValiderConnexion"){
+//    var inputPseudo = page.divConnection.getElementsByTagName("input")[0];
+//    var inputPassword = page.divConnection.getElementsByTagName("input")[1];
+//    if(userMan.addUser(inputPseudo.value, inputPassword.value))
+//      page.toggleConnection();
+//      setTimeout(page.toggleLoader(), 3000);
+//      page.toggleContent();
+//    }
+//    else{
+//      alert("Ce pseudo est indisponible!\nVeuillez entrer un pseudo différent.");
+//    }
+//}, false);
+//https://www.google.fr/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=get+clicked+object+javascript
