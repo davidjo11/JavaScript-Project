@@ -1,25 +1,34 @@
 function UserManager() {
     this.doc = "Association socketId (key) - name (value) for all clients in the room.\n";
-    this.keyName = {};
-    this.nameKey = {};
+    this.keyName = "";
 }
 
 UserManager.prototype = {
 
     addUser: function (socketId, userName) {
-        if (this.key.name.socketId !== undefined || this.nameKey.name !== undefined) {
+        if (this.keyName.search(socketId) === -1) {
             return false
         } else {
-            this.keyName.socketId = userName;
-            this.nameKey.name = socketId;
+            this.keyName += socketId + "-" + userName + ",";
             return true;
         }
 
     },
 
-    removeUser: function (user) {
-        var key = this.nameKey.user;
-        delete this.keyName.(this.nameKey.user);
-        return this.keyName.key === undefined;
+    removeUser: function (socketId) {
+        var t = this.keyName.split(',');
+        if (this.keyName.indexOf(socketId) !== -1){
+            for (var i = 0; i < t.length; i++) {
+                var s = t[i].indexOf(socketId) > -1 ? t[i].substring(t[i].indexOf(socketId), t[i].length) : "";
+                if(s !== "")
+                    i = t.length;
+            }
+            this.keyName.replace(s+',',"");
+        }
+        return this.keyName.search(socketid) === -1;
+    },
+
+    exists: function (socketId) {
+
     }
 }
