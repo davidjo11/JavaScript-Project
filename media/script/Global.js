@@ -77,14 +77,20 @@ Tools = {
             }
         }
         return colors.split(";");
-    }
+    },
+
+    notifyJoinRoom : function (message) {
+
+    },
+
+    page : undefined,
+
+    users : undefined,
+
+    msgCreator : undefined,
+
+    user : undefined
 }
-
-page = undefined;
-users = undefined;
-msgCreator = undefined;
-user = undefined;
-
 
 Tools.include('media/script/PageManager.js', function () {
     page = new PageManager();
