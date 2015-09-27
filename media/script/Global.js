@@ -67,9 +67,9 @@ Tools = {
 page = undefined;
 userMan = undefined;
 
-Tools.include('media/script/PageBundle.js', function(){ page = new PageBundle();});
+Tools.include('media/script/Initializator.js', function(){ page = new PageBundle();});
 Tools.include('media/script/UserManager.js', function(){ userMan = new UserManager();});
-Tools.include('media/script/Message.js', function (){});
+Tools.include('media/script/MessageCreator.js', function (){});
 Tools.include('media/script/User.js', function (){ });
 
 document.addEventListener("click", function (){
