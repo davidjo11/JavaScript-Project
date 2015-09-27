@@ -71,7 +71,7 @@ Tools = {
             for (var j = 0; j < 6; j++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
-            if(colors.indexOf(color) === -1){
+            if (colors.indexOf(color) === -1) {
                 colors += ";" + color;
                 i++;
             }
@@ -79,17 +79,36 @@ Tools = {
         return colors.split(";");
     },
 
-    notifyJoinRoom : function (message) {
+    notifyJoinRoom: function (message) {
 
     },
 
-    page : undefined,
+    getToday: function () {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
 
-    users : undefined,
+        if (dd < 10) {
+            dd = '0' + dd
+        }
 
-    msgCreator : undefined,
+        if (mm < 10) {
+            mm = '0' + mm
+        }
 
-    user : undefined
+        today = dd + '-' + mm + '-' + yyyy;
+
+        return today;
+    },
+
+    page: undefined,
+
+    users: undefined,
+
+    msgCreator: undefined,
+
+    user: undefined
 }
 
 Tools.include('media/script/PageManager.js', function () {
