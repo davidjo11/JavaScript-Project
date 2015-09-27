@@ -4,8 +4,6 @@ function PageManager() {
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
-    this.date = undefined;
-    this.pseudo = undefined;
 }
 
 PageManager.prototype = {
@@ -40,7 +38,7 @@ PageManager.prototype = {
             "margin-bottom", "5px",
             "font-size", "22px");
         Tools.assignAttributes(inputPseudo,
-            "id", "pseudo",
+            "class", "input_pseudo",
             "type", "text",
             "placeholder", "Your pseudo",
             "pattern", "[A-Za-z0-9]{6,}",
@@ -55,6 +53,7 @@ PageManager.prototype = {
             "margin-bottom", "5px",
             "font-size", "22px");
         Tools.assignAttributes(inputDate,
+            "id", "date",
             "type", "date",
             "placeholder", Tools.getToday(),
             "min", "2015-09-01",
@@ -110,24 +109,23 @@ PageManager.prototype = {
         if (this.divConnection.style.display === "none" || this.divConnection.style.display === "") {
             this.divConnection.style.display = "flex";
             var valider = this.divConnection.getElementsByTagName("button")[0];
+            var self = this;
             valider.addEventListener("click", function () {
-                var inputPseudo = this.divConnection.getElementById("pseudo");
-                var inputDate = this.divConnection.getElementById("date");
+                var inputPseudo = self.divConnection.getElementsByTagName("input")[0];
+                //                var inputDate = this.divConnection.getElementById("date");
                 if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/\w/)) {
-                    this.pseudo = inputPseudo.value;
-                    this.date = inputDate.value;
-                    Tools.user = this.pseudo;
-                    Tools.date = this.date.split('-');
+                    //                    this.date = inputDate.value;
+                    Tools.user = inputPseudo.value;
+                    //                    Tools.date = this.date.split('-');
                     cobra.connect('http://cobra-framework.com:8080');
                     setTimeout(function () {
-                        console.log("Time out! toggleContent!")
-                        this.toggleConnection();
-                        var titre = this.divContent.getElementsByClassName('menu__title')[0];
-                        titre.textContent = "Bienvenue sur List in Shop in&trade;, " + this.pseudo.toUpperCase() + "!";
-                        if (this.divContent.style.display == "none")
-                            this.toggleContent();
+                        self.toggleConnection();
+                        var titre = self.divContent.getElementsByClassName('menu__title')[0];
+                        titre.textContent = "Bienvenue sur List in Shop in, " + inputPseudo.value + "!";
+                        if (self.divContent.style.display == "none" || self.divContent.style.display === "")
+                            self.toggleContent();
                     }, 500);
-                } else alert('Votre pseudo doit contenir au moins 6 caractères.');
+                } else alert('Votre pseudo doit contenir au moins 6 caractères et ne peut être composé que des caractères suivants:\n A-Z-a-z0-9_.');
             }, false);
         } else {
             var valider = this.divConnection.getElementsByTagName("button")[0];
@@ -137,7 +135,7 @@ PageManager.prototype = {
     },
 
     toggleContent: function () {
-        if (this.divContent.style.display == "none" || this.divContent.style.display === "" )
+        if (this.divContent.style.display == "none" || this.divContent.style.display === "")
             this.divContent.style.display = "block";
         else this.divContent.style.display = "none";
     },
@@ -154,8 +152,9 @@ PageManager.prototype = {
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
         //une fois l'animation terminée, on la supprime (elle dure 15s voir joinRoomNotif.scss)
+        var self = this;
         setTimeout(function () {
-            this.divNotif.removeChild(notif);
+            self.divNotif.removeChild(notif);
         }, 20000);
     }
 };
