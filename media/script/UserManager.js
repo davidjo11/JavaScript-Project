@@ -5,14 +5,12 @@ function UserManager() {
 
 UserManager.prototype = {
 
-    addUser: function (socketId, userName) {
-        if (this.keyName.search(socketId) === -1) {
-            return false
-        } else {
-            this.keyName += socketId + "-" + userName + ",";
-            return true;
-        }
+    addSocketId : function (socketId) {
+        this.keyName += socketId+",";
+    },
 
+    addUser : function (socketId, name){
+        this.keyName.replace(socketId, socketId+"-"+name);
     },
 
     removeUser: function (socketId) {
