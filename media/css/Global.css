@@ -38,9 +38,11 @@ main {
       color: #808080; }
 
 .card__add:hover {
-  background-color: #808080; }
+  background-color: #808080;
+  cursor: pointer; }
   .card__add:hover:hover div {
     background-color: #808080;
-    color: darkgray; }
+    color: darkgray;
+    cursor: pointer; }
 
 /*# sourceMappingURL=global.css.map */

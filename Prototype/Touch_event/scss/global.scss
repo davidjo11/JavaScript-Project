@@ -49,8 +49,10 @@ main {
 
 .card__add:hover {
     background-color: $gray2;
+    cursor: pointer;
     &:hover div {
         background-color: $gray2;
         color: darkgray;
+        cursor: pointer;
     }
 }
