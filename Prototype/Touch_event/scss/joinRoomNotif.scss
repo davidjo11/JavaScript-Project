@@ -1,0 +1,30 @@
+.notif__join {
+    display: flex;
+    flex-direction: column-reverse;
+    align-content: center;
+    text-align: center;
+    font-size: 22px;
+    z-index: 400;
+    position: fixed;
+    background: transparent;
+    left: 45%;
+    & div {
+        background-color: ghostwhite;
+        border-radius: 6px;
+        font-size: inherit;
+        opacity: 0.3;
+        animation-name: fadeNotif;
+        animation-duration: 15s;
+        animation-iteration-count: 1;
+        animation-direction: forwards;
+    }
+}
+
+@keyframes fadeNotif {
+    0% {display: none; opacity: 0.3;}
+    5% {display: block;}
+    30% {opacity: 1;}
+    70% {display: block; opacity: 1;}
+    95% {opacity: 0.3;}
+    100% {display: none; opacity: 0;}
+}
