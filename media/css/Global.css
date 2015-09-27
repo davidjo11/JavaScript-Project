@@ -29,6 +29,8 @@ body {
   transform: translate(-50%, -50%); }
   .connection input[type=date] {
     display: none; }
+  .connection button:hover {
+    cursor: pointer; }
 
 .main {
   display: none; }

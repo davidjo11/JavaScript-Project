@@ -36,6 +36,9 @@ body {
     & input[type=date] {
         display: none;
     }
+    & button:hover {
+        cursor: pointer;
+    }
 }
 
 .main {
