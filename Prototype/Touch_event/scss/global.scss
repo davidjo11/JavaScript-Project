@@ -22,6 +22,7 @@ body {
     color: black;
     text-align: 'center';
     display: none;
+    color: darkslategray;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
@@ -29,8 +30,12 @@ body {
     left: 50%;
     top: 50%;
     font-size: 25px;
-    box-shadow: 7px 13px 23px #000000;
+    box-shadow: 5px 11px 30px darkgray;
+    border-radius: 6px;
     transform: translate(-50%, -50%);
+    & input[type=date] {
+        display: none;
+    }
 }
 
 .main {
