@@ -9,11 +9,19 @@ function MessageManager(user, titre, description, produits){
 }
 
 MessageManager.prototype = {
-    createMessageJoin :
+    createMessageJoin : function (user) {
+        return {
+            type: 'join',
+            name : user
+        }
+    },
 
-  createMessage : function (user, title, description, products){
+  createMessageNewList : function (titre, description, produits){
     return {
-        user
+        author : Tools.user,
+        title : titre,
+        description : description,
+        products : produits
     }
   }
 };
