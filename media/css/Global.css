@@ -1,48 +1,43 @@
-body {
-  font-family: Open Sans;
-  background-color: lightgray;
-  font-size: 16px; }
+/*
+Error: Invalid CSS after "$gray: lightgray": expected "{", was ";"
+        on line 2 of Prototype/Touch_event/scss/global.scss
 
-main {
-  top: 64px;
-  display: flex;
-  background-color: lightgray;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: row;
-  flex-wrap: wrap; }
-  main > fieldset {
-    box-sizing: border-box;
-    height: 350px;
-    width: 300px;
-    position: absolute;
-    margin: 30px;
-    padding: 10px; }
+1: <<<<<<< HEAD
+2: $gray: lightgray;
+3: $gray2: #808080;
+4: $gray3: #595959;
+5: $titleWhite: whitesmoke;
+6: body {
+7:     font-family: Open Sans;
 
-.card__add {
-  border: dashed 6px #595959; }
-  .card__add > div {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-    align-content: center;
-    text-align: center;
-    background-color: lightgray;
-    height: 100%; }
-    .card__add > div > div {
-      height: 60px;
-      width: auto;
-      font-size: 40px;
-      color: #808080; }
-
-.card__add:hover {
-  background-color: #808080;
-  cursor: pointer; }
-  .card__add:hover:hover div {
-    background-color: #808080;
-    color: darkgray;
-    cursor: pointer; }
-
-/*# sourceMappingURL=global.css.map */
+Backtrace:
+Prototype/Touch_event/scss/global.scss:2
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:1162:in `expected'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:1098:in `expected'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:1093:in `tok!'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:638:in `block'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:632:in `ruleset'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:657:in `block_child'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:647:in `block_contents'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:117:in `stylesheet'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/scss/parser.rb:42:in `parse'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/engine.rb:393:in `_to_tree'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/engine.rb:368:in `_render_with_sourcemap'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/engine.rb:285:in `render_with_sourcemap'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:209:in `each'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:470:in `on_file_changed'
+/usr/share/gems/gems/sass-3.4.14/lib/sass/plugin/compiler.rb:328:in `block in watch'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:291:in `call'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:291:in `_process_changes'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:255:in `block in _wait_for_changes'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:238:in `loop'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:238:in `_wait_for_changes'
+/usr/share/gems/gems/listen-2.10.0/lib/listen/listener.rb:327:in `block in _start_wait_thread'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"$gray: lightgray\": expected \"{\", was \";\"\A         on line 2 of Prototype/Touch_event/scss/global.scss\A \A 1: <<<<<<< HEAD\A 2: $gray: lightgray;\A 3: $gray2: #808080;\A 4: $gray3: #595959;\A 5: $titleWhite: whitesmoke;\A 6: body {\A 7:     font-family: Open Sans;"; }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $gray: lightgray;
 $gray2: #808080;
 $gray3: #595959;
@@ -56,3 +57,97 @@ main {
         cursor: pointer;
     }
 }
+=======
+body {
+    font-family: Open Sans;
+    background-color: lightgray;
+    font-size: 16px;
+}
+
+main {
+    top: 5%;
+}
+
+.card {
+    color: black;
+    margin: 20px;
+    max-width: 300px;
+    width: 270px;
+    height: 350px;
+    max-height: 350px;
+    position: absolute;
+    background-color: white;
+    margin: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+    border-top: solid 8px;
+    border-radius: 3px;
+    padding-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+legend {
+    background: black;
+    padding: 10px 20px;
+    font-weight: bolder;
+    border-radius: 5px;
+    margin-left: 10px;
+    font-size: 22px !important;
+    color: white;
+}
+
+.card:hover {
+    box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover > .card__add {
+    display: block;
+}
+
+.card__add {
+    background-color: transparent;
+    position: absolute;
+    display: none;
+    font-size: 40px;
+    padding: 10px;
+    padding-top: 11px;
+    bottom: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    color: white;
+    text-align: center;
+    z-index: 200;
+    & > button {
+        background-color: blue;
+        border-radius: 50%;
+        &:hover {
+            box-shadow: 4px 4px 10px gray;
+        }
+    }
+}
+
+.card__body {
+    position: relative;
+    color: gray;
+    text-align: justify;
+}
+
+.card__subtitle {
+    padding: 8px;
+    margin-left: 10px;
+    font-weight: bold;
+    color: #8A8587;
+    top: 20px;
+    left: 10px;
+}
+
+.card__description {
+    display: block;
+    padding-right: 12px;
+    padding-left: 12px;
+    height: auto;
+    max-height: 30%;
+}
+>>>>>>> 517402cd954da68d0b20c490a7d8a9a3bf99fd14
