@@ -97,9 +97,14 @@ Tools = {
             mm = '0' + mm
         }
 
-        today = dd + '-' + mm + '-' + yyyy;
+        today = yyyy + '-' + mm + '-' + dd;
 
         return today;
+    },
+
+    alphaOnly: function (event) {
+        var key = event.keyCode;
+        return ((key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8);
     },
 
     page: undefined,
