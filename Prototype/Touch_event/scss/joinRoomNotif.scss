@@ -1,4 +1,8 @@
 .notif__join {
+    height: 60px;
+    width: 250px;
+    color: limegreen;
+    background-color: transparent;
     display: flex;
     flex-direction: column-reverse;
     align-content: center;
@@ -9,7 +13,7 @@
     background: transparent;
     left: 45%;
     & div {
-        background-color: ghostwhite;
+        background-color: palegreen;
         border-radius: 6px;
         font-size: inherit;
         opacity: 0.3;
