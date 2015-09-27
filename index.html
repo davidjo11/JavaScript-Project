@@ -28,6 +28,7 @@
         }
 
         cobra.messageReceivedCallback = function (message) {
+            console.log(message);
              if(message.type == "infos"){//Cas où c'est moi qui ais envoyé le message
                 for(var i = 0; i < message.clients.length; i++)
                 {
@@ -37,6 +38,7 @@
                 socketId = message.socketId;
             }
             else {//Cas où je reçois un message de tous.
+                if(message.message)
                 if (socketId == message.socketId) {
                     var messageText = meTemplate;
                     messageText = messageText.replace(":message",message.message);
@@ -77,9 +79,9 @@
                         console.log(content);
                     }
 
-                    Tools.msgCreator.createMessage();
+                    var msg = Tools.msgCreator.createMessageJoin(Tools.user);
                     // Pour envoyer un message dans toute la room
-                    cobra.sendMessage({content : "join"}, room, true);
+                    cobra.sendMessage({content : msg}, room, true);
 
                     // Pour envoyer un message dans toute la room excepté soi
                     // cobra.sendMessage({content : "test"}, room, false);
@@ -99,12 +101,15 @@
 </head>
 
 <body onload="start();">
-    <div class="content" style="display: block;">
+    <div class="content">
+        <div class="connection">
+
+        </div>
        <div class="notif__join">
 
        </div>
-        <div class="mdl-layout__container">
-            <div class="mdl-layout mdl-js-layout has-drawer is-upgraded" data-upgraded=",MaterialLayout">
+        <div class="mdl-layout__container main">
+            <div class="mdl-layout mdl-js-layout has-drawer is-upgraded">
                 <header class="mdl-layout__header is-casting-shadow">
                     <div class="mdl-layout__header-row">
                         <!-- Title -->
