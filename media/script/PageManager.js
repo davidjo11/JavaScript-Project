@@ -33,7 +33,7 @@ PageManager.prototype = {
         //                "transform", "translate(-50%, -50%)");
         //            Tools.assignAttributes(this.divConnection,
         //                "class", "connection");
-        Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo:");
+        Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo");
 
         var inputPseudo = Tools.createStyledElement("input",
             "margin-top", "15px",
@@ -44,9 +44,10 @@ PageManager.prototype = {
             "type", "text",
             "placeholder", "Your pseudo",
             "pattern", "[A-Za-z0-9]{6,}",
+            "onkeydown", "Tools.alphaOnly(event);",
             "required", "",
             "autofocus", "",
-            'title', "Your pseudo");
+            'title', "Votre pseudo doit uniquement contenir les caractères suivants: [A-Za-z0-9_].");
         Tools.ajouterBalise(this.divConnection, inputPseudo);
 
         var inputDate = Tools.createStyledElement("input",
@@ -55,7 +56,7 @@ PageManager.prototype = {
             "font-size", "22px");
         Tools.assignAttributes(inputDate,
             "type", "date",
-            "placeholde", Tools.getToday(),
+            "placeholder", Tools.getToday(),
             "min", "2015-09-01",
             "max", Tools.getToday(),
             "title", "Une date antérieure à aujourd'hui.");
@@ -106,19 +107,20 @@ PageManager.prototype = {
     },
 
     toggleConnection: function () {
-        if (this.divConnection.style == "none") {
+        if (this.divConnection.style.display === "none" || this.divConnection.style.display === "") {
             this.divConnection.style.display = "flex";
             var valider = this.divConnection.getElementsByTagName("button")[0];
             valider.addEventListener("click", function () {
                 var inputPseudo = this.divConnection.getElementById("pseudo");
                 var inputDate = this.divConnection.getElementById("date");
-                if (inputPseudo.value.length >= 6) {
+                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/\w/)) {
                     this.pseudo = inputPseudo.value;
                     this.date = inputDate.value;
                     Tools.user = this.pseudo;
                     Tools.date = this.date.split('-');
                     cobra.connect('http://cobra-framework.com:8080');
                     setTimeout(function () {
+                        console.log("Time out! toggleContent!")
                         this.toggleConnection();
                         var titre = this.divContent.getElementsByClassName('menu__title')[0];
                         titre.textContent = "Bienvenue sur List in Shop in&trade;, " + this.pseudo.toUpperCase() + "!";
@@ -135,7 +137,7 @@ PageManager.prototype = {
     },
 
     toggleContent: function () {
-        if (this.divContent.style.display == "none")
+        if (this.divContent.style.display == "none" || this.divContent.style.display === "" )
             this.divContent.style.display = "block";
         else this.divContent.style.display = "none";
     },
