@@ -79,8 +79,9 @@ Tools = {
         return colors.split(";");
     },
 
-    notifyJoinRoom: function (message) {
-
+    notify: function (message) {
+        //var username = users.getUser(message);
+        page.createNotif(message);
     },
 
     getToday: function () {
