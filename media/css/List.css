@@ -1,0 +1,19 @@
+.card:hover > .card_edit {
+  color: ghostwhite;
+  background-color: blue;
+  position: absolute;
+  right: 5px;
+  bottom: 5px; }
+  .card:hover > .card_edit:hover {
+    box-shadow: 4px 6px 20px darkgray; }
+
+.card__description {
+  color: darkgray;
+  line-height: 27px;
+  font-size: 14px;
+  width: auto;
+  height: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+/*# sourceMappingURL=List.css.map */

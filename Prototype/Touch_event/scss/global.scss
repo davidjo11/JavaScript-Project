@@ -47,7 +47,7 @@ body {
 
 main {
     top: 64px;
-    display: flex;
+    display: flex !important;
     background-color: $gray;
     justify-content: flex-start;
     align-items: flex-start;
