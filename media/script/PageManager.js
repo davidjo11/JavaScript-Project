@@ -13,26 +13,27 @@ PageManager.prototype = {
         initializeElements: function () {
 
             /* Partie connexion*/
-            this.divConnection = Tools.createStyledElement("div",
-                "padding", "25px",
-                "background-color", "white",
-                "color", "black",
-                "text-align", 'center',
-                "display", "none",
-                "flex-direction", "column",
-                "justify-content", "space-around",
-                "align-items", "center",
-                "position", "absolute",
-                "left", "50%",
-                "top", "50%",
-                "font-size", "25px",
-                "-webkit-box-shadow", "7px 13px 23px #000000",
-                "box-shadow", "7px 13px 23px #000000",
-                "-webkit-transform", "translate(-50%, -50%)",
-                "transform", "translate(-50%, -50%)");
-            Tools.assignAttributes(this.divConnection,
-                "class", "connection");
-            Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo:");
+            this.divConnection = this.body.getElementsByClassName("connection")[0];
+//            this.divConnection = Tools.createStyledElement("div",
+//                "padding", "25px",
+//                "background-color", "white",
+//                "color", "black",
+//                "text-align", 'center',
+//                "display", "none",
+//                "flex-direction", "column",
+//                "justify-content", "space-around",
+//                "align-items", "center",
+//                "position", "absolute",
+//                "left", "50%",
+//                "top", "50%",
+//                "font-size", "25px",
+//                "-webkit-box-shadow", "7px 13px 23px #000000",
+//                "box-shadow", "7px 13px 23px #000000",
+//                "-webkit-transform", "translate(-50%, -50%)",
+//                "transform", "translate(-50%, -50%)");
+//            Tools.assignAttributes(this.divConnection,
+//                "class", "connection");
+//            Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo:");
 
             var inputPseudo = Tools.createStyledElement("input",
                 "margin-top", "15px",
@@ -52,10 +53,10 @@ PageManager.prototype = {
                 "margin-top", "15px",
                 "margin-bottom", "5px",
                 "font-size", "22px");
-            Tools.assignAttributes(inputPassword,
+            Tools.assignAttributes(inputDate,
                 "type", "date",
                 "min", "2015-09-01",
-                "max", Date.getFullYear() + "-" + Date.getMonth() + "-" + Date.getDay(),
+                "max", Tools.getToday(),
                 "title", "Une date antérieure à aujourd'hui.");
 
             var button = Tools.createStyledElement("button",
