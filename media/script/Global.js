@@ -79,9 +79,12 @@ Tools = {
         return colors.split(";");
     },
 
-    notify: function (message) {
+    notify: function (socketId, evt) {
         //var username = users.getUser(message);
-        page.createNotif(message);
+        //if(users.exists(socketId))
+        //  page.createNotif(username, "l");
+        //else page.createNotif(username, "j");
+        page.createNotif(message, evt);
     },
 
     getToday: function () {
