@@ -65,12 +65,14 @@ Tools = {
 }
 
 page = undefined;
-userMan = undefined;
+users = undefined;
+msgCreator =  undefined;
 
 Tools.include('media/script/Initializator.js', function(){ page = new PageBundle();});
 Tools.include('media/script/UserManager.js', function(){ userMan = new UserManager();});
-Tools.include('media/script/MessageCreator.js', function (){});
+Tools.include('media/script/MessageCreator.js', function (){ msgCreator = new MessageCreator();});
 Tools.include('media/script/User.js', function (){ });
+/*
 
 document.addEventListener("click", function (){
   var target = event.getTarget();
@@ -86,3 +88,4 @@ document.addEventListener("click", function (){
       alert("Ce pseudo est indisponible!\nVeuillez entrer un pseudo différent.");
     }
 }, false);
+*/
