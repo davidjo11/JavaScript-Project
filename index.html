@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <title>List in Shop in&trade;</title>
 
-    <link rel="icon" href="media/image/favicon-shopping-cart.ico"/>
+    <link rel="icon" href="media/image/favicon-shopping-cart.ico" />
 
     <link rel="stylesheet" href="media/css/Global.css">
     <link rel="stylesheet" href="media/css/joinRoomNotif.css">
@@ -23,75 +23,74 @@
         var room = "test";
         var socketId;
         var apiUrl = 'http://cobra-framework.com:3000/api/events/' + room;
-//        cobra.connect('http://cobra-framework.com:8080');
+        //        cobra.connect('http://cobra-framework.com:8080');
 
         cobra.connectionCallback = function () {
             cobra.joinRoom(room);
         }
 
         cobra.joinRoomCallback = function (roomName) {
-           // appel à l'API pour récupérer tous les messages de la room roomName
-           $.ajax({
-              type: 'GET',
-              url: apiUrl,
-              success: function () {
-                  console.log("success");
-              },
+            // appel à l'API pour récupérer tous les messages de la room roomName
+            $.ajax({
+                type: 'GET',
+                url: apiUrl,
+                success: function () {
+                    console.log("success");
+                },
 
-              error: function () {
-                  console.log("error when retrieve events");
-              },
+                error: function () {
+                    console.log("error when retrieve events");
+                },
 
-              complete: function (result, status) {
-                  console.log("complete");
-                  for (var i = 0; i < result.responseJSON.Events.length; i++) {
-                     var content = result.responseJSON.Events[i].content;
-                     // recuperer les infos contenues dans les messages
-                     console.log(content);
-                  }
+                complete: function (result, status) {
+                    console.log("complete");
+                    for (var i = 0; i < result.responseJSON.Events.length; i++) {
+                        var content = result.responseJSON.Events[i].content;
+                        // recuperer les infos contenues dans les messages
+                        console.log(content);
+                    }
 
-                  // Pour envoyer un message dans toute la room
-                  cobra.sendMessage({content : "test"}, room, true);
+                    // Pour envoyer un message dans toute la room
+                    cobra.sendMessage({
+                        content: "test"
+                    }, room, true);
 
-                  // Pour envoyer un message dans toute la room excepté soi
-                  // cobra.sendMessage({content : "test"}, room, false);
-              }
-          });
+                    // Pour envoyer un message dans toute la room excepté soi
+                    // cobra.sendMessage({content : "test"}, room, false);
+                }
+            });
         }
 
         cobra.messageReceivedCallback = function (message) {
+
             // Lors de l'arrivée dans une room donne la liste des utilisateurs contenus dans la room
-            if(message.type == "infos"){
-                for(var i = 0; i < message.clients.length; i++)
-                {
+            if (message.type == "infos") {
+                for (var i = 0; i < message.clients.length; i++) {
                     // Contient l'id du client
                     var client = message.clients[i];
-
+                    console.log("Un des clients présents: " + client);
                 }
                 // Mon id attribué par la room
                 socketId = message.socketId;
+            } else if (message.message) {
+                // Message reçu, je le traite
+                console.log(message.message);
             }
-            else if (message.message) {
-               // Message reçu, je le traite
-               console.log(message.message);
-           }
         }
 
-        cobra.clientJoinedRoomCallback = function(data){
+        cobra.clientJoinedRoomCallback = function (data) {
             // Un autre client a rejoint la room
-            console.log(data);
+            console.log(arguments);
             //a for joined
             Tools.notify(data.id, "j");
         }
 
-        cobra.clientLeftRoomCallback = function(data){
+        cobra.clientLeftRoomCallback = function (data) {
             // Un client a quitté la room
-            console.log(data);
+            console.log(arguments);
             //l for left
             Tools.notify(data.id, "l");
         }
-
-
     </script>
 </head>
 
@@ -129,7 +128,8 @@
                         <a class="mdl-navigation__link" href="">Link</a>
                     </nav>
                 </div>
-                <main class="">
+                <main class="main__content">
+                    <!-- Fieldset to add a new list                   -->
                     <fieldset class="card__add">
                         <div>
                             <div>
@@ -144,9 +144,9 @@
 
                     <fieldset class="card">
                         <legend>Title</legend>
-                        <button class="mdl-button mdl-js-button mdl-button--fab card__add">
-                            Edit
-                        </button>
+                        <div class="card__edit">
+                            <button type="button">Edit</button>
+                        </div>
                         <div class="card__body">
                             <div class="card__subtitle">Category</div>
                             <p class="card__description">
