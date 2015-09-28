@@ -115,13 +115,16 @@ PageManager.prototype = {
                 //                var inputDate = this.divConnection.getElementById("date");
                 if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/\w/)) {
                     //                    this.date = inputDate.value;
-                    Tools.user = inputPseudo.value;
+                    //Tant que le client ne connait pas l'id de sa socket, on attend...
+                    while(socketId === undefined);
+                    Tools.me = new User(inputPseudo.value, socketId);
+                    Tools.users.addUser(Tools.me);
                     //                    Tools.date = this.date.split('-');
                     cobra.connect('http://cobra-framework.com:8080');
                     setTimeout(function () {
                         self.toggleConnection();
                         var titre = self.divContent.getElementsByClassName('menu__title')[0];
-                        titre.textContent = "Bienvenue sur List in Shop in, " + inputPseudo.value + "!";
+                        titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
                         if (self.divContent.style.display == "none" || self.divContent.style.display === "")
                             self.toggleContent();
                     }, 500);
@@ -147,11 +150,15 @@ PageManager.prototype = {
 //    },
 
     createNotif: function (userName, evt) {
-        var notif = document.createElement(div);
-        if( evt == "j")
-            notif.createTextNode(userName + " a rejoint la salle.");
-        else if (evt == "l")
-            notif.createTextNode(userName + " a quitté la salle.");
+        var notif = document.createElement("div");
+        if( evt === "j"){
+            Tools.ajouterTexte(notif, userName +" vient de rejoindre la salle.");
+            Tools.users.addUser(userName);
+        }
+        else if (evt === "l"){
+            Tools.ajouterTexte(notif, userName + " a quitté la salle.");
+            Tools.users.removeUser(userName);
+        }
         else return;
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
@@ -159,6 +166,6 @@ PageManager.prototype = {
         var self = this;
         setTimeout(function () {
             self.divNotif.removeChild(notif);
-        }, 20000);
+        }, 10000);
     }
 };
