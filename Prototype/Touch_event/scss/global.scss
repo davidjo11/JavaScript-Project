@@ -45,26 +45,31 @@ body {
     display: none;
 }
 
-main {
+.main__content {
     top: 64px;
-    display: flex !important;
+    display: flex;
     background-color: $gray;
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    margin: 0;
     & > fieldset {
         box-sizing: border-box;
+        border-radius: 6px;
         height: 350px;
         width: 300px;
-        position: absolute;
-        margin: 30px;
         padding: 10px;
+        max-height: 350px;
+        width: 310px;
     }
 }
 
 .card__add {
     border: dashed 6px $gray3;
+    margin: 30px;
     & > div {
         display: flex;
         flex-direction: column;
@@ -92,4 +97,49 @@ main {
         color: darkgray;
         cursor: pointer;
     }
+}
+
+.card {
+    background-color: whitesmoke;
+    border-top: solid 6px black;
+    margin: 20px;
+    & > .card__edit {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        display: none;
+        text-align: center;
+        border-radius: 50%;
+        z-index: 200;
+        background-color: blue;
+        color: ghostwhite;
+    }
+
+    &:hover {
+        box-shadow: 7px 11px 23px darkgray;
+        & > .card__edit {
+            display: block;
+            &:hover {
+                box-shadow: 4px 6px 20px darkgray;
+            }
+        }
+    }
+    & > legend {
+        font-size: 22px;
+        border-radius: 6px;
+        background-color: black;
+        color: whitesmoke;
+        margin-left: 10px;
+        padding: 15px;
+    }
+}
+
+.card__description {
+    color: darkgray;
+    line-height: 27px;
+    font-size: 14px;
+    width: auto;
+    height: 30%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
