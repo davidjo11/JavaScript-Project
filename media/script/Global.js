@@ -84,7 +84,7 @@ Tools = {
         //if(users.exists(socketId))
         //  page.createNotif(username, "l");
         //else page.createNotif(username, "j");
-        page.createNotif(message, evt);
+        page.createNotif(socketId, evt);
     },
 
     getToday: function () {
@@ -117,7 +117,7 @@ Tools = {
 
     msgCreator: undefined,
 
-    user: undefined
+    me: undefined
 }
 
 Tools.include('media/script/PageManager.js', function () {
@@ -125,6 +125,7 @@ Tools.include('media/script/PageManager.js', function () {
 });
 Tools.include('media/script/UserManager.js', function () {
     userMan = new UserManager();
+    userMan.initialize(100);
 });
 Tools.include('media/script/MessageManager.js', function () {
     msgCreator = new MessageManager();

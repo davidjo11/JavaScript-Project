@@ -1,32 +1,38 @@
 function UserManager() {
     this.doc = "Association socketId (key) - name (value) for all clients in the room.\n";
-    this.keyName = "";
+    //Tableau d'objets de type User
+    this.users = new Array();
+    //tableau des couleurs utilisées en hexa
+    this.colors = new Array();
 }
 
 UserManager.prototype = {
 
-    addSocketId : function (socketId) {
-        this.keyName += socketId+",";
+    initialize: function (i) {
+        this.colors = Tools.getRandomColors(i);
     },
 
-    addUser : function (socketId, name){
-        this.keyName.replace(socketId, socketId+"-"+name);
-    },
-
-    removeUser: function (socketId) {
-        var t = this.keyName.split(',');
-        if (this.keyName.indexOf(socketId) !== -1){
-            for (var i = 0; i < t.length; i++) {
-                var s = t[i].indexOf(socketId) > -1 ? t[i].substring(t[i].indexOf(socketId), t[i].length) : "";
-                if(s !== "")
-                    i = t.length;
-            }
-            this.keyName.replace(s+',',"");
-        }
-        return this.keyName.search(socketid) === -1;
+    addUser: function (user) {
+        var color = this.colors.splice(Math.random(this.colors.length), 1)[0];
+        user.setColor(color);
+        this.users.push(user);
+        return true;
     },
 
     exists: function (socketId) {
+        for (var i in this.users) {
+            var u = this.users[i];
+            if (u.getSocket() == socketId)
+                return i;
+        }
+        return -1;
+    },
 
+    removeUser: function (socketId) {
+        if (this.exists(socketId) > -1) {
+            var user = this.users.splice(i, 1);
+            this.colors.push(user.getColor());
+            return true;
+        } else false;
     }
 }
