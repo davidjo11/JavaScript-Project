@@ -1,6 +1,6 @@
 function PageManager() {
     this.body = Tools.getBody();
-//    this.divLoader = undefined;
+    //    this.divLoader = undefined;
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
@@ -85,22 +85,22 @@ PageManager.prototype = {
         Tools.ajouterBalise(Tools.getBody(), this.divConnection);
 
         /*Partie loader*/
-//        this.divLoader = Tools.createStyledElement("div",
-//            "width", "250px",
-//            "height", "50px",
-//            "line-height", "50px",
-//            "text-align", "center",
-//            "position", "absolute",
-//            "display", "none",
-//            "top", "50%",
-//            "left", "50%",
-//            "transform", "translate(-50%, -50%)",
-//            "text-transform", "uppercase",
-//            "font-weight", "900",
-//            "color", "#ce4233",
-//            "letter-spacing", "0.2em");
-//        Tools.assignAttributes(this.divLoader,
-//            "class", "loader");
+        //        this.divLoader = Tools.createStyledElement("div",
+        //            "width", "250px",
+        //            "height", "50px",
+        //            "line-height", "50px",
+        //            "text-align", "center",
+        //            "position", "absolute",
+        //            "display", "none",
+        //            "top", "50%",
+        //            "left", "50%",
+        //            "transform", "translate(-50%, -50%)",
+        //            "text-transform", "uppercase",
+        //            "font-weight", "900",
+        //            "color", "#ce4233",
+        //            "letter-spacing", "0.2em");
+        //        Tools.assignAttributes(this.divLoader,
+        //            "class", "loader");
 
         this.divNotif = this.body.getElementsByClassName("notif__join")[0];
     },
@@ -116,12 +116,11 @@ PageManager.prototype = {
                 if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/\w/)) {
                     //                    this.date = inputDate.value;
                     //Tant que le client ne connait pas l'id de sa socket, on attend...
-                    while(socketId === undefined);
-                    Tools.me = new User(inputPseudo.value, socketId);
-                    Tools.users.addUser(Tools.me);
                     //                    Tools.date = this.date.split('-');
                     cobra.connect('http://cobra-framework.com:8080');
                     setTimeout(function () {
+                        Tools.me = new User(inputPseudo.value, socketId);
+                        Tools.users.addUser(Tools.me);
                         self.toggleConnection();
                         var titre = self.divContent.getElementsByClassName('menu__title')[0];
                         titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
@@ -142,24 +141,22 @@ PageManager.prototype = {
             this.divContent.style.display = "block";
         else this.divContent.style.display = "none";
     },
-//
-//    toggleLoader: function () {
-//        if (this.divLoader.style.display == "none")
-//            this.divLoader.style.display = "block";
-//        this.divLoader.style.display == "none";
-//    },
+    //
+    //    toggleLoader: function () {
+    //        if (this.divLoader.style.display == "none")
+    //            this.divLoader.style.display = "block";
+    //        this.divLoader.style.display == "none";
+    //    },
 
     createNotif: function (userName, evt) {
         var notif = document.createElement("div");
-        if( evt === "j"){
-            Tools.ajouterTexte(notif, userName +" vient de rejoindre la salle.");
+        if (evt === "j") {
+            Tools.ajouterTexte(notif, userName + " vient de rejoindre la salle.");
             Tools.users.addUser(userName);
-        }
-        else if (evt === "l"){
+        } else if (evt === "l") {
             Tools.ajouterTexte(notif, userName + " a quitté la salle.");
             Tools.users.removeUser(userName);
-        }
-        else return;
+        } else return;
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
         //une fois l'animation terminée, on la supprime (elle dure 15s voir joinRoomNotif.scss)
