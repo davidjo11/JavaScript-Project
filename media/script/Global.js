@@ -64,14 +64,14 @@ Tools = {
     },
 
     getRandomColors: function (nbColors) {
-        var colors = "#FFFFFF";
+        var colors = "";
         var letters = '0123456789ABCDEF'.split('');
         for (var i = 0; i < nbColors; i) {
             color = '#';
             for (var j = 0; j < 6; j++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
-            if (colors.indexOf(color) === -1) {
+            if (colors.indexOf(color) === -1 && this.usedColors.indexOf(color)) {
                 colors += ";" + color;
                 i++;
             }
@@ -117,20 +117,27 @@ Tools = {
 
     msgCreator: undefined,
 
-    me: undefined
+    me: undefined,
+
+    clientsIn: [],
+
+    usedColors: "#0000FF,#A9A9A9,#000000,#F5F5F5,#FFFFFF"
 }
 
-Tools.include('media/script/PageManager.js', function () {
-    page = new PageManager();
-});
+Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/UserManager.js', function () {
-    userMan = new UserManager();
-    userMan.initialize(100);
+    Tools.users = new UserManager();
+    Tools.users.initialize(100);
+//    console.log('UsersManager chargé: '+Tools.users);
 });
 Tools.include('media/script/MessageManager.js', function () {
     msgCreator = new MessageManager();
+//    console.log('MessageManager chargé: '+ Tools.msgCreator)
 });
-Tools.include('media/script/User.js', function () {});
+Tools.include('media/script/PageManager.js', function () {
+    page = new PageManager();
+//    console.log("PageManager chargé: "+Tools.page);
+});
 
 /*
 document.addEventListener("click", function (){
