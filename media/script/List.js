@@ -5,6 +5,7 @@ function List(title, prop) {
     this.products = [];
     this.description = "";
     this.sharedWith = [];
+    this.notAlone = 0;
 }
 
 List.prototype = {
@@ -76,11 +77,13 @@ List.prototype = {
                                         "border-top-color", this.prop.getColor(),
                                         );
         Tools.assignAttributes(l,
-                                "id", "list_"+this.name,
+                                "id", Tools.listId+""+this.name,
                                 "class","list");
 
         var legend = Tools.createStyledElement("legend",
                                          "background-color", ""+this.prop.getColor());
+        var title = this.notAlone === 0 ? this.name : this.name+" ("+this.notAlone+")";
+        Tools.ajouterTexte(legend, title);
         Tools.ajouterBalise(l, legend);
 
         var desc = Tools.createStyledElement("div");
