@@ -44,16 +44,25 @@
 
                 complete: function (result, status) {
                     console.log("complete");
-                    for (var i = 0; i < result.responseJSON.Events.length; i++) {
-                        var content = result.responseJSON.Events[i].content;
+                    var r = result.responseJSON.Events;
+                    for (var i = 0; i < r.length; i++) {
+                        var time = r[r.length-i-1].timestamp;
                         // recuperer les infos contenues dans les messages
-                        console.log(content);
+//                                                console.log(r[r.length-i-1]);
+
+                        //Afficher les events précedents? utile ?
+//                        if (!time.startsWith(Tools.getToday()))
+//                            i = r.length;
+//                        else {
+//                            Tools.listTodayEvents.push(r[r.length-i-1].content)
+//                        };
                     }
+//                    Tools.listTodayEvents.reverse();
+
+                    cobra.sendMessage(Tools.msgCreator.createJoinMsg(), room, false);
 
                     // Pour envoyer un message dans toute la room
-                    cobra.sendMessage({
-                        content: "test"
-                    }, room, true);
+//                                        cobra.sendMessage({ content: "test" }, room, true);
 
                     // Pour envoyer un message dans toute la room excepté soi
                     // cobra.sendMessage({content : "test"}, room, false);
@@ -68,11 +77,15 @@
                 for (var i = 0; i < message.clients.length; i++) {
                     // Contient l'id du client
                     var client = message.clients[i];
-                    console.log("Un des clients présents: " + client);
                 }
+                    console.log(message);
                 // Mon id attribué par la room
                 socketId = message.socketId;
-            } else if (message.message) {
+            } else if(message.join){
+                message.socketId
+            }
+
+            else if (message.message) {
                 // Message reçu, je le traite
                 console.log(message.message);
             }
