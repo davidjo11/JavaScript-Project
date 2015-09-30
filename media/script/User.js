@@ -27,7 +27,21 @@ User.prototype = {
         return this.color;
     },
 
-    equals: function (user2) {
-        return typeOf(user2) === "User" && user2.getName() === this.getName() && this.getSocket() === user2.getSocket();
+    equals: function (socketId) {
+        return this.getSocket() === socketId;
+    },
+
+    getList: function (listname) {
+        for (var i = 0; i < this.lists.length; i++) {
+            if (this.lists[i].getName() === listname)
+                return this.lists[i];
+        }
+        return undefined;
+    },
+
+    shareWith(listName, user) {
+        var l = this.this.indexOf(listName);
+        if(!l.addUser(user))
+            alert("Vous partagez déjà cette liste avec " + user.getName() + ".");
     }
 };
