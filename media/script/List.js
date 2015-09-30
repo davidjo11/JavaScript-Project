@@ -39,7 +39,7 @@ List.prototype = {
     },
 
     addUser: function (user) {
-        var aux = this.getUser(user);
+        var aux = this.isSharedWith(user);
         if (aux === undefined) {
             this.sharedWith.push(user);
             return true;
@@ -47,7 +47,7 @@ List.prototype = {
         return false;
     },
 
-    getUser: function (user) {
+    isSharedWith: function (user) {
         for (var i = 0; i < this.sharedWith.length; i++) {
             var u = this.sharedWith.[i];
             if (u.equals(user.getSocket())) {
