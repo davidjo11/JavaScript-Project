@@ -111,6 +111,8 @@ Tools = {
         return ((key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8);
     },
 
+    listId: "list_",
+
     page: undefined,
 
     users: undefined,
@@ -125,7 +127,8 @@ Tools = {
 }
 
 Tools.include('media/script/User.js', function () {});
-Tools.include('media/script/UserManager.js', function () {
+Tools.include('media/script/List.js', function () {});
+Tools.include('media/script/UserManager.js'',' function () {
     Tools.users = new UserManager();
     Tools.users.initialize(100);
 //    console.log('UsersManager chargé: '+Tools.users);
@@ -137,6 +140,9 @@ Tools.include('media/script/MessageManager.js', function () {
 Tools.include('media/script/PageManager.js', function () {
     page = new PageManager();
 //    console.log("PageManager chargé: "+Tools.page);
+});
+Tools.include("media/script/ListManager.js", function () {
+   lm = new ListManager();
 });
 
 /*
