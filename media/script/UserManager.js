@@ -13,7 +13,7 @@ UserManager.prototype = {
     },
 
     addUser: function (user) {
-        var color = this.colors.splice(Math.random(this.colors.length), 1)[0];
+        var color = this.colors.splice(Math.random() * this.colors.length, 1)[0];
         user.setColor(color);
         this.users.push(user);
         return true;
@@ -22,7 +22,7 @@ UserManager.prototype = {
     exists: function (socketId) {
         for (var i in this.users) {
             var u = this.users[i];
-            if (u.getSocket() == socketId)
+            if (u.equals(socketId))
                 return i;
         }
         return -1;
