@@ -128,7 +128,7 @@ Tools = {
 
 Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/List.js', function () {});
-Tools.include('media/script/UserManager.js'',' function () {
+Tools.include('media/script/UserManager.js', function () {
     Tools.users = new UserManager();
     Tools.users.initialize(100);
 //    console.log('UsersManager chargé: '+Tools.users);

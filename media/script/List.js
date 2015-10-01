@@ -50,7 +50,7 @@ List.prototype = {
 
     isSharedWith: function (user) {
         for (var i = 0; i < this.sharedWith.length; i++) {
-            var u = this.sharedWith.[i];
+            var u = this.sharedWith[i];
             if (u.equals(user.getSocket())) {
                 return i;
             }
