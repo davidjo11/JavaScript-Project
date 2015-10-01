@@ -74,7 +74,7 @@ List.prototype = {
     toHtml: function () {
         'use strict';
         var l = Tools.createStyledElement("fieldset",
-                                        "border-top-color", this.prop.getColor(),
+                                        "border-top-color", this.prop.getColor()
                                         );
         Tools.assignAttributes(l,
                                 "id", Tools.listId+""+this.name,
