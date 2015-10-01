@@ -4,32 +4,56 @@ function ListManager() {
 }
 
 ListManager.prototype = {
-    addList: function (list) {
+    createList: function (list) {
         'use strict';
         var i = 0;
-        while(this.getList(list, i) === -1 && i < this.lists.length) {
+        while(this.getListName(list, i) === -1 && i < this.lists.length) {
             i++;
         }
+        //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
         list.notAlone = i;
-        this.lists.push(list);
+        var lg = this.lists.length;
+        return this.lists.push(list) === (lg + 1);
     },
 
-    getList: function (list) {
-        'use strict';
+    getListName: function (list){
+        //Chercher à partir d'un indice aux dans la liste des listes
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
         for (var i = aux; this.lists.length; i++) {
             var l = this.lists[i];
-            if (l.getName() === l.getName() && l.notAlone === list.notAlone && l.getProprietor().equals(list.getProprietor()))
+            if (l.getName() === list.getName() && l.getId() !== list.getId())
                 return i;
         }
         return -1;
     },
 
-    removeList: function (list) {
+    getList: function (list) {
+        'use strict';
+        //Chercher à partir d'un indice aux dans la liste des listes
+        var aux = arguments[1] !== undefined ? arguments[1] : 0;
+
+        for (var i = aux; this.lists.length; i++) {
+            var l = this.lists[i];
+            if (l.equals(list))
+                return i;
+        }
+        return -1;
+    },
+
+    deleteList: function (list) {
         var i = this.getList(list);
         if(i > -1){
             this.lists.splice(i, 1);
+            return true;
+        }
+        return false;
+    },
+
+    updateList: function (list) {
+        var i = this.getList(list);
+        if(i > -1){
+            this.lists.splice(i, 1, list);
             return true;
         }
         return false;

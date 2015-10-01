@@ -6,9 +6,15 @@ function List(title, prop) {
     this.description = "";
     this.sharedWith = [];
     this.notAlone = 0;
+    this.id = Tools.getRandomString();
 }
 
 List.prototype = {
+
+    getId: function (){
+        return this.id;
+    },
+
     getName: function () {
         return this.name;
     },
@@ -51,7 +57,7 @@ List.prototype = {
     isSharedWith: function (user) {
         for (var i = 0; i < this.sharedWith.length; i++) {
             var u = this.sharedWith[i];
-            if (u.equals(user.getSocket())) {
+            if (u.equals(user)) {
                 return i;
             }
         }
@@ -59,7 +65,7 @@ List.prototype = {
     },
 
     removeUser : function(user) {
-        var aux = this.sharedWith.indexOf(user);
+        var aux = this.isSharedWith(user);
         if (aux > -1) {
             this.sharedWith.splice(aux, 1);
             return true;
@@ -77,7 +83,7 @@ List.prototype = {
                                         "border-top-color", this.prop.getColor()
                                         );
         Tools.assignAttributes(l,
-                                "id", Tools.listId+""+this.name,
+                                "id", this.id,
                                 "class","list");
 
         var legend = Tools.createStyledElement("legend",
@@ -87,7 +93,7 @@ List.prototype = {
         Tools.ajouterBalise(l, legend);
 
         var desc = Tools.createStyledElement("div");
-        Toolsµ.ajouterBalise(desc, this.description);
+        Tools.ajouterBalise(desc, this.description);
         Tools.ajouterTexte(desc, this.description);
         Tools.ajouterBalise(l, desc);
 
@@ -100,5 +106,9 @@ List.prototype = {
         Tools.ajouterBalise(l, products);
 
         return l;
+    },
+
+    equals: function (list){
+        return this.id === list.getId() && this.getProprietor().equals(list.getProprietor()) && this.name === list.name;
     }
 }

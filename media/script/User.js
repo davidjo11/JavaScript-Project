@@ -27,21 +27,29 @@ User.prototype = {
         return this.color;
     },
 
-    equals: function (socketId) {
-        return this.getSocket() === socketId;
+    equals: function (user) {
+        return this.getSocket() === user.getSocket();
     },
 
-    getList: function (listname) {
+    getList: function (list) {
         for (var i = 0; i < this.lists.length; i++) {
-            if (this.lists[i].getName() === listname)
+            if (this.lists[i].equals(list))
                 return this.lists[i];
         }
         return undefined;
     },
 
-    shareWith(listName, user) {
-        var l = this.this.indexOf(listName);
+    shareWith: function (list, user) {
+        var l = this.lists[this.indexOf(list)];
         if(!l.addUser(user))
             alert("Vous partagez déjà cette liste avec " + user.getName() + ".");
+    },
+
+    removeUserFromList: function (list, user){
+        if(this.getList(list) !== undefined && list.getProprietor().equals(this) && list.isSharedWith(user)){
+            list.removeUser(user);
+            return true;
+        }
+        return false;
     }
 };

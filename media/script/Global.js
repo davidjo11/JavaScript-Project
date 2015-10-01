@@ -79,6 +79,15 @@ Tools = {
         return colors.split(";");
     },
 
+    getRandomString: function (){
+        var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        var s = "";
+        for (var i = 0; i < 20; i++) {
+            color += letters[Math.floor(Math.random() * 37)];
+        }
+        return s;
+    },
+
     notify: function (socketId, evt) {
         //var username = users.getUser(message);
         //if(users.exists(socketId))
@@ -112,6 +121,8 @@ Tools = {
     },
 
     listId: "list_",
+
+    lm: undefined,
 
     page: undefined,
 

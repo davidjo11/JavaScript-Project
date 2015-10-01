@@ -1,4 +1,4 @@
-.notif {
+.notifs {
   height: 60px;
   width: 300px;
   background-color: transparent;
@@ -13,7 +13,7 @@
   position: fixed;
   background: transparent;
   left: 40%;
-  & .notifs {
+  & .notif {
     border: solid 2px;
     background-color: #e0fde0;
     padding: 10px 8px;
@@ -26,19 +26,19 @@
     animation-direction: forwards;
   }
   .notif__join {
-    @extends .notifs
+    @extends .notif
     border-color: seagreen;
     background-color: #e0fde0;
     color: limegreen;
   }
   .notif__left {
-    @extends .notifs
+    @extends .notif
     border-color: red;
     background-color: #ffb2b2;
     color: red;
   }
   .notif__shared {
-    @extends .notifs
+    @extends .notif
     border-color: blue;
     color: blue;
     background-color: #ccccff;

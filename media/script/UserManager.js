@@ -19,17 +19,17 @@ UserManager.prototype = {
         return true;
     },
 
-    exists: function (socketId) {
+    exists: function (user) {
         for (var i in this.users) {
             var u = this.users[i];
-            if (u.equals(socketId))
+            if (u.equals(user))
                 return i;
         }
         return -1;
     },
 
-    removeUser: function (socketId) {
-        if (this.exists(socketId) > -1) {
+    removeUser: function (user) {
+        if (this.exists(user.getSocket()) > -1) {
             var user = this.users.splice(i, 1);
             this.colors.push(user.getColor());
             return true;

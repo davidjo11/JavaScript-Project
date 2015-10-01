@@ -12,25 +12,6 @@ PageManager.prototype = {
 
         /* Partie connexion*/
         this.divConnection = this.body.getElementsByClassName("connection")[0];
-        //            this.divConnection = Tools.createStyledElement("div",
-        //                "padding", "25px",
-        //                "background-color", "white",
-        //                "color", "black",
-        //                "text-align", 'center',
-        //                "display", "none",
-        //                "flex-direction", "column",
-        //                "justify-content", "space-around",
-        //                "align-items", "center",
-        //                "position", "absolute",
-        //                "left", "50%",
-        //                "top", "50%",
-        //                "font-size", "25px",
-        //                "-webkit-box-shadow", "7px 13px 23px #000000",
-        //                "box-shadow", "7px 13px 23px #000000",
-        //                "-webkit-transform", "translate(-50%, -50%)",
-        //                "transform", "translate(-50%, -50%)");
-        //            Tools.assignAttributes(this.divConnection,
-        //                "class", "connection");
         Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo");
 
         var inputPseudo = Tools.createStyledElement("input",
@@ -102,7 +83,7 @@ PageManager.prototype = {
         //        Tools.assignAttributes(this.divLoader,
         //            "class", "loader");
 
-        this.divNotif = this.body.getElementsByClassName("notif__join")[0];
+        this.divNotif = this.body.getElementsByClassName("notifs")[0];
     },
 
     toggleConnection: function () {
@@ -148,21 +129,42 @@ PageManager.prototype = {
     //        this.divLoader.style.display == "none";
     //    },
 
-    createNotif: function (userName, evt) {
+    createNotif: function (evt, user) {
         var notif = document.createElement("div");
-        if (evt === "j") {
-            Tools.ajouterTexte(notif, userName + " vient de rejoindre la salle.");
-            Tools.users.addUser(userName);
-        } else if (evt === "l") {
-            Tools.ajouterTexte(notif, userName + " a quitté la salle.");
-            Tools.users.removeUser(userName);
-        } else return;
+        Tools.assignAttributes(notif, "class", "notif");
+        if (evt === "join") {
+            notif.classList.add = "notif__join";
+            Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
+        } else if (evt === "left") {
+            notif.classList.add = "notif__left";
+            Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
+        } else if("shared" === evt){
+            //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
+            var l = arguments[2];
+            notif.classList.add = "notif__shared";
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
+        } else if("notshared" === evt){
+            notif.classList.add = "notif__shared";
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
+        }
+
+            else return;
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
-        //une fois l'animation terminée, on la supprime (elle dure 15s voir joinRoomNotif.scss)
+        //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
         var self = this;
         setTimeout(function () {
             self.divNotif.removeChild(notif);
         }, 10000);
+    },
+
+    showList: function (list) {
+        Tools.ajouterBalise(this.divContent, list.toHtml());
+        var l = this.divContent.getElementById(list.getId());
+        l.style.display = "flex";
+    },
+
+    removeList: function (list) {
+        this.divContent.removeChild(this.divContent.getElementById(list.getId()));
     }
 };
