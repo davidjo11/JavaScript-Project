@@ -58,7 +58,7 @@ List.prototype = {
         return -1;
     },
 
-    removeUser(user) {
+    removeUser : function(user) {
         var aux = this.sharedWith.indexOf(user);
         if (aux > -1) {
             this.sharedWith.splice(aux, 1);
@@ -74,7 +74,7 @@ List.prototype = {
     toHtml: function () {
         'use strict';
         var l = Tools.createStyledElement("fieldset",
-                                        "border-top-color", this.prop.getColor(),
+                                        "border-top-color", this.prop.getColor()
                                         );
         Tools.assignAttributes(l,
                                 "id", Tools.listId+""+this.name,
