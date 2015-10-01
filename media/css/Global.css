@@ -3,24 +3,61 @@ body {
   background-color: lightgray;
   font-size: 16px; }
 
-main {
+.content {
+  background-color: inherit;
+  display: block;
+  margin: 0;
+  height: 100%;
+  width: 100%; }
+
+.connection {
+  padding: 25px;
+  background-color: white;
+  color: black;
+  text-align: 'center';
+  display: none;
+  color: darkslategray;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 25px;
+  box-shadow: 5px 11px 30px darkgray;
+  border-radius: 6px;
+  transform: translate(-50%, -50%); }
+  .connection input[type=date] {
+    display: none; }
+  .connection button:hover {
+    cursor: pointer; }
+
+.main {
+  display: none; }
+
+.main__content {
   top: 64px;
   display: flex;
   background-color: lightgray;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: row;
-  flex-wrap: wrap; }
-  main > fieldset {
+  flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
+  margin: 0; }
+  .main__content > fieldset {
     box-sizing: border-box;
+    border-radius: 6px;
     height: 350px;
     width: 300px;
-    position: absolute;
-    margin: 30px;
-    padding: 10px; }
+    padding: 10px;
+    max-height: 350px;
+    width: 310px; }
 
 .card__add {
-  border: dashed 6px #595959; }
+  border: dashed 6px #595959;
+  margin: 30px; }
   .card__add > div {
     display: flex;
     flex-direction: column;
@@ -38,9 +75,48 @@ main {
       color: #808080; }
 
 .card__add:hover {
-  background-color: #808080; }
+  background-color: #808080;
+  cursor: pointer; }
   .card__add:hover:hover div {
     background-color: #808080;
-    color: darkgray; }
+    color: darkgray;
+    cursor: pointer; }
+
+.card {
+  background-color: whitesmoke;
+  border-top: solid 6px black;
+  margin: 20px; }
+  .card > .card__edit {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: none;
+    text-align: center;
+    border-radius: 50%;
+    z-index: 200;
+    background-color: blue;
+    color: ghostwhite; }
+  .card:hover {
+    box-shadow: 7px 11px 23px darkgray; }
+    .card:hover > .card__edit {
+      display: block; }
+      .card:hover > .card__edit:hover {
+        box-shadow: 4px 6px 20px darkgray; }
+  .card > legend {
+    font-size: 22px;
+    border-radius: 6px;
+    background-color: black;
+    color: whitesmoke;
+    margin-left: 10px;
+    padding: 15px; }
+
+.card__description {
+  color: darkgray;
+  line-height: 27px;
+  font-size: 14px;
+  width: auto;
+  height: 30%;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 
 /*# sourceMappingURL=global.css.map */

@@ -1,25 +1,38 @@
-function UserManager(){
-  this.usersList = new Array();
+function UserManager() {
+    this.doc = "Association socketId (key) - name (value) for all clients in the room.\n";
+    //Tableau d'objets de type User
+    this.users = new Array();
+    //tableau des couleurs utilisées en hexa
+    this.colors = new Array();
 }
 
 UserManager.prototype = {
-  userExists : function(user){
-    return this.usersList.indexOf(user) > -1;
-  },
 
-  addUser : function (user){
-    if(!this.userExists(user) || user !== ""){
-      this.usersList.push(user);
-      return true;
-    }
-    else return false;
-  },
+    initialize: function (i) {
+        this.colors = Tools.getRandomColors(i);
+    },
 
-  removeUser : function (user){
-    if(userExists(user)){
-      this.usersList.splice(indexOf(user),1);
-      return true;
+    addUser: function (user) {
+        var color = this.colors.splice(Math.random() * this.colors.length, 1)[0];
+        user.setColor(color);
+        this.users.push(user);
+        return true;
+    },
+
+    exists: function (socketId) {
+        for (var i in this.users) {
+            var u = this.users[i];
+            if (u.equals(socketId))
+                return i;
+        }
+        return -1;
+    },
+
+    removeUser: function (socketId) {
+        if (this.exists(socketId) > -1) {
+            var user = this.users.splice(i, 1);
+            this.colors.push(user.getColor());
+            return true;
+        } else false;
     }
-    return false;
-  }
 }
