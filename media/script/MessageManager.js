@@ -38,13 +38,13 @@ MessageManager.prototype = {
     validateMessage: function (msg) {
         switch(msg.type){
             case "create":
-                if(msg.list && msg.user){
+                if(msg.create && msg.user && msg.listManager){
                     return true;
                 }
                 return false;
                 break;
             case "update":
-                if(msg.list && msg.user){
+                if(msg.update && msg.user && msg.listManager){
                     return true;
                 }
                 return false;
@@ -56,7 +56,7 @@ MessageManager.prototype = {
                 return false;
                 break;
             case 'delete':
-                if(msg.list && msg.user){
+                if(msg.delete && msg.user && msg.listManager){
                     return true;
                 }
                 return false;
