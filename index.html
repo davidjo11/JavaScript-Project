@@ -5,7 +5,7 @@
     <link rel="icon" href="media/image/favicon-shopping-cart.ico" />
 
     <link rel="stylesheet" href="media/css/Global.css">
-    <link rel="stylesheet" href="media/css/joinRoomNotif.css">
+    <link rel="stylesheet" href="media/css/Notification.css">
     <link rel="stylesheet" href="media/css/List.css">
 
     <link rel="stylesheet" href="media/css/material.min.css">
@@ -95,14 +95,14 @@
             // Un autre client a rejoint la room
             console.log(arguments);
             //a for joined
-            Tools.notify(data.id, "j");
+            Tools.notify(data.id, "join");
         }
 
         cobra.clientLeftRoomCallback = function (data) {
             // Un client a quitté la room
             console.log(arguments);
             //l for left
-            Tools.notify(data.id, "l");
+            Tools.notify(data.id, "left");
         }
     </script>
 </head>
@@ -112,7 +112,7 @@
         <div class="connection">
 
         </div>
-        <div class="notif__join">
+        <div class="notif">
 
         </div>
         <div class="mdl-layout__container main">
