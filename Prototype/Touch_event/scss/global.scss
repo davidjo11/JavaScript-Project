@@ -1,0 +1,56 @@
+$gray: lightgray;
+$gray2: #808080;
+$gray3: #595959;
+$titleWhite: whitesmoke;
+body {
+    font-family: Open Sans;
+    background-color: $gray;
+    font-size: 16px;
+}
+
+main {
+    top: 64px;
+    display: flex;
+    background-color: $gray;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    & > fieldset {
+        box-sizing: border-box;
+        height: 350px;
+        width: 300px;
+        position: absolute;
+        margin: 30px;
+        padding: 10px;
+    }
+}
+
+.card__add {
+    border: dashed 6px $gray3;
+    & > div {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        background-color: $gray;
+        height: 100%;
+        & > div {
+            height: 60px;
+            width: auto;
+            font-size: 40px;
+            color: $gray2;
+        }
+    }
+}
+
+.card__add:hover {
+    background-color: $gray2;
+    &:hover div {
+        background-color: $gray2;
+        color: darkgray;
+    }
+}
