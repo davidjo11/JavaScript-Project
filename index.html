@@ -81,10 +81,12 @@
                     console.log(message);
                 // Mon id attribué par la room
                 socketId = message.socketId;
-            } else if(message.join){
+            } else if(message.message.join){
                 message.socketId
             }
+            else if(Tools.validateMessage(message.message)){
 
+            }
             else if (message.message) {
                 // Message reçu, je le traite
                 console.log(message.message);

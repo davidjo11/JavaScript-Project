@@ -87,7 +87,7 @@ List.prototype = {
         Tools.ajouterBalise(l, legend);
 
         var desc = Tools.createStyledElement("div");
-        Toolsµ.ajouterBalise(desc, this.description);
+        Tools.ajouterBalise(desc, this.description);
         Tools.ajouterTexte(desc, this.description);
         Tools.ajouterBalise(l, desc);
 

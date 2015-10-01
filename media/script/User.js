@@ -39,6 +39,16 @@ User.prototype = {
         return undefined;
     },
 
+    getLists: function (){
+        var lists = [];
+        for(var i=0;i<this.lists.length;i++){
+            var l = this.lists[i];
+            if(l.getProprietor().equals(this))
+                lists.push(l);
+        }
+        return lists;
+    },
+
     shareWith(listName, user) {
         var l = this.this.indexOf(listName);
         if(!l.addUser(user))
