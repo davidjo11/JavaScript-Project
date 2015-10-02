@@ -53,7 +53,8 @@ body {
     width: 300px;
     padding: 10px;
     max-height: 350px;
-    width: 310px; }
+    width: 310px;
+    position: relative; }
 
 .card__add {
   border: dashed 6px #595959;
@@ -88,21 +89,24 @@ body {
   margin: 20px; }
   .card > .card__edit {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
+    bottom: 10px;
+    right: 10px;
     display: none;
     text-align: center;
     border-radius: 50%;
     z-index: 200;
-    background-color: blue;
-    color: ghostwhite; }
+    background-color: blue; }
+    .card > .card__edit > button {
+      color: ghostwhite;
+      font-size: 20px; }
   .card:hover {
     box-shadow: 7px 11px 23px darkgray; }
     .card:hover > .card__edit {
       display: block; }
       .card:hover > .card__edit:hover {
-        box-shadow: 4px 6px 20px darkgray; }
+        box-shadow: 6px 6px 20px darkgray; }
   .card > legend {
+    font-weight: bolder;
     font-size: 22px;
     border-radius: 6px;
     background-color: black;
@@ -118,5 +122,26 @@ body {
   height: 30%;
   overflow: hidden;
   text-overflow: ellipsis; }
+
+.card__products {
+  background-color: floralwhite;
+  color: black;
+  border: solid 1px #595959;
+  border-radius: 2px;
+  box-sizing: content-box;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: space-between; }
+  .card__products > span {
+    box-shadow: 2px 2px 6px lightgray;
+    border-radius: 4px;
+    background-color: darkgray;
+    color: black;
+    padding: 5px;
+    margin: 2px 2px; }
 
 /*# sourceMappingURL=global.css.map */

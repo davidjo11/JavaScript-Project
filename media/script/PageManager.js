@@ -4,6 +4,7 @@ function PageManager() {
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
+    this.divEditList = undefined;
 }
 
 PageManager.prototype = {
@@ -84,6 +85,10 @@ PageManager.prototype = {
         //            "class", "loader");
 
         this.divNotif = this.body.getElementsByClassName("notifs")[0];
+
+        this.divEditList = Tools.createStyledElement("div");
+        Tools.assignAttributes(this.divEditList, "classList", "edit__list");
+
     },
 
     toggleConnection: function () {
@@ -128,6 +133,10 @@ PageManager.prototype = {
     //            this.divLoader.style.display = "block";
     //        this.divLoader.style.display == "none";
     //    },
+
+    toggleEditList: function (){
+        this.div
+    },
 
     createNotif: function (evt, user) {
         var notif = document.createElement("div");

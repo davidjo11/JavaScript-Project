@@ -26,7 +26,12 @@ Tools = {
     createStyledElement: function (tagName) {
         var element = document.createElement(tagName);
         for (var i = 1; i < arguments.length; i += 2) {
-            element.style[arguments[i]] = arguments[i + 1];
+            if(arguments[i] === "classList"){
+                var cl = arguments[i++].split(" ");
+                for(var j=0;j<cl.length;j++)
+                    element.classList.add = cl[j];
+            }
+            else element.style[arguments[i]] = arguments[i + 1];
         }
         return element;
     },

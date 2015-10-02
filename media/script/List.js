@@ -79,31 +79,53 @@ List.prototype = {
 
     toHtml: function () {
         'use strict';
+        //Fieldset
         var l = Tools.createStyledElement("fieldset",
                                         "border-top-color", this.prop.getColor()
                                         );
         Tools.assignAttributes(l,
                                 "id", this.id,
-                                "class","list");
-
+                                "classList","card");
+        //Legend
         var legend = Tools.createStyledElement("legend",
                                          "background-color", ""+this.prop.getColor());
         var title = this.notAlone === 0 ? this.name : this.name+" ("+this.notAlone+")";
         Tools.ajouterTexte(legend, title);
         Tools.ajouterBalise(l, legend);
-
+        //button edit
+        var btn__edit = Tools.createStyledElement("button");
+        Tools.assignAttributes(btn__edit, "classList", "mdl-button mdl-js-button mdl-button--fab");
+        Tools.ajouterTexte(btn__edit, "EDIT");
+        //card__edit
+        var card__edit = Tools.createStyledElement("div");
+        Tools.assignAttributes(card__edit, "classList", "card__edit");
+        Tools.ajouterBalise(card__edit, btn__edit);
+        Tools.ajouterBalise(l, card__edit);
+        //card__body
+        var card__body = Tools.createStyledElement("div");
+        Tools.assignAttributes(card__body, "classList", "card__body");
+        Tools.ajouterBalise(l, card__body);
+        //Subtitle description
+        var subtitleDesc = Tools.createStyledElement("div");
+        Tools.assignAttributes(subtitleDesc, "classList", "card__subtitle");
+        Tools.ajouterBalise(l, subtitleDesc);
+        //DEscription
         var desc = Tools.createStyledElement("div");
         Tools.ajouterBalise(desc, this.description);
         Tools.ajouterTexte(desc, this.description);
-        Tools.ajouterBalise(l, desc);
-
+        Tools.ajouterBalise(card__body, desc);
+        //Liste des produits (p)
+        var card__products = Tools.createStyledElement("p");
+        Tools.assignAttributes(card__products, "classList", "card__products")
+        Tools.ajouterBalise(l, card__products);
+        //les produits (span)
         var products = Tools.createStyledElement("div");
         for(var i=0;i<this.products.length;i++){
             var p = Tools.createStyledElement("span");
+            Tools.assignAttributes(p, "classList", "prod");
             Tools.ajouterTexte(p, ""+this.products[i]);
-            Tools.ajouterBalise(products, p);
+            Tools.ajouterBalise(card__products, p);
         }
-        Tools.ajouterBalise(l, products);
 
         return l;
     },

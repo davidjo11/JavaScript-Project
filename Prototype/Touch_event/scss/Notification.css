@@ -1,0 +1,57 @@
+.notifs {
+  height: 60px;
+  width: 300px;
+  background-color: transparent;
+  display: flex;
+  box-sizing: border-box;
+  top: 5px;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
+  font-size: 15px;
+  z-index: 400;
+  position: fixed;
+  background: transparent;
+  left: 40%; }
+  .notifs .notif {
+    border: solid 2px;
+    background-color: #e0fde0;
+    padding: 10px 8px;
+    border-radius: 4px;
+    font-size: inherit;
+    opacity: 0;
+    animation-name: fadeNotif;
+    animation-duration: 15s;
+    animation-iteration-count: 1;
+    animation-direction: forwards; }
+  .notifs .notif__join {
+    @extends .notif
+    border-color: seagreen;
+    background-color: #e0fde0;
+    color: limegreen; }
+  .notifs .notif__left {
+    @extends .notif
+    border-color: red;
+    background-color: #ffb2b2;
+    color: red; }
+  .notifs .notif__shared {
+    @extends .notif
+    border-color: blue;
+    color: blue;
+    background-color: #ccccff; }
+
+@keyframes fadeNotif {
+  0% {
+    display: none;
+    opacity: 0; }
+  5% {
+    display: block; }
+  30% {
+    opacity: 1; }
+  90% {
+    opacity: 0; }
+  100% {
+    display: none;
+    opacity: 0; } }
+
+/*# sourceMappingURL=Notification.css.map */
