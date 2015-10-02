@@ -79,7 +79,7 @@ Tools = {
         return colors.split(";");
     },
 
-    getRandomString: function (){
+    getRandomString: function () {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         var s = "";
         for (var i = 0; i < 20; i++) {
@@ -139,36 +139,20 @@ Tools = {
 
 Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/List.js', function () {});
+Tools.include('media/script/PageManager.js', function () {
+    Tools.page = new PageManager();
+    //        console.log("PageManager chargé: " + Tools.page);
+});
 Tools.include('media/script/UserManager.js', function () {
     Tools.users = new UserManager();
     Tools.users.initialize(100);
-//    console.log('UsersManager chargé: '+Tools.users);
+    //        console.log('UsersManager chargé: ' + Tools.users);
 });
 Tools.include('media/script/MessageManager.js', function () {
-    msgCreator = new MessageManager();
-//    console.log('MessageManager chargé: '+ Tools.msgCreator)
-});
-Tools.include('media/script/PageManager.js', function () {
-    page = new PageManager();
-//    console.log("PageManager chargé: "+Tools.page);
+    Tools.msgCreator = new MessageManager();
+    //        console.log('MessageManager chargé: ' + Tools.msgCreator)
 });
 Tools.include("media/script/ListManager.js", function () {
-   lm = new ListManager();
+    Tools.lm = new ListManager();
+    //        console.log("ListManager chargé: " + Tools.lm);
 });
-
-/*
-document.addEventListener("click", function (){
-  var target = event.getTarget();
-  if(target.id == "ValiderConnexion"){
-    var inputPseudo = page.divConnection.getElementsByTagName("input")[0];
-    var inputPassword = page.divConnection.getElementsByTagName("input")[1];
-    if(userMan.addUser(inputPseudo.value, inputPassword.value))
-      page.toggleConnection();
-      setTimeout(page.toggleLoader(), 3000);
-      page.toggleContent();
-    }
-    else{
-      alert("Ce pseudo est indisponible!\nVeuillez entrer un pseudo différent.");
-    }
-}, false);
-*/

@@ -31,10 +31,9 @@ MessageManager.prototype = {
     },
 
     validateMessage: function (msg) {
-        if(msg.join || msg.left){
+        if (msg.join || msg.left) {
             return true;
-        }
-        else if((msg.update || msg.delete || msg.create) && msg.user && msg.listManager){
+        } else if ((msg.update || msg.delete || msg.create) && msg.user && msg.listManager) {
             return true;
         }
         return false;
@@ -44,5 +43,4 @@ MessageManager.prototype = {
     getProfuctsFromURL: function (URL) {
 
     }
-
 };
