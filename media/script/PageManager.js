@@ -1,6 +1,5 @@
 function PageManager() {
     this.body = Tools.getBody();
-    //    this.divLoader = undefined;
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
@@ -66,24 +65,6 @@ PageManager.prototype = {
 
         Tools.ajouterBalise(Tools.getBody(), this.divConnection);
 
-        /*Partie loader*/
-        //        this.divLoader = Tools.createStyledElement("div",
-        //            "width", "250px",
-        //            "height", "50px",
-        //            "line-height", "50px",
-        //            "text-align", "center",
-        //            "position", "absolute",
-        //            "display", "none",
-        //            "top", "50%",
-        //            "left", "50%",
-        //            "transform", "translate(-50%, -50%)",
-        //            "text-transform", "uppercase",
-        //            "font-weight", "900",
-        //            "color", "#ce4233",
-        //            "letter-spacing", "0.2em");
-        //        Tools.assignAttributes(this.divLoader,
-        //            "class", "loader");
-
         this.divNotif = this.body.getElementsByClassName("notifs")[0];
 
         this.divEdit = this.body.getElementsByClassName("modal")[0];
@@ -125,18 +106,6 @@ PageManager.prototype = {
             this.divContent.style.display = "block";
         else this.divContent.style.display = "none";
     },
-    //
-    //    toggleLoader: function () {
-    //        if (this.divLoader.style.display == "none")
-    //            this.divLoader.style.display = "block";
-    //        this.divLoader.style.display == "none";
-    //    },
-
-    //    toggleEdit: function (){
-    //        if (this.divEdit.style.display == "none" || this.divEdit.style.display === "")
-    //            this.divEdit.style.display = "block";
-    //        else this.divEdit.style.display = "none";
-    //    },
 
     createNotif: function (evt, user) {
         var notif = document.createElement("div");
@@ -173,21 +142,33 @@ PageManager.prototype = {
         }, 10000);
     },
 
-    showList: function (list) {
-        Tools.ajouterBalise(this.divContent, list.toHtml());
-        var l = this.divContent.getElementById(list.getId());
-        l.style.display = "flex";
-    },
+    fillEdit: function (fieldset) {
+        var lid = fieldset.id;
+        var titre = fieldset.getElementsByTagName("legend")[0];
+        var desc = fieldset.getElementsByClassName("card__description")[0];
+        var spansProducts = fieldset.getElementsByTagName("span");
 
-    fillEdit: function (titre, desc, tabProducts) {
         var input = document.getElementById("edit__title");
         var texta = document.getElementById("edit__desc");
+        //pour éviter de conserver des valeurs non validées
         texta.innerText = "";
+        //users
+        var select = document.getElementById("sel__users");
+        select.innerHTML = "";
         var products = this.divEdit.getElementsByClassName("card__products")[0];
+        //pour éviter de conserver des valeurs non validées
         products.innerHTML = "";
         var textProd = [];
-//Cas modification
-        if (arguments.length === 3 && arguments[0] !== undefined && arguments[1] !== undefined && arguments[2] !== undefined) {
+
+        var btn_validate = this.divContent.getElementsByClassName("btn-validate")[0];
+        var btn_delete = this.divContent.getElementsByClassName("btn-delete")[0];
+
+        var l = undefined;
+        //Cas modification:
+        //arguments (voir Tools.editList): liste id, titre, description, produits (tableau d'éléments span)
+        if (arguments.length === 1 && arguments[0] !== undefined) {
+            l = Tools.me.getList(lid);
+            btn_delete.style.display = "block";
             input.placeholder = titre.innerText;
             texta.value = desc.innerText;
             for (var i = 0; i < tabProducts.length; i++) {
@@ -204,11 +185,94 @@ PageManager.prototype = {
                 }, false);
                 textProd.push(p.innerText);
                 Tools.ajouterBalise(products, p_new);
+
+                //On remplit le select
+                for (var i = 0; i < Tools.users.length; i++) {
+                    var u = Tools.users[i];
+                    if (u.getSocket() !== Tools.me.getSocket()) {
+                        var opt = Tools.createStyledElement("option");
+                        Tools.assignAttributes(opt, "value", u.getSocket());
+                        //opt.innerText = u.getName()
+                        Tools.ajouterTexte(opt, u.getName());
+                        if (l.isSharedWith(u))
+                            opt.selected = "true";
+                        else opt.selected = "false";
+                    }
+                }
+
+                btn_validate.addEventListener('click', function () {
+                    var l_new = new List(titre, l.getProprietor());
+                    l_new.id = l.getId();
+                    l_new.setDescription(texta.value);
+                    var tu = select.getElementsByTagName("option");
+                    for (var i = 0; i < tu.length; i++) {
+                        var u = tu[i];
+                        if (u.selected) {
+                            l_new.addUser(Tools.users.getUser(u.value));
+                        }
+                    }
+                    l_new.notAlone = l.notAlone;
+                    for (var i = 0; i < textProd.length; i++) {
+                        l_new.addProduct(textProd[i]);
+                    }
+                    this.removeList(l);
+                    this.createList(l_new);
+                    Tools.me.updateList(l_new);
+                    setTimeout(function () {
+                        cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
+                    }, 2000);
+                }, false);
+
+                btn_delete.addEventListener('click', function () {
+                    var l = Tools.me.getList(lid);
+                    this.removeList(l);
+                    l = Tools.me.deleteList(l);
+                    setTimeout(function () {
+                        cobra.sendMessage(Tools.msgCreator.deleteListMsg(l), room, false);
+                    }, 2000);
+                }, false);
             }
-        }
-        else if(arguments.length === 0){
+        } else if (arguments.length === 0) {
             //Cas new List
             input.disabled = false;
+
+            //On remplit le select
+                for (var i = 0; i < Tools.users.length; i++) {
+                    var u = Tools.users[i];
+                    if (u.getSocket() !== Tools.me.getSocket()) {
+                        var opt = Tools.createStyledElement("option");
+                        Tools.assignAttributes(opt, "value", u.getSocket());
+                        //opt.innerText = u.getName()
+                        Tools.ajouterTexte(opt, u.getName());
+                        opt.selected = "false";
+                    }
+                }
+
+            btn_delete.style.display = "none";
+            btn_validate.addEventListener('click', function () {
+                var l = Tools.me.getList(lid);
+                var l_new = new List(titre, Tools.me);
+                l_new.id = l.getId();
+                l_new.setDescription(texta.value);
+                l_new.sharedWith = l.getSharedWith();
+                l_new.notAlone = l.notAlone;
+                //Products
+                for (var i = 0; i < textProd.length; i++) {
+                    l_new.addProduct(textProd[i]);
+                }
+                //Users
+                var tu = select.getElementsByTagName("option");
+                    for (var i = 0; i < tu.length; i++) {
+                        var u = tu[i];
+                        if (u.selected) {
+                            l_new.addUser(Tools.users.getUser(u.value));
+                        }
+                    }
+                this.removeList(l);
+                this.createList(l_new);
+                Tools.me.updateList(l_new);
+                cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
+            }, false);
         }
         var add = Tools.createStyledElement("span");
         add.addEventListener('click', function () {
@@ -228,7 +292,7 @@ PageManager.prototype = {
             }
         }, false);
         add.innerText = "+";
-        add.title = "Cliquer pour ajouter un produit."
+        add.title = "Cliquer pour ajouter un produit.";
         add.style.paddingRight = "15px";
         add.style.paddingLeft = "15px";
         add.style.color = "whitesmoke";
@@ -238,13 +302,21 @@ PageManager.prototype = {
     },
 
     getList: function (list) {
-        return this.divContent.getElementById(list.getId());
+        return document.getElementById(list.getId());
     },
 
     removeList: function (list) {
         this.getList(list).style.animationName = "disappear";
         setTimeout(function () {
-            this.divContent.removeChild(this.divContent.getElementById(list.getId()));
-        }, 4000);
+            var main = this.divContent.getElementsByClassName("main__content")[0];
+            main.removeChild(document.getElementById(list.getId()));
+        }, 5000);
+    },
+
+    createList: function (list) {
+        var l = list.toHtml("flex");
+        var main = this.divContent.getElementsByClassName("main__content")[0];
+        var fc = main.firstElementChild;
+        main.insertBefore(l, fc);
     }
 };

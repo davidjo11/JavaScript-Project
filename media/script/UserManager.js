@@ -22,12 +22,30 @@ UserManager.prototype = {
     },
 
     exists: function (user) {
-        for (var i in this.users) {
-            var u = this.users[i];
-            if (u.equals(user))
-                return i;
+        if (typeof user === "object") {
+            for (var i = 0; i < this.users.length; i++) {
+                var u = this.users[i];
+                if (u.equals(user))
+                    return i;
+            }
+            return -1;
+        } else if (typeof user === "string") { //socketid
+            for (var i = 0; i < this.users.length; i++) {
+                var u = this.users[i];
+                if (u.getSocket() === user)
+                    return i;
+            }
+            return -1;
         }
-        return -1;
+    },
+
+    getUser: function (socketid){
+      for(var i=0;i<this.users.length;i++){
+          var u = this.users[i];
+          if(u.getSocket() === socketid)
+              return u;
+      }
+        return undefined;
     },
 
     removeUser: function (user) {

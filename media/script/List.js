@@ -35,12 +35,11 @@ List.prototype = {
         return this.products;
     },
 
-    addProducts: function (product) {
-        if (this.products.indexOf(products[i])) {
-            alert("Ce produit fait déjà partie de la liste.");
+    addProduct: function (product) {
+        if (this.products.indexOf(product)) {
             return false;
         } else {
-            this.products.push();
+            this.products.push(product);
             return true;
         }
     },

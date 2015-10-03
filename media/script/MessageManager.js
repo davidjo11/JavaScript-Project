@@ -12,34 +12,39 @@ MessageManager.prototype = {
     newListMsg: function (list) {
         return {
             create: list,
-            user: Tools.me
+            user: Tools.me?
+            users: Tools.users;
         }
     },
 
     updateListMsg: function (list) {
         return {
             update: list,
-            user: Tools.me
+            user: Tools.me,
+            users: Tools.users
         }
     },
 
     deleteListMsg: function (list) {
         return {
             delete: list,
-            user: Tools.me
+            user: Tools.me,
+            users: Tools.users
         }
     },
 
     editListMsg: function (list) {
       return {
           edit: list,
-          user: Tools.me
+          user: Tools.me,
+          users: Tools.users
       }
     },
 
     leftMsg: function (){
         return {
-            left: Tools.me
+            left: Tools.me,
+            users: Tools.users
         }
     },
 
