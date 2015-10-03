@@ -86,7 +86,7 @@ PageManager.prototype = {
 
         this.divNotif = this.body.getElementsByClassName("notifs")[0];
 
-        this.divEdit = this.body.getElementsByClassName("edit")[0];
+        this.divEdit = this.body.getElementsByClassName("modal")[0];
     },
 
     toggleConnection: function () {
@@ -132,61 +132,119 @@ PageManager.prototype = {
     //        this.divLoader.style.display == "none";
     //    },
 
-    toggleEdit: function (){
-        if (this.divEdit.style.display == "none" || this.divEdit.style.display === "")
-            this.divEdit.style.display = "block";
-        else this.divEdit.style.display = "none";
-    },
+    //    toggleEdit: function (){
+    //        if (this.divEdit.style.display == "none" || this.divEdit.style.display === "")
+    //            this.divEdit.style.display = "block";
+    //        else this.divEdit.style.display = "none";
+    //    },
 
     createNotif: function (evt, user) {
-          var notif = document.createElement("div");
-          Tools.assignAttributes(notif, "class", "notif");
-          if (evt === "join") {
-              notif.classList.add = "notif__join";
-              Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
-          } else if (evt === "left") {
-              notif.classList.add = "notif__left";
-              Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
-          } else if ("shared" === evt) {
-              //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
-              var l = arguments[2];
-              notif.classList.add = "notif__shared";
-              Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
-          } else if ("unshared" === evt) {
-              var l = this.getList(arguments[2]);
-              this.removeList(l);
-              notif.classList.add = "notif__unshared";
-              Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
-          } else if ("update" == evt) {
-              var l = arguments[2].toHtml("none");
-              this.divContent.getElementsByClassName("main__content")[0].insertBefore(l, this.getList(list));
-              this.removeList(l);
-              this.l.style.animationName = "appear"
-              notif.classList.add = "notif__update";
-          } else return;
-          Tools.ajouterBalise(this.divNotif, notif);
-          notif.animationName = "fadeNotif";
-          //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
-          var self = this;
-          setTimeout(function () {
-              self.divNotif.removeChild(notif);
-          }, 10000);
-      },
+        var notif = document.createElement("div");
+        Tools.assignAttributes(notif, "class", "notif");
+        if (evt === "join") {
+            notif.classList.add = "notif__join";
+            Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
+        } else if (evt === "left") {
+            notif.classList.add = "notif__left";
+            Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
+        } else if ("shared" === evt) {
+            //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
+            var l = arguments[2];
+            notif.classList.add = "notif__shared";
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
+        } else if ("unshared" === evt) {
+            var l = this.getList(arguments[2]);
+            this.removeList(l);
+            notif.classList.add = "notif__unshared";
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
+        } else if ("update" == evt) {
+            var l = arguments[2].toHtml("none");
+            this.divContent.getElementsByClassName("main__content")[0].insertBefore(l, this.getList(list));
+            this.removeList(l);
+            this.l.style.animationName = "appear"
+            notif.classList.add = "notif__update";
+        } else return;
+        Tools.ajouterBalise(this.divNotif, notif);
+        notif.animationName = "fadeNotif";
+        //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
+        var self = this;
+        setTimeout(function () {
+            self.divNotif.removeChild(notif);
+        }, 10000);
+    },
 
-      showList: function (list) {
-          Tools.ajouterBalise(this.divContent, list.toHtml());
-          var l = this.divContent.getElementById(list.getId());
-          l.style.display = "flex";
-      },
+    showList: function (list) {
+        Tools.ajouterBalise(this.divContent, list.toHtml());
+        var l = this.divContent.getElementById(list.getId());
+        l.style.display = "flex";
+    },
 
-      getList: function (list) {
-          return this.divContent.getElementById(list.getId());
-      },
+    fillEdit: function (titre, desc, tabProducts) {
+        var input = document.getElementById("edit__title");
+        var texta = document.getElementById("edit__desc");
+        texta.innerText = "";
+        var products = this.divEdit.getElementsByClassName("card__products")[0];
+        products.innerHTML = "";
+        var textProd = [];
+//Cas modification
+        if (arguments.length === 3 && arguments[0] !== undefined && arguments[1] !== undefined && arguments[2] !== undefined) {
+            input.placeholder = titre.innerText;
+            texta.value = desc.innerText;
+            for (var i = 0; i < tabProducts.length; i++) {
+                var p = tabProducts[i];
+                var p_new = Tools.createStyledElement("span", "cursor", "pointer");
+                p_new.classList.add = "prod";
+                p_new.innerText = p.innerText;
+                p_new.addEventListener('click', function () {
+                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)", "");
+                    if (res === "o") {
+                        textProd.splice(textProd.indexOf(p_new.innerText), 1);
+                        products.removeChild(this);
+                    }
+                }, false);
+                textProd.push(p.innerText);
+                Tools.ajouterBalise(products, p_new);
+            }
+        }
+        else if(arguments.length === 0){
+            //Cas new List
+            input.disabled = false;
+        }
+        var add = Tools.createStyledElement("span");
+        add.addEventListener('click', function () {
+            var t = prompt("Entrez le nom du nouveau produit", "");
+            if (t !== "" && textProd.indexOf(t) === -1) {
+                var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                sp.innerText = t;
+                sp.addEventListener('click', function () {
+                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)", "");
+                    if (res === "o") {
+                        textProd.splice(textProd.indexOf(sp.innerText), 1);
+                        products.removeChild(this);
+                    }
+                }, false);
+                products.insertBefore(sp, this);
+                textProd.push(sp.innerText);
+            }
+        }, false);
+        add.innerText = "+";
+        add.title = "Cliquer pour ajouter un produit."
+        add.style.paddingRight = "15px";
+        add.style.paddingLeft = "15px";
+        add.style.color = "whitesmoke";
+        add.style.cursor = "pointer";
+        add.style.backgroundColor = "green";
+        Tools.ajouterBalise(products, add);
+    },
 
-      removeList: function (list) {
-          this.getList(list).style.animationName = "disappear";
-          setTimeout(function () {
-              this.divContent.removeChild(this.divContent.getElementById(list.getId()));
-          }, 4000);
-      }
+    getList: function (list) {
+        return this.divContent.getElementById(list.getId());
+    },
+
+    removeList: function (list) {
+        this.getList(list).style.animationName = "disappear";
+        setTimeout(function () {
+            this.divContent.removeChild(this.divContent.getElementById(list.getId()));
+        }, 4000);
+    }
 };

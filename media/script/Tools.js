@@ -149,13 +149,15 @@ Tools = {
         return res;
     },
 
-    editList: function (id){
-        console.log("Onclick");
-        var fieldset = document.getElementById(id);
-        var desc = fieldset.getElementsByClassName("card__description")[0];
-        var ta = document.getElementById("edit__desc");
-        ta.value = desc.value;
-        Tools.page.toggleEdit();
+    editList: function (id) {
+        if (id !== undefined && id !== "") {
+            var fieldset = document.getElementById(id);
+            var titre = fieldset.getElementsByTagName("legend")[0];
+            var desc = fieldset.getElementsByClassName("card__description")[0];
+            var spansProducts = fieldset.getElementsByTagName("span");
+            Tools.page.fillEdit(titre, desc, spansProducts);
+        }
+        else Tools.page.fillEdit();
     },
 
     test: "test",

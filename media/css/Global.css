@@ -49,11 +49,11 @@ body {
   .main__content > fieldset {
     box-sizing: border-box;
     border-radius: 3px;
-    height: 350px;
+    height: 370px;
     width: 300px;
     padding: 10px;
-    max-height: 350px;
-    width: 310px;
+    max-height: 370px;
+    width: 320px;
     position: relative;
     animation-duration: 5s;
     animation-iteration-count: 1;
@@ -62,7 +62,7 @@ body {
 .card__add {
   border: dashed 6px #595959;
   margin: 30px; }
-  .card__add > div {
+  .card__add div.flex {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -72,7 +72,7 @@ body {
     text-align: center;
     background-color: lightgray;
     height: 100%; }
-    .card__add > div > div {
+    .card__add div.flex > div {
       height: 60px;
       width: auto;
       font-size: 40px;
@@ -92,22 +92,26 @@ body {
   margin: 20px; }
   .card > .card__edit {
     position: absolute;
-    bottom: 10px;
+    bottom: 25px;
     right: 10px;
     display: none;
     text-align: center;
-    border-radius: 50%;
-    z-index: 200;
-    background-color: blue; }
-    .card > .card__edit > button {
+    z-index: 50;
+    background-color: transparent;
+    border-radius: 50%; }
+    .card > .card__edit > label {
+      border-radius: 50%;
+      background-color: blue;
+      padding: 18px 6px;
       color: ghostwhite;
       font-size: 20px; }
   .card:hover {
     box-shadow: 7px 11px 23px darkgray; }
     .card:hover > .card__edit {
-      display: block; }
-      .card:hover > .card__edit:hover {
-        box-shadow: 6px 6px 20px darkgray; }
+      display: block;
+      cursor: pointer; }
+      .card:hover > .card__edit:hover > label {
+        box-shadow: 6px 6px 30px darkgray; }
   .card > legend {
     font-weight: bolder;
     font-size: 22px;
@@ -122,7 +126,9 @@ body {
   line-height: 27px;
   font-size: 14px;
   width: auto;
-  height: 30%;
+  min-height: 30%;
+  height: auto;
+  max-height: 53%;
   overflow: hidden;
   text-overflow: ellipsis; }
 
@@ -132,13 +138,16 @@ body {
   border: solid 1px #595959;
   border-radius: 2px;
   box-sizing: content-box;
-  height: 30%;
+  min-height: 10%;
+  height: auto;
+  max-height: 30%;
   display: flex;
   flex-direction: row;
   flex-flow: wrap;
   justify-content: center;
   align-items: flex-start;
-  align-content: space-between; }
+  align-content: space-between;
+  overflow: auto; }
   .card__products > span {
     box-shadow: 2px 2px 6px lightgray;
     border-radius: 4px;

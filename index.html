@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="media/css/Global.css">
     <link rel="stylesheet" href="media/css/Notification.css">
     <link rel="stylesheet" href="media/css/List.css">
+    <link rel="stylesheet" href="media/css/Modal.css">
 
     <link rel="stylesheet" href="media/css/material.min.css">
     <script src="media/script/material.min.js"></script>
@@ -72,67 +73,67 @@
 
         cobra.messageReceivedCallback = function (message) {
 
-                // Lors de l'arrivée dans une room donne la liste des utilisateurs contenus dans la room
-                if (message.type == "infos") {
-                    for (var i = 0; i < message.clients.length; i++) {
-                        // Contient l'id du client
-                        var client = message.clients[i];
-                    }
-                    console.log(message);
-                    // Mon id attribué par la room
-                    socketId = message.socketId;
-                } else if (Tools.msgCreator.validateMessage(message.message)) {
-                    var m = message.message;
-                    if (m.join) {
-                        Tools.notify("join", user);
-                        Tools.users.addUser(user);
-                    } else if (m.update || m.create) {
-                        var l = m.update === undefined ? m.create : m.update;
-                        if (Tools.me.getList(l.getId()) === undefined && l.isSharedWith(Tools.me)) {
-                            Tools.notify("shared", user, l);
-                            Tools.me.createList(list);
-                        } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l.getId() !== undefined)) {
-                                Tools.page.notify("update", user, l);
-                                Tools.me.updateList(l);
-                            } else {//J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
-                                var i = Tools.me.getList(l);
-                                if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
-                                    Tools.page.notify("unshared", user, l);
-                                    var l = Tools.me.getList(l.getId());
-                                    Tools.page.removeList(l);
-                                    Tools.me.deleteList(list);
-                                }//Cas impossible
-                                else {
-                                    console.log("Cas impossible!");
-                                }
-                            }
-                        } else if (m.edit) {
-                            if (m.edit.getProprietor().equals(Tools.me) || m.edit.isSharedWith(Tools.me)) {
-                                Tools.notify("edit");
-                            }
-                        } else if (m.left) {
-                            Tools.notify("left", user);
-                            //                    Tools.users.removeUser(user);
+            // Lors de l'arrivée dans une room donne la liste des utilisateurs contenus dans la room
+            if (message.type == "infos") {
+                for (var i = 0; i < message.clients.length; i++) {
+                    // Contient l'id du client
+                    var client = message.clients[i];
+                }
+                console.log(message);
+                // Mon id attribué par la room
+                socketId = message.socketId;
+            } else if (Tools.msgCreator.validateMessage(message.message)) {
+                var m = message.message;
+                if (m.join) {
+                    Tools.notify("join", user);
+                    Tools.users.addUser(user);
+                } else if (m.update || m.create) {
+                    var l = m.update === undefined ? m.create : m.update;
+                    if (Tools.me.getList(l.getId()) === undefined && l.isSharedWith(Tools.me)) {
+                        Tools.notify("shared", user, l);
+                        Tools.me.createList(list);
+                    } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l.getId() !== undefined)) {
+                        Tools.page.notify("update", user, l);
+                        Tools.me.updateList(l);
+                    } else { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
+                        var i = Tools.me.getList(l);
+                        if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
+                            Tools.page.notify("unshared", user, l);
+                            var l = Tools.me.getList(l.getId());
+                            Tools.page.removeList(l);
+                            Tools.me.deleteList(list);
+                        } //Cas impossible
+                        else {
+                            console.log("Cas impossible!");
                         }
-
-                    } //Le type du message est inconnu.
-                    else if (message.message) {
-                        // Message reçu, je le traite
-                        console.log(message.message);
                     }
+                } else if (m.edit) {
+                    if (m.edit.getProprietor().equals(Tools.me) || m.edit.isSharedWith(Tools.me)) {
+                        Tools.notify("edit");
+                    }
+                } else if (m.left) {
+                    Tools.notify("left", user);
+                    //                    Tools.users.removeUser(user);
                 }
 
-                cobra.clientJoinedRoomCallback = function (data) {
-                    // Un autre client a rejoint la room
-                    //            console.log(arguments);
-                    //            Tools.notify(data.id, "join");
-                }
+            } //Le type du message est inconnu.
+            else if (message.message) {
+                // Message reçu, je le traite
+                console.log(message.message);
+            }
+        }
 
-                cobra.clientLeftRoomCallback = function (data) {
-                    // Un client a quitté la room
-                    //            console.log(arguments);
-                    //            Tools.notify(data.id, "left");
-                }
+        cobra.clientJoinedRoomCallback = function (data) {
+            // Un autre client a rejoint la room
+            //            console.log(arguments);
+            //            Tools.notify(data.id, "join");
+        }
+
+        cobra.clientLeftRoomCallback = function (data) {
+            // Un client a quitté la room
+            //            console.log(arguments);
+            //            Tools.notify(data.id, "left");
+        }
     </script>
 </head>
 
@@ -144,15 +145,42 @@
         <div class="notifs">
 
         </div>
-        <div class="edit" style="background-color:black; opacity:0.3;padding 50px;display:none;z-index:400;position:fixed; margin:0;">
-            <div class="edit__list" style="display:flex;flex-direction:column; justify-content:space-around;align-items:center; align-content:center;background-color:whitesmoke;color:darkslategray;margin:0; height:80%;width:80%;">
+        <!-- Modal One -->
+        <div class="modal">
+            <input class="modal-open" id="modal-one" type="checkbox" hidden>
+            <div class="modal-wrap" aria-hidden="true" role="dialog">
+                <label class="modal-overlay" for="modal-one"></label>
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <input id="edit__title" type="text" disabled placeholder="new title">
+                        <!--Titre-->
+                        </input>
+                        <label class="btn-close" for="modal-one" aria-hidden="true">×</label>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="" id="edit__desc" placeholder="Description" cols="105" rows="6" style="resize: none;"></textarea>
+                        <p class="card__products">
+                            <!--Textarea-->
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-delete">Delete</button>
+                        <button type="button" class="btn btn-primary btn-validate">Valider</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="edit" style="background-color:black; opacity:0.3;padding:50px;display:none;z-index:200;position:fixed; margin:0;height:100%;width:100%;">
+            <div class="edit__list" style="box-sizing:border-box;padding:20px;font-size:22px;opacity:1;position:absolute;top:50%;left:50%;display:flex;flex-direction:column; justify-content:space-around;align-items:flex-start; align-content:center;background-color:whitesmoke;color:darkslategray;margin:0; height:60%;width:60%;transform:translate(-50%,-50%);">
                 <p>Description</p>
-                <textarea name="ed" id="edit__desc" cols="10" rows="10"></textarea>
+                <textarea name="ed" id="edit__desc" cols="100" rows="10"></textarea>
                 <p class="edit__products">
 
                 </p>
             </div>
         </div>
+-->
         <div class="mdl-layout__container main">
             <div class="mdl-layout mdl-js-layout has-drawer is-upgraded">
                 <header class="mdl-layout__header is-casting-shadow">
@@ -181,22 +209,26 @@
                 </div>
                 <main class="main__content">
                     <!-- Fieldset to add a new list                   -->
-                    <fieldset class="card__add" id="test">
-                        <div>
-                            <div>
-                                Add a list
-                                <button class="mdl-button mdl-js-button mdl-button--fab" value="test">
-                                    +
-                                </button>
+                    <fieldset class="card__add">
+                        <label class="btn" for="modal-one" onclick="Tools.editList();">
+                            <div class="flex">
+                                <div>
+                                    Add a list
+                                    <button class="mdl-button mdl-js-button mdl-button--fab">
+                                        +
+                                    </button>
 
+                                </div>
                             </div>
-                        </div>
+
+                        </label>
                     </fieldset>
 
-                    <fieldset class="card">
+                    <fieldset id="test" class="card">
                         <legend>Title</legend>
                         <div class="card__edit">
-                            <button type="button" class="mdl-button mdl-js-button mdl-button--fab" onclick="Tools.editList(Tools.test);">Edit</button>
+                            <!--                            <button type="button" class="mdl-button mdl-js-button mdl-button--fab" onclick="Tools.editList(Tools.test);" value="test">Edit</button>-->
+                            <label class="btn" for="modal-one" onclick="Tools.editList(Tools.test);">EDIT</label>
                         </div>
                         <div class="card__body">
                             <div class="card__subtitle">Description</div>
@@ -210,6 +242,7 @@
                                 <span class="prod">Levure</span>
                                 <span class="prod">Chocolate</span>
                             </p>
+
                         </div>
                     </fieldset>
                 </main>
