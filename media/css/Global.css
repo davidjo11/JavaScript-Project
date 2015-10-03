@@ -108,9 +108,9 @@ body {
   .card:hover {
     box-shadow: 7px 11px 23px darkgray; }
     .card:hover > .card__edit {
-      display: block;
-      cursor: pointer; }
+      display: block; }
       .card:hover > .card__edit:hover > label {
+        cursor: pointer;
         box-shadow: 6px 6px 30px darkgray; }
   .card > legend {
     font-weight: bolder;
@@ -166,6 +166,9 @@ body {
     color: black;
     padding: 5px;
     margin: 2px 2px; }
+
+.btn {
+  cursor: pointer; }
 
 @keyframes appear {
   0% {

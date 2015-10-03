@@ -115,7 +115,7 @@ body {
         text-align: center;
         z-index: 50;
         background-color: transparent;
-            border-radius: 50%;
+        border-radius: 50%;
         & > label {
             border-radius: 50%;
             background-color: blue;
@@ -128,8 +128,8 @@ body {
         box-shadow: 7px 11px 23px darkgray;
         & > .card__edit {
             display: block;
-            cursor: pointer;
             &:hover > label {
+                cursor: pointer;
                 box-shadow: 6px 6px 30px darkgray;
             }
         }
@@ -193,6 +193,10 @@ body {
         padding: 5px;
         margin: 2px 2px;
     }
+}
+
+.btn {
+    cursor: pointer;
 }
 
 @keyframes appear {

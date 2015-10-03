@@ -152,9 +152,6 @@ Tools = {
     editList: function (id) {
         if (id !== undefined && id !== "") {
             var fieldset = document.getElementById(id);
-            var titre = fieldset.getElementsByTagName("legend")[0];
-            var desc = fieldset.getElementsByClassName("card__description")[0];
-            var spansProducts = fieldset.getElementsByTagName("span");
             Tools.page.fillEdit(fieldset);
         }
         else Tools.page.fillEdit();

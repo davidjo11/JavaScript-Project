@@ -98,9 +98,9 @@ List.prototype = {
         Tools.ajouterTexte(legend, title);
         Tools.ajouterBalise(l, legend);
         //button edit
-        var btn__edit = Tools.createStyledElement("button");
-        Tools.assignAttributes(btn__edit, "classList", "mdl-button mdl-js-button mdl-button--fab", "name", this.id);
-        btn__edit.onclick = Tools.editList(btn__edit.name);
+        var btn__edit = Tools.createStyledElement("label");
+        Tools.assignAttributes(btn__edit, "classList", "btn", "for", "modal-one", "onclick", "Tools.editList("+this.id+")");
+//        btn__edit.onclick = Tools.editList(btn__edit.name);
         Tools.ajouterTexte(btn__edit, "EDIT");
         //card__edit
         var card__edit = Tools.createStyledElement("div");

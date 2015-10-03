@@ -12,8 +12,8 @@ MessageManager.prototype = {
     newListMsg: function (list) {
         return {
             create: list,
-            user: Tools.me?
-            users: Tools.users;
+            user: Tools.me,
+            users: Tools.users
         }
     },
 

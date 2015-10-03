@@ -146,7 +146,7 @@ PageManager.prototype = {
         var lid = fieldset.id;
         var titre = fieldset.getElementsByTagName("legend")[0];
         var desc = fieldset.getElementsByClassName("card__description")[0];
-        var spansProducts = fieldset.getElementsByTagName("span");
+        var tabProducts = fieldset.getElementsByTagName("span");
 
         var input = document.getElementById("edit__title");
         var texta = document.getElementById("edit__desc");
@@ -160,8 +160,8 @@ PageManager.prototype = {
         products.innerHTML = "";
         var textProd = [];
 
-        var btn_validate = this.divContent.getElementsByClassName("btn-validate")[0];
-        var btn_delete = this.divContent.getElementsByClassName("btn-delete")[0];
+        var btn_validate = this.divEdit.getElementsByClassName("btn-validate")[0];
+        var btn_delete = this.divEdit.getElementsByClassName("btn-delete")[0];
 
         var l = undefined;
         //Cas modification:

@@ -60,7 +60,7 @@
                     }
                     //                    Tools.listTodayEvents.reverse();
 
-                    cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
+                    cobra.sendMessage(Tools.msgCreator.joinMsg(Tools.me), room, false);
 
                     // Pour envoyer un message dans toute la room
                     //                                        cobra.sendMessage({ content: "test" }, room, true);
@@ -233,7 +233,7 @@
                         <legend>Title</legend>
                         <div class="card__edit">
                             <!--                            <button type="button" class="mdl-button mdl-js-button mdl-button--fab" onclick="Tools.editList(Tools.test);" value="test">Edit</button>-->
-                            <label class="btn" for="modal-one" onclick="Tools.editList(Tools.test);">EDIT</label>
+                            <label class="btn" for="modal-one" onclick="Tools.editList(Tools.test);">EDIT</<label>
                         </div>
                         <div class="card__body">
                             <div class="card__subtitle">Description</div>
