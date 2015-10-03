@@ -26,12 +26,11 @@ Tools = {
     createStyledElement: function (tagName) {
         var element = document.createElement(tagName);
         for (var i = 1; i < arguments.length; i += 2) {
-            if(arguments[i] === "classList"){
+            if (arguments[i] === "classList") {
                 var cl = arguments[i++].split(" ");
-                for(var j=0;j<cl.length;j++)
+                for (var j = 0; j < cl.length; j++)
                     element.classList.add = cl[j];
-            }
-            else element.style[arguments[i]] = arguments[i + 1];
+            } else element.style[arguments[i]] = arguments[i + 1];
         }
         return element;
     },
@@ -88,7 +87,7 @@ Tools = {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         var s = "";
         for (var i = 0; i < 20; i++) {
-            color += letters[Math.floor(Math.random() * 37)];
+            color += letters[Math.floor(Math.random() * letters.length)];
         }
         return s;
     },
@@ -125,9 +124,43 @@ Tools = {
         return ((key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8);
     },
 
-    listId: "list_",
+    crypted: function (s, size) {
+        var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_-,;^!$£*µ§~#[|`\]()='.split("");
+        var scrypted = "";
+        for (var i = 0; i < s.length; i++) {
+            for (var j = 0; j < size; j++) {
+                scrypted += letters[Math.floor(Math.random() * letters.length)];
 
-    lm: undefined,
+            }
+            scryted += s.charAt(i);
+        }
+        for (var j = 0; j < size; j++) {
+            scrypted += letters[Math.floor(Math.random() * letters.length)];
+        }
+        return scrypted;
+    },
+
+    uncrytped: function (s, size) {
+        var res = "";
+        for (var i = size - 1; i < s.length; i++) {
+            res += s.charAt(size);
+            i += size;
+        }
+        return res;
+    },
+
+    editList: function (id){
+        console.log("Onclick");
+        var fieldset = document.getElementById(id);
+        var desc = fieldset.getElementsByClassName("card__description")[0];
+        var ta = document.getElementById("edit__desc");
+        ta.value = desc.value;
+        Tools.page.toggleEdit();
+    },
+
+    test: "test",
+
+    listId: "list_",
 
     page: undefined,
 
@@ -137,13 +170,15 @@ Tools = {
 
     me: undefined,
 
-    clientsIn: [],
-
     usedColors: "#0000FF,#A9A9A9,#000000,#F5F5F5,#FFFFFF"
 }
 
-Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/List.js', function () {});
+Tools.include("media/script/ListManager.js", function () {
+    //    Tools.lm = new ListManager();
+    //        console.log("ListManager chargé: " + Tools.lm);
+});
+Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/PageManager.js', function () {
     Tools.page = new PageManager();
     //        console.log("PageManager chargé: " + Tools.page);
@@ -156,8 +191,4 @@ Tools.include('media/script/UserManager.js', function () {
 Tools.include('media/script/MessageManager.js', function () {
     Tools.msgCreator = new MessageManager();
     //        console.log('MessageManager chargé: ' + Tools.msgCreator)
-});
-Tools.include("media/script/ListManager.js", function () {
-    Tools.lm = new ListManager();
-    //        console.log("ListManager chargé: " + Tools.lm);
 });

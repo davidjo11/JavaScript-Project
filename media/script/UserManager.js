@@ -13,8 +13,10 @@ UserManager.prototype = {
     },
 
     addUser: function (user) {
-        var color = this.colors.splice(Math.random() * this.colors.length, 1)[0];
-        user.setColor(color);
+        if (user.getColor() === undefined) {
+            var color = this.colors.splice(Math.random() * this.colors.length, 1)[0];
+            user.setColor(color);
+        }
         this.users.push(user);
         return true;
     },

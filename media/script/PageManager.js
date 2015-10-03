@@ -4,7 +4,7 @@ function PageManager() {
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
-    this.divEditList = undefined;
+    this.divEdit = undefined;
 }
 
 PageManager.prototype = {
@@ -86,9 +86,7 @@ PageManager.prototype = {
 
         this.divNotif = this.body.getElementsByClassName("notifs")[0];
 
-        this.divEditList = Tools.createStyledElement("div");
-        Tools.assignAttributes(this.divEditList, "classList", "edit__list");
-
+        this.divEdit = this.body.getElementsByClassName("edit")[0];
     },
 
     toggleConnection: function () {
@@ -134,46 +132,61 @@ PageManager.prototype = {
     //        this.divLoader.style.display == "none";
     //    },
 
-    toggleEditList: function (){
-        this.div
+    toggleEdit: function (){
+        if (this.divEdit.style.display == "none" || this.divEdit.style.display === "")
+            this.divEdit.style.display = "block";
+        else this.divEdit.style.display = "none";
     },
 
     createNotif: function (evt, user) {
-        var notif = document.createElement("div");
-        Tools.assignAttributes(notif, "class", "notif");
-        if (evt === "join") {
-            notif.classList.add = "notif__join";
-            Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
-        } else if (evt === "left") {
-            notif.classList.add = "notif__left";
-            Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
-        } else if("shared" === evt){
-            //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
-            var l = arguments[2];
-            notif.classList.add = "notif__shared";
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
-        } else if("notshared" === evt){
-            notif.classList.add = "notif__shared";
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
-        }
+          var notif = document.createElement("div");
+          Tools.assignAttributes(notif, "class", "notif");
+          if (evt === "join") {
+              notif.classList.add = "notif__join";
+              Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
+          } else if (evt === "left") {
+              notif.classList.add = "notif__left";
+              Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
+          } else if ("shared" === evt) {
+              //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
+              var l = arguments[2];
+              notif.classList.add = "notif__shared";
+              Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
+          } else if ("unshared" === evt) {
+              var l = this.getList(arguments[2]);
+              this.removeList(l);
+              notif.classList.add = "notif__unshared";
+              Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
+          } else if ("update" == evt) {
+              var l = arguments[2].toHtml("none");
+              this.divContent.getElementsByClassName("main__content")[0].insertBefore(l, this.getList(list));
+              this.removeList(l);
+              this.l.style.animationName = "appear"
+              notif.classList.add = "notif__update";
+          } else return;
+          Tools.ajouterBalise(this.divNotif, notif);
+          notif.animationName = "fadeNotif";
+          //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
+          var self = this;
+          setTimeout(function () {
+              self.divNotif.removeChild(notif);
+          }, 10000);
+      },
 
-            else return;
-        Tools.ajouterBalise(this.divNotif, notif);
-        notif.animationName = "fadeNotif";
-        //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
-        var self = this;
-        setTimeout(function () {
-            self.divNotif.removeChild(notif);
-        }, 10000);
-    },
+      showList: function (list) {
+          Tools.ajouterBalise(this.divContent, list.toHtml());
+          var l = this.divContent.getElementById(list.getId());
+          l.style.display = "flex";
+      },
 
-    showList: function (list) {
-        Tools.ajouterBalise(this.divContent, list.toHtml());
-        var l = this.divContent.getElementById(list.getId());
-        l.style.display = "flex";
-    },
+      getList: function (list) {
+          return this.divContent.getElementById(list.getId());
+      },
 
-    removeList: function (list) {
-        this.divContent.removeChild(this.divContent.getElementById(list.getId()));
-    }
+      removeList: function (list) {
+          this.getList(list).style.animationName = "disappear";
+          setTimeout(function () {
+              this.divContent.removeChild(this.divContent.getElementById(list.getId()));
+          }, 4000);
+      }
 };

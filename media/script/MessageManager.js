@@ -3,37 +3,48 @@ function MessageManager() {
 }
 
 MessageManager.prototype = {
-    createMsgJoin: function (user) {
+    joinMsg: function (user) {
         return {
-            join: Tools.me
+            join: user
         }
     },
 
-    createNewListMsg: function (list) {
+    newListMsg: function (list) {
         return {
             create: list,
             user: Tools.me
         }
     },
 
-    updateList: function (list) {
+    updateListMsg: function (list) {
         return {
             update: list,
             user: Tools.me
         }
     },
 
-    deleteList: function (list) {
+    deleteListMsg: function (list) {
         return {
             delete: list,
             user: Tools.me
         }
     },
 
+    editListMsg: function (list) {
+      return {
+          edit: list,
+          user: Tools.me
+      }
+    },
+
+    leftMsg: function (){
+        return {
+            left: Tools.me
+        }
+    },
+
     validateMessage: function (msg) {
-        if (msg.join || msg.left) {
-            return true;
-        } else if ((msg.update || msg.delete || msg.create) && msg.user && msg.listManager) {
+        if ((msg.join || msg.left || msg.edit || msg.update || msg.delete || msg.create) && msg.user) {
             return true;
         }
         return false;

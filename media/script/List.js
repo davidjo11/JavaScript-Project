@@ -11,7 +11,7 @@ function List(title, prop) {
 
 List.prototype = {
 
-    getId: function (){
+    getId: function () {
         return this.id;
     },
 
@@ -46,15 +46,14 @@ List.prototype = {
     },
 
     addUser: function (user) {
-        var aux = this.isSharedWith(user);
-        if (aux === undefined) {
+        if (!this.isSharedWith(user)) {
             this.sharedWith.push(user);
             return true;
         }
         return false;
     },
 
-    isSharedWith: function (user) {
+    getUser: function (user) {
         for (var i = 0; i < this.sharedWith.length; i++) {
             var u = this.sharedWith[i];
             if (u.equals(user)) {
@@ -64,9 +63,15 @@ List.prototype = {
         return -1;
     },
 
-    removeUser : function(user) {
-        var aux = this.isSharedWith(user);
-        if (aux > -1) {
+    isSharedWith: function (user) {
+        var i = this.getUser(user);
+        if (i > -1)
+            return true;
+        return this.proprietor.equals(user);
+    },
+
+    removeUser: function (user) {
+        if (this.isSharedWith(user)) {
             this.sharedWith.splice(aux, 1);
             return true;
         }
@@ -77,24 +82,26 @@ List.prototype = {
         this.description = desc;
     },
 
-    toHtml: function () {
+    toHtml: function (display) {
         'use strict';
         //Fieldset
         var l = Tools.createStyledElement("fieldset",
-                                        "border-top-color", this.prop.getColor()
-                                        );
+            "border-top-color", this.prop.getColor(),
+            "display", display
+        );
         Tools.assignAttributes(l,
-                                "id", this.id,
-                                "classList","card");
+            "id", this.id,
+            "classList", "card");
         //Legend
         var legend = Tools.createStyledElement("legend",
-                                         "background-color", ""+this.prop.getColor());
-        var title = this.notAlone === 0 ? this.name : this.name+" ("+this.notAlone+")";
+            "background-color", "" + this.prop.getColor());
+        var title = this.notAlone === 0 ? this.name : this.name + " (" + this.notAlone + ")";
         Tools.ajouterTexte(legend, title);
         Tools.ajouterBalise(l, legend);
         //button edit
         var btn__edit = Tools.createStyledElement("button");
-        Tools.assignAttributes(btn__edit, "classList", "mdl-button mdl-js-button mdl-button--fab");
+        Tools.assignAttributes(btn__edit, "classList", "mdl-button mdl-js-button mdl-button--fab", "name", this.id);
+        btn__edit.onclick = Tools.editList(btn__edit.name);
         Tools.ajouterTexte(btn__edit, "EDIT");
         //card__edit
         var card__edit = Tools.createStyledElement("div");
@@ -120,17 +127,17 @@ List.prototype = {
         Tools.ajouterBalise(l, card__products);
         //les produits (span)
         var products = Tools.createStyledElement("div");
-        for(var i=0;i<this.products.length;i++){
+        for (var i = 0; i < this.products.length; i++) {
             var p = Tools.createStyledElement("span");
             Tools.assignAttributes(p, "classList", "prod");
-            Tools.ajouterTexte(p, ""+this.products[i]);
+            Tools.ajouterTexte(p, "" + this.products[i]);
             Tools.ajouterBalise(card__products, p);
         }
 
         return l;
     },
 
-    equals: function (list){
+    equals: function (list) {
         return this.id === list.getId() && this.getProprietor().equals(list.getProprietor()) && this.name === list.name;
     }
 }

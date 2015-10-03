@@ -1,9 +1,9 @@
 function User(username, socket) {
     this.socketId = socket;
     this.name = username;
-    //  this.password = password;
+    this.password = undefined;
     this.color = undefined;
-    this.lists = [];
+    this.lm = new ListManager();
 }
 
 User.prototype = {
@@ -11,9 +11,9 @@ User.prototype = {
         return this.name;
     },
 
-    //  getPassword : function (){
-    //    return this.password;
-    //  },
+    getPassword: function () {
+        return this.password;
+    },
 
     getSocket: function () {
         return this.socketId;
@@ -32,21 +32,30 @@ User.prototype = {
     },
 
     getList: function (list) {
-        for (var i = 0; i < this.lists.length; i++) {
-            if (this.lists[i].equals(list))
-                return this.lists[i];
-        }
-        return undefined;
+        return this.lm.getList(list);
     },
 
-    shareWith: function (list, user) {
-        var l = this.lists[this.indexOf(list)];
-        if(!l.addUser(user))
-            alert("Vous partagez déjà cette liste avec " + user.getName() + ".");
+    updateList: function (list){
+        return this.lm.updateList(list);
     },
 
-    removeUserFromList: function (list, user){
-        if(this.getList(list) !== undefined && list.getProprietor().equals(this) && list.isSharedWith(user)){
+    createList: function (list){
+        return this.lm.createList(list);
+    },
+
+    deleteList: function (list) {
+        return this.lm.deleteList(list);
+    },
+
+    shareWith: function (id, user) {
+        var l = this.lm.getList(id);
+        if(l.getProprietor().equals(this))
+            return l.addUser(user);
+        return false;
+    },
+
+    removeUserFromList: function (list, user) {
+        if (this.getList(list) !== undefined && list.getProprietor().equals(this) && list.isSharedWith(user)) {
             list.removeUser(user);
             return true;
         }

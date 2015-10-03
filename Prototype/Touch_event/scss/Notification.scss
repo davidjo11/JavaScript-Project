@@ -31,13 +31,13 @@
     background-color: #e0fde0;
     color: limegreen;
   }
-  .notif__left {
+  .notif__left, .notif__unshared {
     @extends .notif
     border-color: red;
     background-color: #ffb2b2;
     color: red;
   }
-  .notif__shared {
+  .notif__shared, notif__update {
     @extends .notif
     border-color: blue;
     color: blue;

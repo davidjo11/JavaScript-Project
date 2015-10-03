@@ -10,14 +10,14 @@ ListManager.prototype = {
         while(this.getListName(list, i) === -1 && i < this.lists.length) {
             i++;
         }
-        //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
+        //Si il existe dÃ©jÃ  une liste avec le mÃªme nom, on ajoute un numÃ©ro indiquant le nombre de listes avec le mÃªme nom dÃ©jÃ  prÃ©sentes
         list.notAlone = i;
         var lg = this.lists.length;
         return this.lists.push(list) === (lg + 1);
     },
 
     getListName: function (list){
-        //Chercher à partir d'un indice aux dans la liste des listes
+        //Chercher Ã  partir d'un indice aux dans le tableau de List
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
         for (var i = aux; this.lists.length; i++) {
@@ -30,7 +30,7 @@ ListManager.prototype = {
 
     getList: function (list) {
         'use strict';
-        //Chercher à partir d'un indice aux dans la liste des listes
+        //Chercher Ã  partir d'un indice aux dans la liste des listes
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
         for (var i = aux; this.lists.length; i++) {
@@ -39,6 +39,15 @@ ListManager.prototype = {
                 return i;
         }
         return -1;
+    },
+
+    getList: function (id) {
+        for (var i = 0; this.lists.length; i++) {
+            var l = this.lists[i];
+            if (l.getId(id))
+                return l;
+        }
+        return undefined;
     },
 
     deleteList: function (list) {
@@ -55,6 +64,14 @@ ListManager.prototype = {
         if(i > -1){
             this.lists.splice(i, 1, list);
             return true;
+        }
+        return false;
+    },
+
+    isSharedWith: function (list, user){
+        var i = this.getList(list);
+        if(i > -1){
+            return this.lists[i].isSharedWith(user);
         }
         return false;
     }
