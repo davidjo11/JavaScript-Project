@@ -26,18 +26,19 @@ Tools = {
     createStyledElement: function (tagName) {
         var element = document.createElement(tagName);
         for (var i = 1; i < arguments.length; i += 2) {
-            if (arguments[i] === "classList") {
-                var cl = arguments[i++].split(" ");
-                for (var j = 0; j < cl.length; j++)
-                    element.classList.add = cl[j];
-            } else element.style[arguments[i]] = arguments[i + 1];
+             element.style[arguments[i]] = arguments[i + 1];
         }
         return element;
     },
 
     assignAttributes: function (balise) {
         for (i = 1; i < arguments.length; i++) {
-            balise.setAttribute(arguments[i++], arguments[i]);
+            if (arguments[i] === "classList") {
+                i++;
+                var cl = arguments[i].split(" ");
+                for (var j = 0; j < cl.length; j++)
+                    balise.classList.add(cl[j]);
+            }else balise.setAttribute(arguments[i++], arguments[i]);
         }
     },
 
@@ -87,7 +88,7 @@ Tools = {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         var s = "";
         for (var i = 0; i < 20; i++) {
-            color += letters[Math.floor(Math.random() * letters.length)];
+            s += letters[Math.floor(Math.random() * letters.length)];
         }
         return s;
     },

@@ -36,7 +36,7 @@ List.prototype = {
     },
 
     addProduct: function (product) {
-        if (this.products.indexOf(product)) {
+        if (this.products.indexOf(product) > -1) {
             return false;
         } else {
             this.products.push(product);
@@ -85,15 +85,42 @@ List.prototype = {
         'use strict';
         //Fieldset
         var l = Tools.createStyledElement("fieldset",
-            "border-top-color", this.prop.getColor(),
+            "border-top-color", this.proprietor.getColor(),
             "display", display
         );
+        
+        var legend = this.notAlone === 0 ? this.name : this.name + " ("+this.notAlone+")";
+        
         Tools.assignAttributes(l,
             "id", this.id,
-            "classList", "card");
+            "classList", "card",
+            "title", legend);
+        
+        var spans = "";
+        for(var i=0;i<this.products.length;i++){
+            spans += ""
+                +"<span class=\"prod\">"+this.products[i]+"<\/span>";
+        }
+        
+        
+        l.innerHTML = "<legend title=\""+legend+"\" style=\"background-color: "+this.proprietor.getColor()+";\">"+legend+"<\/legend>"
+                    + "<div class=\"card__edit\">"
+                    +        "<label class=\"btn\" for=\"modal-one\" onclick=\"Tools.editList(\\\""+this.id.trim()+"\\\");\">EDIT<\/label>"
+                    + "<\/div>"
+                    + "<div class=\"card__body\">"
+                    +       "<div class=\"card__subtitle\">Description<\/div>"
+                    +       "<p class=\"card__description\">"
+                    +           this.description
+                    +       "<\/p>"
+                    +       "<div class=\"card__subtitle\">Produits<\/div>"
+                    +       "<p class=\"card__products\">"
+                    +           spans
+                    +       "<\/p>"
+                    +"<\/div>"
+        
         //Legend
-        var legend = Tools.createStyledElement("legend",
-            "background-color", "" + this.prop.getColor());
+        /*var legend = Tools.createStyledElement("legend",
+            "background-color", "" + this.proprietor.getColor());
         var title = this.notAlone === 0 ? this.name : this.name + " (" + this.notAlone + ")";
         Tools.ajouterTexte(legend, title);
         Tools.ajouterBalise(l, legend);
@@ -117,7 +144,6 @@ List.prototype = {
         Tools.ajouterBalise(l, subtitleDesc);
         //DEscription
         var desc = Tools.createStyledElement("div");
-        Tools.ajouterBalise(desc, this.description);
         Tools.ajouterTexte(desc, this.description);
         Tools.ajouterBalise(card__body, desc);
         //Liste des produits (p)
@@ -131,7 +157,9 @@ List.prototype = {
             Tools.assignAttributes(p, "classList", "prod");
             Tools.ajouterTexte(p, "" + this.products[i]);
             Tools.ajouterBalise(card__products, p);
-        }
+        }*/
+        
+        
 
         return l;
     },

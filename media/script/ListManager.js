@@ -12,7 +12,7 @@ ListManager.prototype = {
         }
         //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
         list.notAlone = i;
-        var lg = this.lists.length;
+//        var lg = this.lists.length;
 //        return this.lists.push(list) === (lg + 1);
         return list;
     },

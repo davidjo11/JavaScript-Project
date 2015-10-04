@@ -84,11 +84,13 @@
                 socketId = message.socketId;
             } else if (Tools.msgCreator.validateMessage(message.message)) {
                 var m = message.message;
+                console.log(message);
                 if (m.join) {
                     Tools.notify("join", user);
                     Tools.users.addUser(user);
                 } else if (m.update || m.create) {
                     var l = m.update === undefined ? m.create : m.update;
+                    console.log(l);
                     if (Tools.me.getList(l.getId()) === undefined && l.isSharedWith(Tools.me)) {
                         Tools.notify("shared", user, l);
                         Tools.me.createList(list);
@@ -152,25 +154,21 @@
                 <label class="modal-overlay" for="modal-one"></label>
                 <div class="modal-dialog">
                     <div class="modal-header">
-                        <input id="edit__title" type="text" disabled placeholder="new title">
+                        <input id="edit__title" type="text" disabled placeholder="Nouvelle liste" value ="">
                         <!--Titre-->
                         </input>
                         <label class="btn-close" for="modal-one" aria-hidden="true">×</label>
                     </div>
                     <div class="modal-body">
-                        <textarea name="" id="edit__desc" placeholder="Description" cols="105" rows="6" style="resize: none;"></textarea>
-                        <p class="card__products">
-                            <!--Textarea-->
+                        <textarea name="" id="edit__desc" placeholder="Décrivez la liste ici." cols="105" rows="6" style="resize: none;"></textarea>
+                        <p class="card__products" style="margin-top:5px; margin-bottom:5px;">
                         </p>
                         <p class="card__users">
-                            <select name="" id="sel__users" multiple>
-
-                            </select>
+                            
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-delete">Supprimer la liste</button>
-                        <button type="button" class="btn btn-primary btn-validate">Valider</button>
+                        
                     </div>
                 </div>
             </div>
@@ -222,17 +220,14 @@
                                     <button class="mdl-button mdl-js-button mdl-button--fab">
                                         +
                                     </button>
-
                                 </div>
                             </div>
-
                         </label>
                     </fieldset>
 
                     <fieldset id="test" class="card">
                         <legend>Title</legend>
                         <div class="card__edit">
-                            <!--                            <button type="button" class="mdl-button mdl-js-button mdl-button--fab" onclick="Tools.editList(Tools.test);" value="test">Edit</button>-->
                             <label class="btn" for="modal-one" onclick="Tools.editList(Tools.test);">EDIT</<label>
                         </div>
                         <div class="card__body">

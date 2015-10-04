@@ -121,16 +121,17 @@ PageManager.prototype = {
             var l = arguments[2];
             notif.classList.add = "notif__shared";
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
+            this.createList(l);
         } else if ("unshared" === evt) {
             var l = this.getList(arguments[2]);
             this.removeList(l);
             notif.classList.add = "notif__unshared";
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
         } else if ("update" == evt) {
-            var l = arguments[2].toHtml("none");
-            this.divContent.getElementsByClassName("main__content")[0].insertBefore(l, this.getList(list));
-            this.removeList(l);
-            this.l.style.animationName = "appear"
+            var l = arguments[2].toHtml();
+            var old = document.getElementById(l.getId());
+            old.innerHTML = l.toHtml().innerHTML;
+            this.old.style.animationName = "appear";
             notif.classList.add = "notif__update";
         } else return;
         Tools.ajouterBalise(this.divNotif, notif);
@@ -142,42 +143,53 @@ PageManager.prototype = {
         }, 10000);
     },
 
-    fillEdit: function (fieldset) {
-        var lid = fieldset.id;
-        var titre = fieldset.getElementsByTagName("legend")[0];
-        var desc = fieldset.getElementsByClassName("card__description")[0];
-        var tabProducts = fieldset.getElementsByTagName("span");
-
+    fillEdit: function () {
+        var self = this;
         var input = document.getElementById("edit__title");
+        input.autofocus = "true";
         var texta = document.getElementById("edit__desc");
         //pour éviter de conserver des valeurs non validées
-        texta.innerText = "";
+        texta.value = "";
         //users
+        var p__users = this.divEdit.getElementsByClassName("card__users")[0];
+
+        //Pour eviter des problèmes avec les eventListener (voir le code ci-dessous), on recrée les elements select et les boutons.
+        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
         var select = document.getElementById("sel__users");
-        select.innerHTML = "";
+
         var products = this.divEdit.getElementsByClassName("card__products")[0];
         //pour éviter de conserver des valeurs non validées
         products.innerHTML = "";
         var textProd = [];
 
+        var modal_footer = this.divEdit.getElementsByClassName("modal-footer")[0];
+        modal_footer.innerHTML = "<label class=\"btn\" for=\"modal-one\"><button type=\"button\" for=\"modal-one\" class=\"btn btn-primary btn-delete\"><label class=\"btn\" for=\"modal-one\">Supprimer la liste<\/label><\/button><\/label><label class=\"btn\" for=\"modal-one\"><button type=\"button\" class=\"btn btn-primary btn-validate\" for=\"modal-one\"><label class=\"btn\" for=\"modal-one\">Valider</label><\/button><\/label>";
         var btn_validate = this.divEdit.getElementsByClassName("btn-validate")[0];
         var btn_delete = this.divEdit.getElementsByClassName("btn-delete")[0];
 
         var l = undefined;
         //Cas modification:
         //arguments (voir Tools.editList): liste id, titre, description, produits (tableau d'éléments span)
+        console.log(arguments.length);
         if (arguments.length === 1 && arguments[0] !== undefined) {
+            var fieldset = arguments[0];
+            var lid = fieldset.id;
+            var titre = fieldset.getElementsByTagName("legend")[0];
+            var tabProducts = fieldset.getElementsByTagName("span");
+            var desc = fieldset.getElementsByClassName("card__description")[0];
+
             l = Tools.me.getList(lid);
-            btn_delete.style.display = "block";
-            input.placeholder = titre.innerText;
+            btn_delete.style.display = "inline";
+            btn_validate.style.display = "inline";
+            input.value = titre.innerText;
             texta.value = desc.innerText;
             for (var i = 0; i < tabProducts.length; i++) {
                 var p = tabProducts[i];
                 var p_new = Tools.createStyledElement("span", "cursor", "pointer");
-                p_new.classList.add = "prod";
+                Tools.assignAttributes(p_new, "classList", "prod");
                 p_new.innerText = p.innerText;
                 p_new.addEventListener('click', function () {
-                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)", "");
+                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
                     if (res === "o") {
                         textProd.splice(textProd.indexOf(p_new.innerText), 1);
                         products.removeChild(this);
@@ -187,108 +199,150 @@ PageManager.prototype = {
                 Tools.ajouterBalise(products, p_new);
 
                 //On remplit le select
+                var ownIt = l.isSharedWith(Tools.me);
+                if (!ownIt) {
+                    select.addEventListener('click', function () {
+                        alert('Vous devez être propriétaire de la liste pour gérer le partage.');
+                    }, false);
+                }
                 for (var i = 0; i < Tools.users.length; i++) {
-                    var u = Tools.users[i];
-                    if (u.getSocket() !== Tools.me.getSocket()) {
+                    var u = Tools.users.getUser(i);
+                    if (u.getSocket() !== Tools.me.getSocket()) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
                         var opt = Tools.createStyledElement("option");
                         Tools.assignAttributes(opt, "value", u.getSocket());
                         //opt.innerText = u.getName()
-                        Tools.ajouterTexte(opt, u.getName());
+                        opt.text = u.getName();
                         if (l.isSharedWith(u))
                             opt.selected = "true";
                         else opt.selected = "false";
+                        if (!ownIt) { //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
+                            opt.disabled = "true";
+                        }
                     }
                 }
 
                 btn_validate.addEventListener('click', function () {
-                    var l_new = new List(titre, l.getProprietor());
-                    l_new.id = l.getId();
-                    l_new.setDescription(texta.value);
-                    var tu = select.getElementsByTagName("option");
-                    for (var i = 0; i < tu.length; i++) {
-                        var u = tu[i];
-                        if (u.selected) {
-                            l_new.addUser(Tools.users.getUser(u.value));
+                    l.setDescription(texta.value);
+                    if (!ownIt) { //Si je ne suis pas proprio alors => aucun changement au niveua des utilisateurs de la liste...
+                        
+                    } else { //... sinon on contrôle.
+                        l.sharedWith = [];
+                        var tu = select.getElementsByTagName("option");
+                        for (var i = 1; i < tu.length; i++) {
+                            var u = tu[i];
+                            if (u.selected) {
+                                l.addUser(Tools.users.getUser(u.value));
+                            }
                         }
                     }
-                    l_new.notAlone = l.notAlone;
                     for (var i = 0; i < textProd.length; i++) {
-                        l_new.addProduct(textProd[i]);
+                        l.addProduct(textProd[i]);
                     }
-                    this.removeList(l);
-                    this.createList(l_new);
-                    Tools.me.updateList(l_new);
                     setTimeout(function () {
-                        cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
-                    }, 2000);
+                        //                        //On retire de la page l'ancienne liste...
+                        //                        self.removeList(l);
+                        //                        //... on y met la nouvelle.
+                        //                        self.createList(l);
+                        //                        //On update le listeManager.
+                        ////                        Tools.me.updateList(l);
+                        //                        //On partage.
+//                        fieldset.innerHTML = l.innerHTML;
+                        self.updateList(l);
+                        cobra.sendMessage(Tools.msgCreator.updateListMsg(l), room, true);
+                    }, 1000);
                 }, false);
 
                 btn_delete.addEventListener('click', function () {
                     var l = Tools.me.getList(lid);
-                    this.removeList(l);
                     l = Tools.me.deleteList(l);
                     setTimeout(function () {
-                        cobra.sendMessage(Tools.msgCreator.deleteListMsg(l), room, false);
-                    }, 2000);
+                        self.removeList(l);
+                        cobra.sendMessage(Tools.msgCreator.deleteListMsg(l), room, true);
+                    }, 1000);
                 }, false);
             }
-        } else if (arguments.length === 0) {
-            //Cas new List
+
+        } else if (arguments.length === 0) { //Cas création d'une new liste:
             input.disabled = false;
+            btn_delete.style.display = "none";
+            console.log(btn_delete.style.display);
 
             //On remplit le select
-                for (var i = 0; i < Tools.users.length; i++) {
-                    var u = Tools.users[i];
-                    if (u.getSocket() !== Tools.me.getSocket()) {
-                        var opt = Tools.createStyledElement("option");
-                        Tools.assignAttributes(opt, "value", u.getSocket());
-                        //opt.innerText = u.getName()
-                        Tools.ajouterTexte(opt, u.getName());
-                        opt.selected = "false";
-                    }
+            for (var i = 0; i < Tools.users.length; i++) {
+                var u = Tools.users[i];
+                if (u.getSocket() !== Tools.me.getSocket()) {
+                    var opt = Tools.createStyledElement("option");
+                    Tools.assignAttributes(opt, "value", u.getSocket());
+                    //opt.innerText = u.getName()
+                    opt.text = u.getName();
+                    opt.selected = "false";
+                    Tools.ajouterBalise(select, opt);
                 }
+            }
 
-            btn_delete.style.display = "none";
             btn_validate.addEventListener('click', function () {
-                var l = Tools.me.getList(lid);
-                var l_new = new List(titre, Tools.me);
-                l_new.id = l.getId();
+                var l_new = new List((input.value ? input.value : input.placeholder), Tools.me);
                 l_new.setDescription(texta.value);
-                l_new.sharedWith = l.getSharedWith();
-                l_new.notAlone = l.notAlone;
                 //Products
                 for (var i = 0; i < textProd.length; i++) {
                     l_new.addProduct(textProd[i]);
                 }
                 //Users
                 var tu = select.getElementsByTagName("option");
-                    for (var i = 0; i < tu.length; i++) {
-                        var u = tu[i];
-                        if (u.selected) {
-                            l_new.addUser(Tools.users.getUser(u.value));
-                        }
+                for (var i = 0; i < tu.length; i++) {
+                    var u = tu[i];
+                    if (u.selected) {
+                        l_new.addUser(Tools.users.getUser(u.value));
                     }
-                this.removeList(l);
-                this.createList(l_new);
-                Tools.me.updateList(l_new);
-                cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
+                }
+                setTimeout(function () {
+                    //... on y met la nouvelle.
+                    self.createList(l_new);
+                    //On update le listeManager.
+                    Tools.me.createList(l_new);
+                    //On partage.
+                    cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, true);
+                }, 1000);
             }, false);
         }
         var add = Tools.createStyledElement("span");
         add.addEventListener('click', function () {
-            var t = prompt("Entrez le nom du nouveau produit", "");
-            if (t !== "" && textProd.indexOf(t) === -1) {
-                var sp = Tools.createStyledElement("span", "cursor", "pointer");
-                sp.innerText = t;
-                sp.addEventListener('click', function () {
-                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)", "");
-                    if (res === "o") {
-                        textProd.splice(textProd.indexOf(sp.innerText), 1);
-                        products.removeChild(this);
+            var t = prompt("Entrez le nom du nouveau produit (vous pouvez en mettre plusieurs en les séparant par des virgules):");
+            if (t !== null && t.indexOf(',') > -1) {
+                var tab_p = t.split(",");
+                for (var i = 0; i < tab_p.length; i++) {
+                    var p = tab_p[i].trim();
+                    if (textProd.indexOf(p) === -1 && p !== "" && p.match(/[A-Za-z ]*/g)) {
+                        var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                        Tools.assignAttributes(sp, "classList", "prod");
+                        sp.innerText = p;
+                        sp.addEventListener('click', function () {
+                            var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
+                            if (res === "o") {
+                                textProd.splice(textProd.indexOf(sp.innerText), 1);
+                                products.removeChild(this);
+                            }
+                        }, false);
+                        products.insertBefore(sp, this);
+                        textProd.push(sp.innerText);
                     }
-                }, false);
-                products.insertBefore(sp, this);
-                textProd.push(sp.innerText);
+                }
+            } else if (t !== "" && t !== null) {
+                t = t.trim();
+                if (textProd.indexOf(t) === -1 && t !== "" && t.match(/[A-Za-z ]*/g)) {
+                    var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                    Tools.assignAttributes(sp, "classList", "prod");
+                    sp.innerText = t;
+                    sp.addEventListener('click', function () {
+                        var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
+                        if (res === "o") {
+                            textProd.splice(textProd.indexOf(sp.innerText), 1);
+                            products.removeChild(this);
+                        }
+                    }, false);
+                    products.insertBefore(sp, this);
+                    textProd.push(sp.innerText);
+                }
             }
         }, false);
         add.innerText = "+";
@@ -310,6 +364,15 @@ PageManager.prototype = {
         setTimeout(function () {
             var main = this.divContent.getElementsByClassName("main__content")[0];
             main.removeChild(document.getElementById(list.getId()));
+        }, 5000);
+    },
+
+    updateList: function (list) {
+        var l = this.getList(list);
+            l.style.animationName = "disappear";
+        setTimeout(function () {
+            l.style.display = "flex";
+            l.style.animationName = "appear";
         }, 5000);
     },
 

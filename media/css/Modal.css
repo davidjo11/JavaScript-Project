@@ -61,9 +61,15 @@
 
 .modal-body {
   padding: 20px; }
+  .modal-body select {
+    width: 100%; }
 
 .modal-body p {
   margin: 0; }
+  .modal-body p span.prod:hover {
+    background-color: red;
+    color: white;
+    content: "-"; }
 
 .modal-header,
 .modal-footer {
@@ -82,7 +88,9 @@
 
 .btn-primary, .btn-validate, .btn-delete {
   color: whitesmoke;
-  border-radius: 4px; }
+  border-radius: 4px;
+  margin: 0px 5px;
+  display: inline; }
 
 .btn-validate {
   background-color: forestgreen; }

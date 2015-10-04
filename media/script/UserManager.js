@@ -39,13 +39,18 @@ UserManager.prototype = {
         }
     },
 
-    getUser: function (socketid){
-      for(var i=0;i<this.users.length;i++){
-          var u = this.users[i];
-          if(u.getSocket() === socketid)
-              return u;
-      }
-        return undefined;
+    getUser: function (id) {
+        if (typeof socketid === "string") { //param.: socketId
+            for (var i = 0; i < this.users.length; i++) {
+                var u = this.users[i];
+                if (u.getSocket() === socketid)
+                    return u;
+            }
+            return undefined;
+
+        } else if (typeof id === "number") { //Param.: indice dans le tableau this.users
+            return this.users[id];
+        }
     },
 
     removeUser: function (user) {
