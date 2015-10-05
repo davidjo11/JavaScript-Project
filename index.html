@@ -60,8 +60,6 @@
                     }
                     //                    Tools.listTodayEvents.reverse();
 
-                    cobra.sendMessage(Tools.msgCreator.joinMsg(Tools.me), room, false);
-
                     // Pour envoyer un message dans toute la room
                     //                                        cobra.sendMessage({ content: "test" }, room, true);
 
@@ -84,13 +82,20 @@
                 socketId = message.socketId;
             } else if (Tools.msgCreator.validateMessage(message.message)) {
                 var m = message.message;
-                console.log(message);
+                var user = undefined;
                 if (m.join) {
+                    user = Tools.msgCreator.getUser(m.join);
                     Tools.notify("join", user);
                     Tools.users.addUser(user);
-                } else if (m.update || m.create) {
-                    var l = m.update === undefined ? m.create : m.update;
-                    console.log(l);
+                    Tools.page.addUserSelect(user);
+                } else if (m.update || m.create || m.delete) {
+                    var res = Tools.msgCreator.transformCUD(m);
+                    var l = res[0];
+                    user = res[1];
+                    if (Tools.users.getUser(user.getSocket()) === -1) {
+                        Tools.users.addUser(user);
+                        Tools.page.addUserSelect(user);
+                    }
                     if (Tools.me.getList(l.getId()) === undefined && l.isSharedWith(Tools.me)) {
                         Tools.notify("shared", user, l);
                         Tools.me.createList(list);
@@ -110,13 +115,18 @@
                         }
                     }
                 } else if (m.edit) {
-                    if (m.edit.getProprietor().equals(Tools.me) || m.edit.isSharedWith(Tools.me)) {
-                        Tools.notify("edit");
+                    var res = Tools.msgCreator.transformCUD(m);
+                    var l = res[0];
+                    var user = res[1];
+                    if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
+                        Tools.notify("edit", user);
                     }
-                } else if (m.left) {
-                    Tools.notify("left", user);
-                    //                    Tools.users.removeUser(user);
                 }
+                /*else if (m.left) {
+                                   user = Tools.msgCreator.getUser(m.left);
+                                   Tools.notify("left", user);
+                                   Tools.users.removeUser(user);
+                               }*/
 
             } //Le type du message est inconnu.
             else if (message.message) {
@@ -134,7 +144,13 @@
         cobra.clientLeftRoomCallback = function (data) {
             // Un client a quitté la room
             //            console.log(arguments);
-            //            Tools.notify(data.id, "left");
+            var u = Tools.users.getUser(data.id);
+
+            if (u !== undefined) {
+                Tools.notify("left", u);
+                Tools.users.removeUser(u);
+                Tools.page.removeFromSelect(u);
+            }
         }
     </script>
 </head>
@@ -154,7 +170,7 @@
                 <label class="modal-overlay" for="modal-one"></label>
                 <div class="modal-dialog">
                     <div class="modal-header">
-                        <input id="edit__title" type="text" disabled placeholder="Nouvelle liste" value ="">
+                        <input id="edit__title" type="text" disabled placeholder="Nouvelle liste" value="">
                         <!--Titre-->
                         </input>
                         <label class="btn-close" for="modal-one" aria-hidden="true">×</label>
@@ -164,26 +180,18 @@
                         <p class="card__products" style="margin-top:5px; margin-bottom:5px;">
                         </p>
                         <p class="card__users">
-                            
+                            <select id="sel__users" multiple>
+                                <option value="0" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.</option>
+                            </select>
                         </p>
                     </div>
                     <div class="modal-footer">
-                        
+
                     </div>
                 </div>
             </div>
         </div>
-        <!--
-        <div class="edit" style="background-color:black; opacity:0.3;padding:50px;display:none;z-index:200;position:fixed; margin:0;height:100%;width:100%;">
-            <div class="edit__list" style="box-sizing:border-box;padding:20px;font-size:22px;opacity:1;position:absolute;top:50%;left:50%;display:flex;flex-direction:column; justify-content:space-around;align-items:flex-start; align-content:center;background-color:whitesmoke;color:darkslategray;margin:0; height:60%;width:60%;transform:translate(-50%,-50%);">
-                <p>Description</p>
-                <textarea name="ed" id="edit__desc" cols="100" rows="10"></textarea>
-                <p class="edit__products">
 
-                </p>
-            </div>
-        </div>
--->
         <div class="mdl-layout__container main">
             <div class="mdl-layout mdl-js-layout has-drawer is-upgraded">
                 <header class="mdl-layout__header is-casting-shadow">

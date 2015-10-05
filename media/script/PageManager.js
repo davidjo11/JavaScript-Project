@@ -87,11 +87,12 @@ PageManager.prototype = {
                         Tools.me = new User(inputPseudo.value, socketId);
                         Tools.users.addUser(Tools.me);
                         self.toggleConnection();
+                        cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
                         var titre = self.divContent.getElementsByClassName('menu__title')[0];
                         titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
                         if (self.divContent.style.display == "none" || self.divContent.style.display === "")
                             self.toggleContent();
-                    }, 500);
+                    }, 1000);
                 } else alert('Votre pseudo doit contenir au moins 6 caractères et ne peut être composé que des caractères suivants:\n A-Z-a-z0-9_.');
             }, false);
         } else {
@@ -120,13 +121,13 @@ PageManager.prototype = {
             //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
             var l = arguments[2];
             notif.classList.add = "notif__shared";
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste avec vous.");
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé la liste " + l.getName() + " avec vous.");
             this.createList(l);
         } else if ("unshared" === evt) {
             var l = this.getList(arguments[2]);
             this.removeList(l);
             notif.classList.add = "notif__unshared";
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste avec vous.");
+            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste" + l.getName() + "avec vous.");
         } else if ("update" == evt) {
             var l = arguments[2].toHtml();
             var old = document.getElementById(l.getId());
@@ -143,6 +144,27 @@ PageManager.prototype = {
         }, 10000);
     },
 
+    removeFromSelect: function (user) {
+        var select = document.getElementById("sel__users");
+        var opts = select.getElementsByTagName('option');
+        for (var i = 0; i < opts.length; i++) {
+            var opt = opts[i];
+            if (opt.value === user.getSocket()) {
+                select.removeChild(opt);
+                return;
+            }
+        }
+    },
+
+    addUserSelect: function (user) {
+        var select = document.getElementById("sel__users");
+        var opt = Tools.createStyledElement("option");
+        Tools.assignAttributes(opt, "value", user.getSocket());
+        opt.text = user.getName();
+        console.log(select);
+        Tools.ajouterBalise(select, opt);
+    },
+
     fillEdit: function () {
         var self = this;
         var input = document.getElementById("edit__title");
@@ -154,8 +176,9 @@ PageManager.prototype = {
         var p__users = this.divEdit.getElementsByClassName("card__users")[0];
 
         //Pour eviter des problèmes avec les eventListener (voir le code ci-dessous), on recrée les elements select et les boutons.
-        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
+        //        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
         var select = document.getElementById("sel__users");
+        select.innerHTML = "<option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option>";
 
         var products = this.divEdit.getElementsByClassName("card__products")[0];
         //pour éviter de conserver des valeurs non validées
@@ -170,7 +193,6 @@ PageManager.prototype = {
         var l = undefined;
         //Cas modification:
         //arguments (voir Tools.editList): liste id, titre, description, produits (tableau d'éléments span)
-        console.log(arguments.length);
         if (arguments.length === 1 && arguments[0] !== undefined) {
             var fieldset = arguments[0];
             var lid = fieldset.id;
@@ -200,23 +222,27 @@ PageManager.prototype = {
 
                 //On remplit le select
                 var ownIt = l.isSharedWith(Tools.me);
-                if (!ownIt) {
-                    select.addEventListener('click', function () {
-                        alert('Vous devez être propriétaire de la liste pour gérer le partage.');
-                    }, false);
-                }
-                for (var i = 0; i < Tools.users.length; i++) {
+                for (var i = 0; i < Tools.users.getNbUser(); i++) {
                     var u = Tools.users.getUser(i);
-                    if (u.getSocket() !== Tools.me.getSocket()) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
+                    if (!u.equals(Tools.me)) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
                         var opt = Tools.createStyledElement("option");
                         Tools.assignAttributes(opt, "value", u.getSocket());
                         //opt.innerText = u.getName()
                         opt.text = u.getName();
                         if (l.isSharedWith(u))
-                            opt.selected = "true";
-                        else opt.selected = "false";
+                            opt.selected = true;
+                        else opt.selected = false;
                         if (!ownIt) { //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
-                            opt.disabled = "true";
+                            opt.addEventListener('click', function () {
+                                alert('Vous devez être propriétaire de la liste pour gérer le partage.');
+                            }, false);
+                            opt.disabled = true;
+                        } else {
+                            opt.addEventListener('click', function () {
+                                if (this.selected)
+                                    this.selected = false;
+                                else this.selected = true;
+                            }, false);
                         }
                     }
                 }
@@ -224,10 +250,10 @@ PageManager.prototype = {
                 btn_validate.addEventListener('click', function () {
                     l.setDescription(texta.value);
                     if (!ownIt) { //Si je ne suis pas proprio alors => aucun changement au niveua des utilisateurs de la liste...
-                        
+
                     } else { //... sinon on contrôle.
                         l.sharedWith = [];
-                        var tu = select.getElementsByTagName("option");
+                        var tu = select.option;
                         for (var i = 1; i < tu.length; i++) {
                             var u = tu[i];
                             if (u.selected) {
@@ -246,9 +272,9 @@ PageManager.prototype = {
                         //                        //On update le listeManager.
                         ////                        Tools.me.updateList(l);
                         //                        //On partage.
-//                        fieldset.innerHTML = l.innerHTML;
+                        //                        fieldset.innerHTML = l.innerHTML;
                         self.updateList(l);
-                        cobra.sendMessage(Tools.msgCreator.updateListMsg(l), room, true);
+                        cobra.sendMessage(Tools.msgCreator.updateListMsg(l), room, false);
                     }, 1000);
                 }, false);
 
@@ -257,7 +283,7 @@ PageManager.prototype = {
                     l = Tools.me.deleteList(l);
                     setTimeout(function () {
                         self.removeList(l);
-                        cobra.sendMessage(Tools.msgCreator.deleteListMsg(l), room, true);
+                        cobra.sendMessage(Tools.msgCreator.deleteListMsg(l), room, false);
                     }, 1000);
                 }, false);
             }
@@ -265,17 +291,22 @@ PageManager.prototype = {
         } else if (arguments.length === 0) { //Cas création d'une new liste:
             input.disabled = false;
             btn_delete.style.display = "none";
-            console.log(btn_delete.style.display);
 
             //On remplit le select
-            for (var i = 0; i < Tools.users.length; i++) {
-                var u = Tools.users[i];
-                if (u.getSocket() !== Tools.me.getSocket()) {
+            for (var i = 0; i < Tools.users.getNbUser(); i++) {
+                var u = Tools.users.getUser(i);
+                if (!u.equals(Tools.me)) {
                     var opt = Tools.createStyledElement("option");
                     Tools.assignAttributes(opt, "value", u.getSocket());
                     //opt.innerText = u.getName()
                     opt.text = u.getName();
-                    opt.selected = "false";
+                    opt.selected = false;
+                    opt.disabled = false;
+                    opt.addEventListener('click', function () {
+                        if (!this.selected)
+                                    this.selected = true;
+                                else this.selected = false;
+                    }, false);
                     Tools.ajouterBalise(select, opt);
                 }
             }
@@ -288,11 +319,13 @@ PageManager.prototype = {
                     l_new.addProduct(textProd[i]);
                 }
                 //Users
-                var tu = select.getElementsByTagName("option");
-                for (var i = 0; i < tu.length; i++) {
+                var tu = select.option;
+                for (var i = 1; i < tu.length; i++) {
                     var u = tu[i];
                     if (u.selected) {
-                        l_new.addUser(Tools.users.getUser(u.value));
+                        console.log("Stupid");
+                        console.log(l_new.isSharedWith(u.value));
+                        console.log(l_new.addUser(Tools.users.getUser(u.value)));
                     }
                 }
                 setTimeout(function () {
@@ -301,7 +334,7 @@ PageManager.prototype = {
                     //On update le listeManager.
                     Tools.me.createList(l_new);
                     //On partage.
-                    cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, true);
+                    cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
                 }, 1000);
             }, false);
         }
@@ -369,7 +402,7 @@ PageManager.prototype = {
 
     updateList: function (list) {
         var l = this.getList(list);
-            l.style.animationName = "disappear";
+        l.style.animationName = "disappear";
         setTimeout(function () {
             l.style.display = "flex";
             l.style.animationName = "appear";

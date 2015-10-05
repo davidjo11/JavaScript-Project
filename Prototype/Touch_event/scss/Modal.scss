@@ -66,11 +66,11 @@
     max-height: 800px;
     box-sizing: border-box;
     z-index: 103;
-
-    & + textarea {
+    & textarea {
         overflow: auto;
         text-overflow: ellipsis;
         margin-bottom: 5px;
+        max-width: 100%;
     }
 }
 

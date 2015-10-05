@@ -54,10 +54,11 @@
   max-height: 800px;
   box-sizing: border-box;
   z-index: 103; }
-  .modal-dialog + textarea {
+  .modal-dialog textarea {
     overflow: auto;
     text-overflow: ellipsis;
-    margin-bottom: 5px; }
+    margin-bottom: 5px;
+    max-width: 100%; }
 
 .modal-body {
   padding: 20px; }

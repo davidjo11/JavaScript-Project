@@ -35,11 +35,11 @@ User.prototype = {
         return this.lm.getList(list);
     },
 
-    updateList: function (list){
+    updateList: function (list) {
         return this.lm.updateList(list);
     },
 
-    createList: function (list){
+    createList: function (list) {
         return this.lm.createList(list);
     },
 
@@ -49,7 +49,7 @@ User.prototype = {
 
     shareWith: function (id, user) {
         var l = this.lm.getList(id);
-        if(l.getProprietor().equals(this))
+        if (l.getProprietor().equals(this))
             return l.addUser(user);
         return false;
     },

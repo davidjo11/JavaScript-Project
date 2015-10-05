@@ -12,8 +12,8 @@ ListManager.prototype = {
         }
         //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
         list.notAlone = i;
-//        var lg = this.lists.length;
-//        return this.lists.push(list) === (lg + 1);
+        //        var lg = this.lists.length;
+        //        return this.lists.push(list) === (lg + 1);
         return list;
     },
 
@@ -46,7 +46,7 @@ ListManager.prototype = {
         } else if (typeof list === "string") {
             for (var i = 0; this.lists.length; i++) {
                 var l = this.lists[i];
-                if (l.getId(id))
+                if (l.getId() === list)
                     return l;
             }
             return undefined;

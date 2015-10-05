@@ -88,36 +88,22 @@ List.prototype = {
             "border-top-color", this.proprietor.getColor(),
             "display", display
         );
-        
-        var legend = this.notAlone === 0 ? this.name : this.name + " ("+this.notAlone+")";
-        
+
+        var legend = this.notAlone === 0 ? this.name : this.name + " (" + this.notAlone + ")";
+
         Tools.assignAttributes(l,
             "id", this.id,
             "classList", "card",
             "title", legend);
-        
+
         var spans = "";
-        for(var i=0;i<this.products.length;i++){
-            spans += ""
-                +"<span class=\"prod\">"+this.products[i]+"<\/span>";
+        for (var i = 0; i < this.products.length; i++) {
+            spans += "" + "<span class=\"prod\">" + this.products[i] + "<\/span>";
         }
-        
-        
-        l.innerHTML = "<legend title=\""+legend+"\" style=\"background-color: "+this.proprietor.getColor()+";\">"+legend+"<\/legend>"
-                    + "<div class=\"card__edit\">"
-                    +        "<label class=\"btn\" for=\"modal-one\" onclick=\"Tools.editList(\\\""+this.id.trim()+"\\\");\">EDIT<\/label>"
-                    + "<\/div>"
-                    + "<div class=\"card__body\">"
-                    +       "<div class=\"card__subtitle\">Description<\/div>"
-                    +       "<p class=\"card__description\">"
-                    +           this.description
-                    +       "<\/p>"
-                    +       "<div class=\"card__subtitle\">Produits<\/div>"
-                    +       "<p class=\"card__products\">"
-                    +           spans
-                    +       "<\/p>"
-                    +"<\/div>"
-        
+
+
+        l.innerHTML = "<legend title=\"" + legend + "\" style=\"background-color: " + this.proprietor.getColor() + ";\">" + legend + "<\/legend>" + "<div class=\"card__edit\">" + "<label class=\"btn\" for=\"modal-one\" onclick=\"Tools.editList(\\\"" + this.id.trim() + "\\\");\">EDIT<\/label>" + "<\/div>" + "<div class=\"card__body\">" + "<div class=\"card__subtitle\">Description<\/div>" + "<p class=\"card__description\">" + this.description + "<\/p>" + "<div class=\"card__subtitle\">Produits<\/div>" + "<p class=\"card__products\">" + spans + "<\/p>" + "<\/div>"
+
         //Legend
         /*var legend = Tools.createStyledElement("legend",
             "background-color", "" + this.proprietor.getColor());
@@ -158,8 +144,8 @@ List.prototype = {
             Tools.ajouterTexte(p, "" + this.products[i]);
             Tools.ajouterBalise(card__products, p);
         }*/
-        
-        
+
+
 
         return l;
     },

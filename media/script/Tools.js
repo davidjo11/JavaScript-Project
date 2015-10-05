@@ -26,7 +26,7 @@ Tools = {
     createStyledElement: function (tagName) {
         var element = document.createElement(tagName);
         for (var i = 1; i < arguments.length; i += 2) {
-             element.style[arguments[i]] = arguments[i + 1];
+            element.style[arguments[i]] = arguments[i + 1];
         }
         return element;
     },
@@ -38,7 +38,7 @@ Tools = {
                 var cl = arguments[i].split(" ");
                 for (var j = 0; j < cl.length; j++)
                     balise.classList.add(cl[j]);
-            }else balise.setAttribute(arguments[i++], arguments[i]);
+            } else balise.setAttribute(arguments[i++], arguments[i]);
         }
     },
 
@@ -93,12 +93,12 @@ Tools = {
         return s;
     },
 
-    notify: function (socketId, evt) {
+    notify: function (evt, user) {
         //var username = users.getUser(message);
         //if(users.exists(socketId))
         //  page.createNotif(username, "l");
         //else page.createNotif(username, "j");
-        page.createNotif(socketId, evt);
+        Tools.page.createNotif(evt, user);
     },
 
     getToday: function () {
@@ -154,8 +154,7 @@ Tools = {
         if (id !== undefined && id !== "") {
             var fieldset = document.getElementById(id);
             Tools.page.fillEdit(fieldset);
-        }
-        else Tools.page.fillEdit();
+        } else Tools.page.fillEdit();
     },
 
     test: "test",

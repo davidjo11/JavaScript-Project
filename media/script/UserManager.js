@@ -11,7 +11,11 @@ UserManager.prototype = {
     initialize: function (i) {
         this.colors = Tools.getRandomColors(i);
     },
-
+    
+    getNbUser: function (){
+        return this.users.length;
+    },
+    
     addUser: function (user) {
         if (user.getColor() === undefined) {
             var color = this.colors.splice(Math.random() * this.colors.length, 1)[0];
@@ -40,10 +44,10 @@ UserManager.prototype = {
     },
 
     getUser: function (id) {
-        if (typeof socketid === "string") { //param.: socketId
+        if (typeof id === "string") { //param.: socketId
             for (var i = 0; i < this.users.length; i++) {
                 var u = this.users[i];
-                if (u.getSocket() === socketid)
+                if (u.getSocket() === id)
                     return u;
             }
             return undefined;
@@ -54,9 +58,10 @@ UserManager.prototype = {
     },
 
     removeUser: function (user) {
-        if (this.exists(user.getSocket()) > -1) {
-            var user = this.users.splice(i, 1);
-            this.colors.push(user.getColor());
+        var i = this.exists(user);
+        if (i > -1) {
+            console.log(this.users.splice(i, 1));
+            //            this.colors.push(user.getColor());
             return true;
         } else false;
     }
