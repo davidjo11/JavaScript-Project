@@ -6,6 +6,9 @@ function UserManager() {
     this.colors = new Array();
 }
 
+/*Cette classe permet de répertorier l'ensemble des utilisateurs présents dans la room.
+*Dès qu'un message est reçu, si l'envoyeur n'est pas dans l'objet l'UserManager alors on l'ajoute.
+*/
 UserManager.prototype = {
 
     initialize: function (i) {
@@ -25,6 +28,10 @@ UserManager.prototype = {
         return true;
     },
 
+    /*Retourne la position de l'utilisateur dans le UserManager
+    *@param user: soit un objet User soit une chaine de caractère réprésentant le socket d'un utilisateur
+    *@return la position de l'utilisateur user dans le UserManager, -1 si user n'y est pas.
+    */
     exists: function (user) {
         if (typeof user === "object") {
             for (var i = 0; i < this.users.length; i++) {
@@ -43,6 +50,9 @@ UserManager.prototype = {
         }
     },
 
+    /*Retourne l'objet de type User correspondant à la socket de l'utilisateur ou à sa position dans this.users.
+    *@param id: le socket ou l'identifiant de l'utilisateur.
+    */
     getUser: function (id) {
         if (typeof id === "string") { //param.: socketId
             for (var i = 0; i < this.users.length; i++) {
@@ -51,16 +61,18 @@ UserManager.prototype = {
                     return u;
             }
             return undefined;
-
         } else if (typeof id === "number") { //Param.: indice dans le tableau this.users
             return this.users[id];
         }
     },
 
+    /*Permet de retirer l'utilisateur user du UserManager
+    *@param user: l'utilisateur à retirer
+    */
     removeUser: function (user) {
         var i = this.exists(user);
         if (i > -1) {
-            console.log(this.users.splice(i, 1));
+            this.users.splice(i, 1);
             //            this.colors.push(user.getColor());
             return true;
         } else false;

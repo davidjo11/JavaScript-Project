@@ -6,6 +6,8 @@ function PageManager() {
     this.divEdit = undefined;
 }
 
+/*Cette classe gère l'ensemble des animations et autres à faire sur la page index.html (étant donné que l'on utilise qu'une page HTML).
+*/
 PageManager.prototype = {
 
     initializeElements: function () {

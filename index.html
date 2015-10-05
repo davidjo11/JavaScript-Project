@@ -47,18 +47,16 @@
                     console.log("complete");
                     var r = result.responseJSON.Events;
                     for (var i = 0; i < r.length; i++) {
-                        //                        var time = r[r.length-i-1].timestamp;
-                        // recuperer les infos contenues dans les messages
-                        //                                                console.log(r[r.length-i-1]);
+                        var time = r[r.length - i - 1].timestamp;
+                        console.log(r[r.length - i - 1].content);
 
-                        //Afficher les events précedents? utile ?
-                        //                        if (!time.startsWith(Tools.getToday()))
-                        //                            i = r.length;
-                        //                        else {
-                        //                            Tools.listTodayEvents.push(r[r.length-i-1].content)
-                        //                        };
+                        if (!time.startsWith(Tools.getToday()))
+                            i = r.length;
+                        else if (r[r.length - i - 1].message) {
+                            Tools.listTodayEvents.push(r[r.length - i - 1].message)
+                        };
                     }
-                    //                    Tools.listTodayEvents.reverse();
+                    Tools.listTodayEvents.reverse();
 
                     // Pour envoyer un message dans toute la room
                     //                                        cobra.sendMessage({ content: "test" }, room, true);
@@ -95,7 +93,7 @@
                     user = res.user;
                     //On ajoute l'utilisateur si il n'est pas dans la liste de nos utilisateurs
                     if (Tools.users.getUser(user.getSocket()) === -1) {
-                        console.log(user.getName()+" a été ajouté.");
+                        console.log(user.getName() + " a été ajouté.");
                         Tools.users.addUser(user);
                         Tools.page.addUserSelect(user);
                     }
@@ -112,7 +110,7 @@
                         if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
                             Tools.notify("edit", user);
                         }
-                    } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined){ //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
+                    } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined) { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
                         var i = Tools.me.getList(l);
                         if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
                             Tools.page.notify("unshared", user, l);
@@ -237,7 +235,7 @@
                         </label>
                     </fieldset>
 
-<!--
+                    <!--
                     <fieldset id="test" class="card">
                         <legend>Title</legend>
                         <div class="card__edit">

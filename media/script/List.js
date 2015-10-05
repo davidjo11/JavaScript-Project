@@ -1,10 +1,14 @@
 function List(title, prop) {
+    //inutile pour l'instant
     this.isBeingEdited = false;
     this.name = title;
     this.proprietor = prop;
     this.products = [];
     this.description = "";
+    //La liste de partage
     this.sharedWith = [];
+    //Au cas où l'utilisateur possèderait une liste avec le même nom, on met un compteur pour les différencier.
+    //Si tu le supprime, supprime-le aussi dans MessageManager et PageManager.
     this.notAlone = 0;
     this.id = Tools.getRandomString();
 }
@@ -35,6 +39,10 @@ List.prototype = {
         return this.products;
     },
 
+    /*Permet d'ajouter le produit product à la liste de produits.
+    *@param product: le produit à ajouter
+    *@return true si le produit a été ajouté, false sinon.
+    */
     addProduct: function (product) {
         if (this.products.indexOf(product) > -1) {
             return false;
@@ -44,6 +52,9 @@ List.prototype = {
         }
     },
 
+    /*Permet d'ajouter l'utilisateur user à la liste de partage (sharedWith)
+    *@return true si user a été ajouté, false sinon.
+    */
     addUser: function (user) {
         if (!this.isSharedWith(user)) {
             this.sharedWith.push(user);
@@ -52,6 +63,10 @@ List.prototype = {
         return false;
     },
 
+    /*Retourne l'indice de l'utilisateur user si celui-ci est présent dans la liste de partage (sharedWith).
+    *@param user: l'utilisateur
+    *@return la position de user dans la liste de partage, -1 si il n'en fait pas partie.
+    */
     getUser: function (user) {
         for (var i = 0; i < this.sharedWith.length; i++) {
             var u = this.sharedWith[i];
@@ -62,6 +77,10 @@ List.prototype = {
         return -1;
     },
 
+    /*Permet de savoir si user fait partie de la liste de partage (sharedWith).
+    *@param user : l'utilisateur dont on veut contrôler l'accès à la liste
+    *@return true si user est proprietaire ou membre de la liste sharedWit, false sinon.
+    */
     isSharedWith: function (user) {
         var i = this.getUser(user);
         if (i > -1)
@@ -69,6 +88,10 @@ List.prototype = {
         return this.proprietor.equals(user);
     },
 
+    /*Permet de supprimer l'utilisateur de la liste de partage (sharedWith).
+    *@param user : l'objet User à retirer
+    *@return true si user à été retiré, false sinon
+    */
     removeUser: function (user) {
         if (this.isSharedWith(user)) {
             this.sharedWith.splice(aux, 1);
@@ -81,6 +104,9 @@ List.prototype = {
         this.description = desc;
     },
 
+    /*Retourne un élément HTML permettant de l'afficher la liste dans la page.
+    *@param list - l'objet liste à transformer
+    */
     toHtml: function (display) {
         'use strict';
         //Fieldset
@@ -150,7 +176,26 @@ List.prototype = {
         return l;
     },
 
+    /**Compare 2 listes en comparant leurs IDs, leurs proprietaire et leurs nom.
+    *
+    */
     equals: function (list) {
         return this.id === list.getId() && this.getProprietor().equals(list.getProprietor()) && this.name === list.name;
+    },
+
+    forJSON: function(){
+        var res = {};
+
+        res.id = this.id;
+        res.name = this.name;
+        res.description = this.description;
+        res.products = this.products;
+        res.proprietor = this.proprietor.forJSON();
+        res.sharedWith = [];
+        for(var i=0;i<this.sharedWith.length;i++)
+            res.sharedWith.push(this.sharedWith[i].forJSON());
+        res.notAlone = this.notAlone;
+
+        return res;
     }
 }

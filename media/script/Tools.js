@@ -157,6 +157,8 @@ Tools = {
         } else Tools.page.fillEdit();
     },
 
+    listTodayEvents: [],
+
     test: "test",
 
     listId: "list_",
