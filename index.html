@@ -101,7 +101,6 @@
                     }
                     if (Tools.me.getList(l) === undefined && l.isSharedWith(Tools.me)) {
                         console.log("shared");
-                        console.log(l);
                         Tools.notify("shared", user, l);
                         Tools.me.createList(l);
                     } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l) !== undefined) {

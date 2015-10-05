@@ -124,15 +124,13 @@ PageManager.prototype = {
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé la liste " + l.getName() + " avec vous.");
             this.createList(l);
         } else if ("unshared" === evt) {
-            var l = this.getList(arguments[2]);
+            var l = arguments[2];
             this.removeList(l);
             notif.classList.add = "notif__unshared";
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste" + l.getName() + "avec vous.");
-        } else if ("update" == evt) {
-            var l = arguments[2].toHtml();
-            var old = document.getElementById(l.getId());
-            old.innerHTML = l.toHtml().innerHTML;
-            this.old.style.animationName = "appear";
+        } else if ("update" === evt) {
+            var l = arguments[2];
+            this.updateList(l);
             notif.classList.add = "notif__update";
         } else return;
         Tools.ajouterBalise(this.divNotif, notif);
@@ -161,7 +159,6 @@ PageManager.prototype = {
         var opt = Tools.createStyledElement("option");
         Tools.assignAttributes(opt, "value", user.getSocket());
         opt.text = user.getName();
-        console.log(select);
         Tools.ajouterBalise(select, opt);
     },
 
@@ -322,8 +319,7 @@ PageManager.prototype = {
                 for (var i = 1; i < tu.length; i++) {
                     var u = tu[i];
                     if (u.selected) {
-                        console.log("Stupid");
-                        console.log(l_new.addUser(Tools.users.getUser(u.value)));
+                        l_new.addUser(Tools.users.getUser(u.value));
                     }
                 }
                 setTimeout(function () {
@@ -392,10 +388,10 @@ PageManager.prototype = {
     },
 
     removeList: function (list) {
-        this.getList(list).style.animationName = "disappear";
+        var l = this.getList(list);
+        l.style.animationName = "disappear";
         setTimeout(function () {
-            var main = this.divContent.getElementsByClassName("main__content")[0];
-            main.removeChild(document.getElementById(list.getId()));
+            this.divContent.removeChild(l);
         }, 5000);
     },
 
@@ -403,8 +399,8 @@ PageManager.prototype = {
         var l = this.getList(list);
         l.style.animationName = "disappear";
         setTimeout(function () {
-            l.style.display = "flex";
-            l.style.animationName = "appear";
+            l.innerHTML = list.toHtml("flex").innerHTML;
+            this.l.style.animationName = "appear";
         }, 5000);
     },
 
@@ -413,5 +409,6 @@ PageManager.prototype = {
         var main = this.divContent.getElementsByClassName("main__content")[0];
         var fc = main.firstElementChild;
         main.insertBefore(l, fc);
+        l.style.animationName = "appear";
     }
 };
