@@ -14,7 +14,8 @@ ListManager.prototype = {
         list.notAlone = i;
         //        var lg = this.lists.length;
         //        return this.lists.push(list) === (lg + 1);
-        return list;
+        this.lists.push(list);
+        return true;
     },
 
     getListName: function (list) {
@@ -29,7 +30,7 @@ ListManager.prototype = {
         return -1;
     },
 
-    getList: function (list) {
+    getListPosition: function (list) {
         'use strict';
 
         if (typeof list === "object") {
@@ -47,14 +48,35 @@ ListManager.prototype = {
             for (var i = 0; this.lists.length; i++) {
                 var l = this.lists[i];
                 if (l.getId() === list)
+                    return i;
+            }
+            return -1;
+        }
+    },
+
+    getList: function (list){
+          if (typeof list === "object") {
+            //Chercher à partir d'un indice aux dans la liste des listes
+
+            for (var i = 0; this.lists.length; i++) {
+                var l = this.lists[i];
+                if (l.equals(list))
+                    return l;
+            }
+            return undefined;
+
+        } else if (typeof list === "string") {//l'id de la liste
+            for (var i = 0; this.lists.length; i++) {
+                var l = this.lists[i];
+                if (l.getId() === list)
                     return l;
             }
             return undefined;
         }
     },
-
+    
     deleteList: function (list) {
-        var i = this.getList(list);
+        var i = this.getListPosition(list);
         if (i > -1) {
             return this.lists.splice(i, 1);
         }
@@ -62,7 +84,7 @@ ListManager.prototype = {
     },
 
     updateList: function (list) {
-        var i = this.getList(list);
+        var i = this.getListPosition(list);
         if (i > -1) {
             this.lists.splice(i, 1, list);
             return list;
@@ -71,7 +93,7 @@ ListManager.prototype = {
     },
 
     isSharedWith: function (list, user) {
-        var i = this.getList(list);
+        var i = this.getListPosition(list);
         if (i > -1) {
             return this.lists[i].isSharedWith(user);
         }

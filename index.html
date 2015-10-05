@@ -88,21 +88,32 @@
                     Tools.notify("join", user);
                     Tools.users.addUser(user);
                     Tools.page.addUserSelect(user);
-                } else if (m.update || m.create || m.delete) {
+                } else if (m.update || m.create || m.delete || m.edit) {
+                    console.log("CRUD");
                     var res = Tools.msgCreator.transformCUD(m);
-                    var l = res[0];
-                    user = res[1];
+                    var l = res.list;
+                    user = res.user;
+                    //On ajoute l'utilisateur si il n'est pas dans la liste de nos utilisateurs
                     if (Tools.users.getUser(user.getSocket()) === -1) {
+                        console.log(user.getName()+" a été ajouté.");
                         Tools.users.addUser(user);
                         Tools.page.addUserSelect(user);
                     }
-                    if (Tools.me.getList(l.getId()) === undefined && l.isSharedWith(Tools.me)) {
+                    if (Tools.me.getList(l) === undefined && l.isSharedWith(Tools.me)) {
+                        console.log("shared");
+                        console.log(l);
                         Tools.notify("shared", user, l);
-                        Tools.me.createList(list);
-                    } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l.getId() !== undefined)) {
+                        Tools.me.createList(l);
+                    } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l) !== undefined) {
+                        console.log("update");
                         Tools.page.notify("update", user, l);
                         Tools.me.updateList(l);
-                    } else { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
+                    } else if (l.isBeingEdited) {
+                        console.log("edit");
+                        if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
+                            Tools.notify("edit", user);
+                        }
+                    } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined){ //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
                         var i = Tools.me.getList(l);
                         if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
                             Tools.page.notify("unshared", user, l);
@@ -110,28 +121,22 @@
                             Tools.page.removeList(l);
                             Tools.me.deleteList(list);
                         } //Cas impossible
-                        else {
-                            console.log("Cas impossible!");
-                        }
-                    }
-                } else if (m.edit) {
-                    var res = Tools.msgCreator.transformCUD(m);
-                    var l = res[0];
-                    var user = res[1];
-                    if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
-                        Tools.notify("edit", user);
-                    }
-                }
-                /*else if (m.left) {
-                                   user = Tools.msgCreator.getUser(m.left);
-                                   Tools.notify("left", user);
-                                   Tools.users.removeUser(user);
-                               }*/
 
-            } //Le type du message est inconnu.
-            else if (message.message) {
-                // Message reçu, je le traite
-                console.log(message.message);
+                    } else {
+                        console.log("Cas impossible!");
+                        console.log(message.message);
+                    }
+                    /*else if (m.left) {
+                                       user = Tools.msgCreator.getUser(m.left);
+                                       Tools.notify("left", user);
+                                       Tools.users.removeUser(user);
+                                   }*/
+
+                } //Le type du message est inconnu.
+                else if (message.message) {
+                    // Message reçu, je le traite
+                    console.log(message.message);
+                }
             }
         }
 
@@ -233,6 +238,7 @@
                         </label>
                     </fieldset>
 
+<!--
                     <fieldset id="test" class="card">
                         <legend>Title</legend>
                         <div class="card__edit">
@@ -253,6 +259,7 @@
 
                         </div>
                     </fieldset>
+-->
                 </main>
                 <div class="mdl-layout__drawer-button"><i class="material-icons">menu</i>
                 </div>

@@ -238,10 +238,9 @@ PageManager.prototype = {
                             }, false);
                             opt.disabled = true;
                         } else {
-                            opt.addEventListener('click', function () {
-                                if (this.selected)
-                                    this.selected = false;
-                                else this.selected = true;
+                            opt.addEventListener('mousedown', function (e) {
+                                this.selected = !this.selected;
+                                e.preventDefault();
                             }, false);
                         }
                     }
@@ -253,7 +252,7 @@ PageManager.prototype = {
 
                     } else { //... sinon on contrôle.
                         l.sharedWith = [];
-                        var tu = select.option;
+                        var tu = select.options;
                         for (var i = 1; i < tu.length; i++) {
                             var u = tu[i];
                             if (u.selected) {
@@ -302,10 +301,10 @@ PageManager.prototype = {
                     opt.text = u.getName();
                     opt.selected = false;
                     opt.disabled = false;
-                    opt.addEventListener('click', function () {
-                        if (!this.selected)
-                                    this.selected = true;
-                                else this.selected = false;
+                    opt.addEventListener('mousedown', function (e) {
+                        this.selected = !this.selected;
+                        e.preventDefault();
+
                     }, false);
                     Tools.ajouterBalise(select, opt);
                 }
@@ -319,12 +318,11 @@ PageManager.prototype = {
                     l_new.addProduct(textProd[i]);
                 }
                 //Users
-                var tu = select.option;
+                var tu = select.options;
                 for (var i = 1; i < tu.length; i++) {
                     var u = tu[i];
                     if (u.selected) {
                         console.log("Stupid");
-                        console.log(l_new.isSharedWith(u.value));
                         console.log(l_new.addUser(Tools.users.getUser(u.value)));
                     }
                 }
@@ -388,6 +386,7 @@ PageManager.prototype = {
         Tools.ajouterBalise(products, add);
     },
 
+    //Retourne l'élément HTML Fieldset dans le body, correspondant à la liste
     getList: function (list) {
         return document.getElementById(list.getId());
     },

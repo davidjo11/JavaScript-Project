@@ -42,7 +42,7 @@ MessageManager.prototype = {
     },
 
     validateMessage: function (msg) {
-        if (((msg.edit || msg.update || msg.delete || msg.create) && msg.user) || msg.join) {
+        if (((typeof msg.edit === "object" || typeof msg.update === "object" || typeof msg.delete=== "object" || typeof msg.create=== "object") && typeof msg.user === "object") || typeof msg.join === "object") {
             return true;
         }
         return false;
@@ -50,14 +50,12 @@ MessageManager.prototype = {
 
     /*transformCUD (Create, Update, Delete)*/
     transformCUD: function (messageObject) {
-        var res = [];
+        var res = { list: undefined, user : undefined};
         //Traitement de la liste
         var list = undefined,
             list_b = undefined;
         var user = undefined,
             user_b = undefined;
-        var users = undefined,
-            users_b = undefined;
 
         if (messageObject.create) {
             list_b = messageObject.create;
@@ -68,22 +66,29 @@ MessageManager.prototype = {
         } else if (messageObject.edit) {
             list_b = messageObject.edit;
         }
+        
+        console.log("stupid");
+        console.log(list_b);
         user_b = messageObject.user;
-        user = new User(user_b.name, user_b.socket);
+        user = new User(user_b.name, user_b.socketId);
         user.setColor(user_b.color);
-
-        list = new List(list_b.name, user);
+        Tools.users.addUser(user);
+        
+        var proprietor = new User(list_b.proprietor.name, list_b.proprietor.socketId);
+        proprietor.setColor(list_b.proprietor.color);
+        list = new List(list_b.name, proprietor);
+        
         list.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
         for (var i = 0; i < list_b.sharedWith.length; i++) {
-            var u = new User(list_b.sharedWith[i].name, list_b.sharedWith[i].socket);
+            var u = new User(list_b.sharedWith[i].name, list_b.sharedWith[i].socketId);
             u.setColor(list_b.sharedWith[i].color);
             list.addUser(u);
+            Tools.users.addUser(u);
         }
         //Produits
         for (var i = 0; i < list_b.products.length; i++) {
-            var u = new User(list_b.products[i].name, list_b.products[i].socket);
-            u.setColor(list_b.products[i].color);
+            var u = list_b.products[i];
             list.addProduct(u);
         }
 
@@ -91,8 +96,8 @@ MessageManager.prototype = {
         list.notAlone = list_b.notAlone;
         list.id = list_b.id;
 
-        res.push(list);
-        res.push(user);
+        res.list = list;
+        res.user = user;
 
         return res;
     },

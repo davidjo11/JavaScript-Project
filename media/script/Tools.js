@@ -98,7 +98,7 @@ Tools = {
         //if(users.exists(socketId))
         //  page.createNotif(username, "l");
         //else page.createNotif(username, "j");
-        Tools.page.createNotif(evt, user);
+        Tools.page.createNotif(evt, user, arguments[2]);
     },
 
     getToday: function () {
