@@ -10,6 +10,18 @@ body {
   height: 100%;
   width: 100%; }
 
+.disconnect {
+    background-color: red;
+    color: white;
+    font-size: 20px;
+    border: outset whitesmoke 2px;
+    position: fixed;
+    top: 20x;
+    bottom: 20px;
+    border-radius: 3px;
+    display: none;
+}
+
 .connection {
   padding: 25px;
   background-color: white;

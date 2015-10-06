@@ -3,16 +3,19 @@ function PageManager() {
     this.divConnection = undefined;
     this.divContent = undefined;
     this.divNotif = undefined;
+    this.divDisconnect = undefined;
     this.divEdit = undefined;
 }
 
 /*Cette classe gère l'ensemble des animations et autres à faire sur la page index.html (étant donné que l'on utilise qu'une page HTML).
-*/
+ */
 PageManager.prototype = {
 
     initializeElements: function () {
 
         /* Partie connexion*/
+        this.divDisconnect = document.getElementsByClassName("disconnect")[0];
+        
         this.divConnection = this.body.getElementsByClassName("connection")[0];
         Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo");
 
@@ -80,7 +83,7 @@ PageManager.prototype = {
             valider.addEventListener("click", function () {
                 var inputPseudo = self.divConnection.getElementsByTagName("input")[0];
                 //                var inputDate = this.divConnection.getElementById("date");
-                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/\w/)) {
+                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/[A-Za-z0-9_]{6,}/)) {
                     //                    this.date = inputDate.value;
                     //Tant que le client ne connait pas l'id de sa socket, on attend...
                     //                    Tools.date = this.date.split('-');
@@ -92,9 +95,11 @@ PageManager.prototype = {
                         cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
                         var titre = self.divContent.getElementsByClassName('menu__title')[0];
                         titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
-                        if (self.divContent.style.display == "none" || self.divContent.style.display === "")
-                            self.toggleContent();
-                    }, 1000);
+                        self.toggleContent();
+                        document.onkeydown = Tools.fkey;
+                        document.onkeypress = Tools.fkey;
+                        document.onkeyup = Tools.fkey;
+                    }, 750);
                 } else alert('Votre pseudo doit contenir au moins 6 caractères et ne peut être composé que des caractères suivants:\n A-Z-a-z0-9_.');
             }, false);
         } else {
@@ -105,11 +110,22 @@ PageManager.prototype = {
     },
 
     toggleContent: function () {
-        if (this.divContent.style.display == "none" || this.divContent.style.display === "")
+        if (this.divContent.style.display == "none" || this.divContent.style.display === ""){
             this.divContent.style.display = "block";
-        else this.divContent.style.display = "none";
+            this.toggleDisconnect();
+        }
+        else{
+            this.divContent.style.display = "none";
+            this.toggleDisconnect();
+        } 
     },
 
+    toggleDisconnect: function (){
+      if(this.divDisconnect.style.display === "none" || this.divDisconnect.style.display === "")  
+          this.divDisconnect.style.display = "block";
+        else this.divDisconnect.style.display = "none";
+    },
+    
     createNotif: function (evt, user) {
         var notif = document.createElement("div");
         Tools.assignAttributes(notif, "class", "notif");
@@ -144,7 +160,7 @@ PageManager.prototype = {
         }, 10000);
     },
 
-    removeFromSelect: function (user) {
+    removeUserFromSelect: function (user) {
         var select = document.getElementById("sel__users");
         var opts = select.getElementsByTagName('option');
         for (var i = 0; i < opts.length; i++) {
@@ -156,7 +172,7 @@ PageManager.prototype = {
         }
     },
 
-    addUserSelect: function (user) {
+    addUserToSelect: function (user) {
         var select = document.getElementById("sel__users");
         var opt = Tools.createStyledElement("option");
         Tools.assignAttributes(opt, "value", user.getSocket());

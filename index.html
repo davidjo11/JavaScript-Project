@@ -44,26 +44,27 @@
                 },
 
                 complete: function (result, status) {
-                    console.log("complete");
-                    var r = result.responseJSON.Events;
-                    for (var i = 0; i < r.length; i++) {
-                        var time = r[r.length - i - 1].timestamp;
-                        console.log(r[r.length - i - 1].content);
-
-                        if (!time.startsWith(Tools.getToday()))
-                            i = r.length;
-                        else if (r[r.length - i - 1].message) {
-                            Tools.listTodayEvents.push(r[r.length - i - 1].message)
-                        };
+                        console.log("complete");
+                        var r = result.responseJSON.Events;
+                        for (var i = 0; i < r.length; i++) {
+                            //                        var time = r[r.length - i - 1].timestamp;
+                            //                        console.log(r[i].content);
+                            //                            console.log(JSON.parse(r[i].content));
+                            var m = (JSON.parse(r[i].content)).message;
+//                            console.log(m);
+                            //Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
+                            if (m !== null && m !== undefined && m !== {} && Tools.msgCreator.validateMessage(m)) {
+                                Tools.listEvents.push(m);
+                            }
+                        }
                     }
-                    Tools.listTodayEvents.reverse();
+                    //                    Tools.listTodayEvents.reverse();
 
-                    // Pour envoyer un message dans toute la room
-                    //                                        cobra.sendMessage({ content: "test" }, room, true);
+                // Pour envoyer un message dans toute la room
+                //                                        cobra.sendMessage({ content: "test" }, room, true);
 
-                    // Pour envoyer un message dans toute la room excepté soi
-                    // cobra.sendMessage({content : "test"}, room, false);
-                }
+                // Pour envoyer un message dans toute la room excepté soi
+                // cobra.sendMessage({content : "test"}, room, false);
             });
         }
 
@@ -82,15 +83,27 @@
                 var m = message.message;
                 var user = undefined;
                 if (m.join) {
-                    user = Tools.msgCreator.getUser(m.join);
+                    user = Tools.msgCreator.fromObjectToUser(m.join);
                     Tools.notify("join", user);
                     Tools.users.addUser(user);
-                    Tools.page.addUserSelect(user);
-                } else if (m.update || m.create || m.delete || m.edit) {
+                    Tools.page.addUserToSelect(user);
+                } else if (m.left){
+                    user = Tools.msgCreator.fromObjectToUser(m.left);
+                    Tools.notify("left", user);
+                    Tools.users.removeUser(user);
+                    Tools.page.removeUserFromSelect(user);
+                }
+                
+                else if (m.update || m.create || m.delete || m.edit) {
                     console.log("CRUD");
-                    var res = Tools.msgCreator.transformCUD(m);
-                    var l = res.list;
-                    user = res.user;
+                    var l = undefined;
+                    if (m.update !== undefined) l = m.update;
+                    else if (m.create !== undefined) l = m.create;
+                    else if (m.delete !== undefined) l = m.delete;
+                    else if (m.edit !== undefined) l = m.edit;
+
+                    l = Tools.msgCreator.fromObjectToList(l);
+                    user = Tools.msgCreator.fromObjectToUser(m.user);
                     //On ajoute l'utilisateur si il n'est pas dans la liste de nos utilisateurs
                     if (Tools.users.getUser(user.getSocket()) === -1) {
                         console.log(user.getName() + " a été ajouté.");
@@ -151,7 +164,7 @@
             if (u !== undefined) {
                 Tools.notify("left", u);
                 Tools.users.removeUser(u);
-                Tools.page.removeFromSelect(u);
+                Tools.page.removeUserFromSelect(u);
             }
         }
     </script>
@@ -161,6 +174,9 @@
     <div class="content">
         <div class="connection">
 
+        </div>
+        <div class="disconnect">
+            Se deconnecter
         </div>
         <div class="notifs">
 

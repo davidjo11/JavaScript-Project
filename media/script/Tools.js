@@ -125,6 +125,22 @@ Tools = {
         return ((key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8);
     },
 
+    fkey: function (e) {
+        e = e || window.event;
+
+        if (e.keyCode == 116) {
+            var response = prompt("Vous avez pressez la touche f5.\nVous risquez de vous déconnecter, voulez-vous continuer?(o/n)");
+            if ((response !== "o" && response !== "O")){
+                e.preventDefault();
+                console.log(e.keyCode);
+//                console.log(response !== "o");
+            }
+            else {
+                cobra.sendMessage(Tools.msgCreator.leftMsg(), room, false);
+            }
+        }
+    },
+
     crypted: function (s, size) {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_-,;^!$£*µ§~#[|`\]()='.split("");
         var scrypted = "";
@@ -157,7 +173,7 @@ Tools = {
         } else Tools.page.fillEdit();
     },
 
-    listTodayEvents: [],
+    listEvents: [],
 
     test: "test",
 
@@ -173,6 +189,8 @@ Tools = {
 
     usedColors: "#0000FF,#A9A9A9,#000000,#F5F5F5,#FFFFFF"
 }
+
+var wasPressed = false;
 
 Tools.include('media/script/List.js', function () {});
 Tools.include("media/script/ListManager.js", function () {

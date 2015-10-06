@@ -36,6 +36,13 @@ MessageManager.prototype = {
             user: Tools.me.forJSON()
         }
     },
+    
+    leftMsg: function(){
+        return {
+            left: Tools.me,
+            lists: Tools.me.lists
+        }
+    },
 
     editListMsg: function (list) {
         return {
@@ -48,7 +55,7 @@ MessageManager.prototype = {
     *
     */
     validateMessage: function (msg) {
-        if (((typeof msg.edit === "object" || typeof msg.update === "object" || typeof msg.delete=== "object" || typeof msg.create=== "object") && typeof msg.user === "object") || typeof msg.join === "object") {
+        if (((msg.edit || msg.update || msg.delete || msg.create) && msg.user) || msg.join) {
             return true;
         }
         return false;
@@ -57,38 +64,21 @@ MessageManager.prototype = {
     /*transformCUD (Create, Update, Delete)
     *Analyse le message reçu et retourne les objets User et List correspondants.
     */
-    transformCUD: function (messageObject) {
-        var res = { list: undefined, user : undefined};
+    fromObjectToList: function (object) {
         //Traitement de la liste
         var list = undefined,
-            list_b = undefined;
-        var user = undefined,
-            user_b = undefined;
+            list_b = object;
 
-        if (messageObject.create) {
-            list_b = messageObject.create;
-        } else if (messageObject.update) {
-            list_b = messageObject.update;
-        } else if (messageObjectcase.delete) {
-            list_b = messageObject.delete;
-        } else if (messageObject.edit) {
-            list_b = messageObject.edit;
-        }
-
-        user_b = messageObject.user;
-        user = new User(user_b.name, user_b.socketId);
-        user.setColor(user_b.color);
+        user = this.fromObjectToUser(object.user);
         Tools.users.addUser(user);
         
-        var proprietor = new User(list_b.proprietor.name, list_b.proprietor.socketId);
-        proprietor.setColor(list_b.proprietor.color);
+        var proprietor = this.fromObjectToUser(list_b.proprietor);
         list = new List(list_b.name, proprietor);
         
         list.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
         for (var i = 0; i < list_b.sharedWith.length; i++) {
-            var u = new User(list_b.sharedWith[i].name, list_b.sharedWith[i].socketId);
-            u.setColor(list_b.sharedWith[i].color);
+            var u = this.fromObjectToUser(list_b.sharedWith[i]);
             list.addUser(u);
             Tools.users.addUser(u);
         }
@@ -99,23 +89,22 @@ MessageManager.prototype = {
         }
 
         list.description = list_b.description;
+        //Facultatif.
         list.notAlone = list_b.notAlone;
         list.id = list_b.id;
 
-        res.list = list;
-        res.user = user;
-
-        return res;
+        return list;
     },
 
     /*Analyse l'objet Object reçu en param. et retourne l'objet User correspondant.
     *
     */
-    getUser: function (userObject) {
-        var u = new User(userObject.name, userObject.socketId);
-        u.setColor(userObject.color);
+    fromObjectToUser: function (object) {
+        var u = new User(object.name, object.socketId);
+        u.setColor(object.color);
         return u;
     },
+    
 
     //La fonction de MICKAEL
     /*A mon avis(david): Cette fonction devrait retirer les produits du site et retourner l'ensemble des produits sous la forme d'un tableau de String.
