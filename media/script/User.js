@@ -1,9 +1,10 @@
-function User(username, socket) {
+function User(username, socket, password) {
     this.socketId = socket;
     this.name = username;
-    this.password = undefined;
+    this.password = Tools.crypted(password,this.username.length);
     this.color = undefined;
     this.lm = new ListManager();
+    this.id = Tools.getRandomString(25);
 }
 
 User.prototype = {
@@ -88,6 +89,7 @@ User.prototype = {
     forJSON: function (){
         var res = {};
 
+        res.id = this.id;
         res.name = this.name;
         res.socketId = this.socketId;
         res.color = this.color;

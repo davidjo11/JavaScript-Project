@@ -84,10 +84,11 @@ Tools = {
         return colors.split(";");
     },
 
-    getRandomString: function () {
+    getRandomString: function (l) {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         var s = "";
-        for (var i = 0; i < 20; i++) {
+        var aux = typeof l === "number"  && l > 20 ? l : 20;
+        for (var i = 0; i < aux; i++) {
             s += letters[Math.floor(Math.random() * letters.length)];
         }
         return s;
@@ -172,7 +173,28 @@ Tools = {
             Tools.page.fillEdit(fieldset);
         } else Tools.page.fillEdit();
     },
+    
+    /*Compare la date (yyyy-mm-dd) passée en param. à la date d'origine Tools.originTime
+    *@return 0 si égalité, 1 si supérieure, -1 si inférieure
+    */
+    isDateSupToOriginDate: function (stringDate){
+        var date = stringDate.split('-');
+        var ot = Tools.originTime.split('-');
+        if(parseInt(date[0]) < parseInt(ot[0]))
+            return false;
+        else if(parseInt(date[1]) < parseInt(ot[1]))
+            return false;
+        else if(parseInt(date[2]) < parseInt(ot[2]))
+            return false;
+        else return true;
+    },
+    
+    connect: function (){
+        
+    },
 
+    originTime: "2015-10-07",
+    
     listEvents: [],
 
     test: "test",

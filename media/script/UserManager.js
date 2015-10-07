@@ -4,6 +4,8 @@ function UserManager() {
     this.users = new Array();
     //tableau des couleurs utilisées en hexa
     this.colors = new Array();
+    //tableau des pseudos indisponibles
+    this.unavailablePseudo = [];
 }
 
 /*Cette classe permet de répertorier l'ensemble des utilisateurs présents dans la room.
@@ -25,6 +27,7 @@ UserManager.prototype = {
             user.setColor(color);
         }
         this.users.push(user);
+        this.unavailablePseudo.push(user.getName());
         return true;
     },
 
@@ -67,14 +70,19 @@ UserManager.prototype = {
     },
 
     /*Permet de retirer l'utilisateur user du UserManager
-    *@param user: l'utilisateur à retirer
+    *@param user: le nom ou la position dans la tableau de l'utilisateur à retirer
     */
     removeUser: function (user) {
-        var i = this.exists(user);
+        var i = this.getUser(user);
         if (i > -1) {
-            this.users.splice(i, 1);
+            var u = this.users.splice(i, 1);
+            this.unavailablePseudo.splice(this.unavailablePseudo.indexOf(u.getName()), 1);
             //            this.colors.push(user.getColor());
             return true;
         } else false;
+    },
+    
+    isAvailable: function (pseudo){
+        return this.unavailablePseudo.indexOf(pseudo) === -1;
     }
 }

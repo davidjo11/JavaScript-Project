@@ -10,6 +10,12 @@ function MessageManager() {
 */
 MessageManager.prototype = {
 
+    /*Analyse l'ensemble des events ayant eu lieu pendant l'absence de l'utilisateur (update des listes, utilisateurs connectés, etc...)
+    */
+    initialize: function (events){
+        
+    },
+    
     joinMsg: function () {
         return {
             join: Tools.me.forJSON()
@@ -68,13 +74,13 @@ MessageManager.prototype = {
         //Traitement de la liste
         var list = undefined,
             list_b = object;
-
-        user = this.fromObjectToUser(object.user);
-        Tools.users.addUser(user);
+        //Id
+        list.id = list_b.id;
         
+        //Proprio
         var proprietor = this.fromObjectToUser(list_b.proprietor);
         list = new List(list_b.name, proprietor);
-        
+        //isBeingEdited
         list.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
         for (var i = 0; i < list_b.sharedWith.length; i++) {
@@ -87,12 +93,11 @@ MessageManager.prototype = {
             var u = list_b.products[i];
             list.addProduct(u);
         }
-
+        //Description
         list.description = list_b.description;
         //Facultatif.
         list.notAlone = list_b.notAlone;
-        list.id = list_b.id;
-
+        
         return list;
     },
 
@@ -102,6 +107,7 @@ MessageManager.prototype = {
     fromObjectToUser: function (object) {
         var u = new User(object.name, object.socketId);
         u.setColor(object.color);
+        u.id = object.id;
         return u;
     },
     

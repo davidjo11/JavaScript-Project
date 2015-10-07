@@ -46,17 +46,26 @@
                 complete: function (result, status) {
                         console.log("complete");
                         var r = result.responseJSON.Events;
-                        for (var i = 0; i < r.length; i++) {
-                            //                        var time = r[r.length - i - 1].timestamp;
-                            //                        console.log(r[i].content);
-                            //                            console.log(JSON.parse(r[i].content));
-                            var m = (JSON.parse(r[i].content)).message;
-//                            console.log(m);
-                            //Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
+                        var m = undefined,
+                            time = undefined;
+                        var i = r.length - 1;
+                        do {
+                            m = (JSON.parse(r[i].content)).message;
+                            time = r[i].timestamp.substring(0, 9);
                             if (m !== null && m !== undefined && m !== {} && Tools.msgCreator.validateMessage(m)) {
                                 Tools.listEvents.push(m);
                             }
+                            i++;
                         }
+                        while (Tools.isDateSupToOriginDate(time)) 
+//                        {
+//                                                    var time = r[r.length - i - 1].timestamp;
+//                                                    console.log(r[i].content);
+//                                                        console.log(JSON.parse(r[i].content));
+//                                                        console.log(m);
+//                            Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
+//
+//                        }
                     }
                     //                    Tools.listTodayEvents.reverse();
 
@@ -87,14 +96,12 @@
                     Tools.notify("join", user);
                     Tools.users.addUser(user);
                     Tools.page.addUserToSelect(user);
-                } else if (m.left){
+                } else if (m.left) {
                     user = Tools.msgCreator.fromObjectToUser(m.left);
                     Tools.notify("left", user);
                     Tools.users.removeUser(user);
                     Tools.page.removeUserFromSelect(user);
-                }
-                
-                else if (m.update || m.create || m.delete || m.edit) {
+                } else if (m.update || m.create || m.delete || m.edit) {
                     console.log("CRUD");
                     var l = undefined;
                     if (m.update !== undefined) l = m.update;

@@ -82,8 +82,8 @@ PageManager.prototype = {
             var self = this;
             valider.addEventListener("click", function () {
                 var inputPseudo = self.divConnection.getElementsByTagName("input")[0];
-                //                var inputDate = this.divConnection.getElementById("date");
-                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/[A-Za-z0-9_]{6,}/)) {
+                                var inputPwd = this.divConnection.getElementById("password");
+                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/[A-Za-z0-9_]{6,}/) && Tools.users.isAvailable(inputPseudo.value) && Tools) {
                     //                    this.date = inputDate.value;
                     //Tant que le client ne connait pas l'id de sa socket, on attend...
                     //                    Tools.date = this.date.split('-');
