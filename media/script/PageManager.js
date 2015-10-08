@@ -89,12 +89,7 @@ PageManager.prototype = {
                         Tools.users.addUser(Tools.me);
                         self.toggleConnection();
                         cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
-                        var titre = self.divContent.getElementsByClassName('menu__title')[0];
-                        titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
                         self.toggleContent();
-                        document.onkeydown = Tools.fkey;
-                        document.onkeypress = Tools.fkey;
-                        document.onkeyup = Tools.fkey;
                     }, 750);
                 } else alert(error);
             }, false);
@@ -108,9 +103,19 @@ PageManager.prototype = {
     toggleContent: function () {
         if (this.divContent.style.display == "none" || this.divContent.style.display === "") {
             this.divContent.style.display = "block";
+            this.divNotif.style.display = "flex";
+            var titre = this.divContent.getElementsByClassName('menu__title')[0];
+            titre.textContent = "Bienvenue sur List in Shop in, " + Tools.me.getName() + "!";
+            document.onkeydown = Tools.fkey;
+            document.onkeypress = Tools.fkey;
+            document.onkeyup = Tools.fkey;
             this.toggleDisconnect();
         } else {
             this.divContent.style.display = "none";
+            this.divNotif.style.display = "none";
+            document.onkeydown = undefined;
+            document.onkeypress = undefined;
+            document.onkeyup = undefined;
             this.toggleDisconnect();
         }
     },
@@ -178,6 +183,7 @@ PageManager.prototype = {
     fillEdit: function () {
         var self = this;
         var input = document.getElementById("edit__title");
+        input.value = "";
         input.autofocus = "true";
         var texta = document.getElementById("edit__desc");
         //pour éviter de conserver des valeurs non validées
@@ -196,7 +202,7 @@ PageManager.prototype = {
         var textProd = [];
 
         var modal_footer = this.divEdit.getElementsByClassName("modal-footer")[0];
-        modal_footer.innerHTML = "<label class=\"btn\" for=\"modal-one\"><button type=\"button\" for=\"modal-one\" class=\"btn btn-primary btn-delete\"><label class=\"btn\" for=\"modal-one\">Supprimer la liste<\/label><\/button><\/label><label class=\"btn\" for=\"modal-one\"><button type=\"button\" class=\"btn btn-primary btn-validate\" for=\"modal-one\"><label class=\"btn\" for=\"modal-one\">Valider</label><\/button><\/label>";
+        modal_footer.innerHTML = "<button type=\"button\" for=\"modal-one\" class=\"btn btn-primary btn-delete\"><label class=\"btn\" for=\"modal-one\">Supprimer la liste<\/label><\/button><button type=\"button\" class=\"btn btn-primary btn-validate\" for=\"modal-one\"><label class=\"btn\" for=\"modal-one\">Valider</label><\/button>";
         var btn_validate = this.divEdit.getElementsByClassName("btn-validate")[0];
         var btn_delete = this.divEdit.getElementsByClassName("btn-delete")[0];
 
@@ -288,6 +294,7 @@ PageManager.prototype = {
                 }, false);
 
                 btn_delete.addEventListener('click', function () {
+                    console.log("deleteList");
                     var l = Tools.me.getList(lid);
                     l = Tools.me.deleteList(l);
                     setTimeout(function () {
@@ -395,16 +402,19 @@ PageManager.prototype = {
         Tools.ajouterBalise(products, add);
     },
 
-    //Retourne l'élément HTML Fieldset dans le body, correspondant à la liste
+    //Retourne l'élément HTML Fieldset dans le body, correspondant à l'objet Liste passé en param.
     getList: function (list) {
+        console.log(list);
         return document.getElementById(list.getId());
     },
 
     removeList: function (list) {
         var l = this.getList(list);
         l.style.animationName = "disappear";
+        console.log(l);
+        var self = this;
         setTimeout(function () {
-            this.divContent.removeChild(l);
+            self.divContent.removeChild(l);
         }, 5000);
     },
 
@@ -413,7 +423,7 @@ PageManager.prototype = {
         l.style.animationName = "disappear";
         setTimeout(function () {
             l.innerHTML = list.toHtml("flex").innerHTML;
-            this.l.style.animationName = "appear";
+            l.style.animationName = "appear";
         }, 5000);
     },
 

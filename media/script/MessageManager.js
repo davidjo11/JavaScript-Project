@@ -74,12 +74,14 @@ MessageManager.prototype = {
         //Traitement de la liste
         var list = undefined,
             list_b = object;
-        //Id
-        list.id = list_b.id;
-        
+
         //Proprio
         var proprietor = this.fromObjectToUser(list_b.proprietor);
+
         list = new List(list_b.name, proprietor);
+
+        //Id
+        list.id = list_b.id;
         //isBeingEdited
         list.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
