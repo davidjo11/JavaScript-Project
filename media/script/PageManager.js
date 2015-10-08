@@ -231,7 +231,7 @@ PageManager.prototype = {
                 Tools.ajouterBalise(products, p_new);
 
                 //On remplit le select
-                var ownIt = l.isSharedWith(Tools.me);
+                var ownIt = l.getProprietor().equals(Tools.me);
                 for (var i = 0; i < Tools.users.getNbUser(); i++) {
                     var u = Tools.users.getUser(i);
                     if (!u.equals(Tools.me)) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
@@ -258,9 +258,7 @@ PageManager.prototype = {
 
                 btn_validate.addEventListener('click', function () {
                     l.setDescription(texta.value);
-                    if (!ownIt) { //Si je ne suis pas proprio alors => aucun changement au niveua des utilisateurs de la liste...
-
-                    } else { //... sinon on contrôle.
+                    if (ownIt) { //... sinon on contrôle.
                         l.sharedWith = [];
                         var tu = select.options;
                         for (var i = 1; i < tu.length; i++) {
@@ -288,7 +286,7 @@ PageManager.prototype = {
                 }, false);
 
                 btn_delete.addEventListener('click', function () {
-                    var l = Tools.me.getList(lid);
+                    var l = Tools.me.getList(lid); 
                     l = Tools.me.deleteList(l);
                     setTimeout(function () {
                         self.removeList(l);
@@ -314,7 +312,6 @@ PageManager.prototype = {
                     opt.addEventListener('mousedown', function (e) {
                         this.selected = !this.selected;
                         e.preventDefault();
-
                     }, false);
                     Tools.ajouterBalise(select, opt);
                 }
@@ -327,6 +324,7 @@ PageManager.prototype = {
                 for (var i = 0; i < textProd.length; i++) {
                     l_new.addProduct(textProd[i]);
                 }
+                Tools.me.createList(l_new);
                 //Users
                 var tu = select.options;
                 for (var i = 1; i < tu.length; i++) {
@@ -338,8 +336,6 @@ PageManager.prototype = {
                 setTimeout(function () {
                     //... on y met la nouvelle.
                     self.createList(l_new);
-                    //On update le listeManager.
-                    Tools.me.createList(l_new);
                     //On partage.
                     cobra.sendMessage(Tools.msgCreator.updateListMsg(l_new), room, false);
                 }, 1000);
@@ -397,14 +393,16 @@ PageManager.prototype = {
 
     //Retourne l'élément HTML Fieldset dans le body, correspondant à la liste
     getList: function (list) {
+        console.log(list);
         return document.getElementById(list.getId());
     },
 
     removeList: function (list) {
         var l = this.getList(list);
         l.style.animationName = "disappear";
+        var self = this;
         setTimeout(function () {
-            this.divContent.removeChild(l);
+            self.divContent.removeChild(l);
         }, 5000);
     },
 
@@ -413,7 +411,7 @@ PageManager.prototype = {
         l.style.animationName = "disappear";
         setTimeout(function () {
             l.innerHTML = list.toHtml("flex").innerHTML;
-            this.l.style.animationName = "appear";
+            l.style.animationName = "appear";
         }, 5000);
     },
 

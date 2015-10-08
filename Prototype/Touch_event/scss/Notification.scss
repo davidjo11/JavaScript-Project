@@ -15,7 +15,6 @@
   left: 40%;
   & .notif {
     border: solid 2px;
-    background-color: #e0fde0;
     padding: 10px 8px;
     border-radius: 4px;
     font-size: inherit;
@@ -26,19 +25,19 @@
     animation-direction: forwards;
   }
   .notif__join {
-    @extends .notif
+    @extends .notif;
     border-color: seagreen;
     background-color: #e0fde0;
     color: limegreen;
   }
   .notif__left, .notif__unshared {
-    @extends .notif
+    @extends .notif;
     border-color: red;
     background-color: #ffb2b2;
     color: red;
   }
   .notif__shared, notif__update {
-    @extends .notif
+    @extends .notif;
     border-color: blue;
     color: blue;
     background-color: #ccccff;

@@ -131,12 +131,11 @@
                             Tools.notify("edit", user);
                         }
                     } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined) { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
-                        var i = Tools.me.getList(l);
-                        if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
-                            Tools.page.notify("unshared", user, l);
-                            var l = Tools.me.getList(l.getId());
-                            Tools.page.removeList(l);
-                            Tools.me.deleteList(list);
+                        var deleted = Tools.me.getList(l);
+                        if (deleted !== undefined) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager avec l'utilisateur
+                            Tools.page.notify("unshared", user, deleted);
+                            Tools.page.removeList(deleted);
+                            Tools.me.deleteList(deleted);
                         } //Cas impossible
 
                     } else {
