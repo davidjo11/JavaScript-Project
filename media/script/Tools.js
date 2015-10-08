@@ -168,6 +168,7 @@ Tools = {
     },
 
     editList: function (id) {
+        console.log(arguments);
         if (id !== undefined && id !== "") {
             var fieldset = document.getElementById(id);
             Tools.page.fillEdit(fieldset);

@@ -9,12 +9,16 @@ ListManager.prototype = {
     */
     createList: function (list) {
         'use strict';
-        var i = 0;
-        while (this.getListName(list, i) === -1 && i < this.lists.length) {
+        var i = this.getListName(list, 0), j = 0;
+        while (i !== -1 && i < this.lists.length) {
+            console.log(i);
             i++;
+            i = this.getListName(list, i);
+            j++;
         }
+        console.log(j);
         //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
-        list.notAlone = i;
+        list.notAlone = j;
         //        var lg = this.lists.length;
         //        return this.lists.push(list) === (lg + 1);
         this.lists.push(list);
@@ -28,7 +32,7 @@ ListManager.prototype = {
         //Chercher à partir d'un indice aux dans le tableau de List
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
-        for (var i = aux; this.lists.length; i++) {
+        for (var i = aux;i<this.lists.length; i++) {
             var l = this.lists[i];
             if (l.getName() === list.getName() && l.getId() !== list.getId())
                 return i;
