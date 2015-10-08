@@ -1,4 +1,6 @@
-function start(){
-  page.initializeElements();
-  page.toggleConnection();
+function start() {
+    Tools.connect();
+    Tools.initialize();
+    Tools.page.initializeElements();
+    Tools.page.toggleConnection();
 }

@@ -1,9 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>List in Shop in&trade;</title>
+
+    <link rel="icon" href="media/image/favicon-shopping-cart.ico" />
+
     <link rel="stylesheet" href="media/css/Global.css">
+    <link rel="stylesheet" href="media/css/Notification.css">
+    <link rel="stylesheet" href="media/css/List.css">
+    <link rel="stylesheet" href="media/css/Modal.css">
+
     <link rel="stylesheet" href="media/css/material.min.css">
     <script src="media/script/material.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -12,113 +17,277 @@
     <script src="media/script/socket.io.js"></script>
     <script src="media/script/cobra.js"></script>
 
-    <script src="media/script/Global.js" type="text/javascript"></script>
-    <script src="media/script/Start.js" type="text/javascript"></script>
+    <script src="media/script/Tools.js" type="text/javascript"></script>
 
     <script>
         var cobra = new Cobra();
         var room = "test";
         var socketId;
         var apiUrl = 'http://cobra-framework.com:3000/api/events/' + room;
-        cobra.connect('http://cobra-framework.com:8080');
-        results = undefined;
+        //        cobra.connect('http://cobra-framework.com:8080');
 
         cobra.connectionCallback = function () {
             cobra.joinRoom(room);
         }
 
         cobra.joinRoomCallback = function (roomName) {
-           // appel à l'API pour récupérer tous les messages de la room roomName
+            // appel à l'API pour récupérer tous les messages de la room roomName
+            $.ajax({
+                type: 'GET',
+                url: apiUrl,
+                success: function () {
+                    console.log("success");
+                },
 
-           $.ajax({
-              type: 'GET',
-              url: apiUrl,
-              success: function () {
-                  console.log("success");
-              },
+                error: function () {
+                    console.log("error when retrieve events");
+                },
 
-              error: function () {
-                  console.log("error when retrieve events");
-              },
+                complete: function (result, status) {
+                        console.log("complete");
+                        var r = result.responseJSON.Events;
+                        var m = undefined,
+                            time = undefined;
+                        var i = r.length - 1;
+                        do {
+                            m = (JSON.parse(r[i].content)).message;
+                            time = r[i].timestamp.substring(0, 9);
+                            if (m !== null && m !== undefined && m !== {} && Tools.msgCreator.validateMessage(m)) {
+                                Tools.listEvents.push(m);
+                            }
+                            i++;
+                        }
+                        while (Tools.isDateSupToOriginDate(time)) 
+//                        {
+//                                                    var time = r[r.length - i - 1].timestamp;
+//                                                    console.log(r[i].content);
+//                                                        console.log(JSON.parse(r[i].content));
+//                                                        console.log(m);
+//                            Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
+//
+//                        }
+                    }
+                    //                    Tools.listTodayEvents.reverse();
 
-              complete: function (result, status) {
-                  results = result;
-                  console.log("complete");
-                  for (var i = 0; i < result.responseJSON.Events.length; i++) {
-                     var content = result.responseJSON.Events[i].content;
-                     // recuperer les infos contenues dans les messages
-                     console.log(content);
-                  }
+                // Pour envoyer un message dans toute la room
+                //                                        cobra.sendMessage({ content: "test" }, room, true);
 
-                  // Pour envoyer un message dans toute la room
-                  // cobra.sendMessage({content : "test"}, room, true);
-
-                  // Pour envoyer un message dans toute la room excepté soi
-                  // cobra.sendMessage({content : "test"}, room, false);
-              }
-          });
+                // Pour envoyer un message dans toute la room excepté soi
+                // cobra.sendMessage({content : "test"}, room, false);
+            });
         }
 
-        cobra.clientJoinedRoomCallback = function (data){
-          for(i in arguments.length)
-          console.log(arguments[i]);
+        cobra.messageReceivedCallback = function (message) {
+
+            // Lors de l'arrivée dans une room donne la liste des utilisateurs contenus dans la room
+            if (message.type == "infos") {
+                for (var i = 0; i < message.clients.length; i++) {
+                    // Contient l'id du client
+                    var client = message.clients[i];
+                }
+                console.log(message);
+                // Mon id attribué par la room
+                socketId = message.socketId;
+            } else if (Tools.msgCreator.validateMessage(message.message)) {
+                var m = message.message;
+                var user = undefined;
+                if (m.join) {
+                    user = Tools.msgCreator.fromObjectToUser(m.join);
+                    Tools.notify("join", user);
+                    Tools.users.addUser(user);
+                    Tools.page.addUserToSelect(user);
+                } else if (m.left) {
+                    user = Tools.msgCreator.fromObjectToUser(m.left);
+                    Tools.notify("left", user);
+                    Tools.users.removeUser(user);
+                    Tools.page.removeUserFromSelect(user);
+                } else if (m.update || m.create || m.delete || m.edit) {
+                    console.log("CRUD");
+                    var l = undefined;
+                    if (m.update !== undefined) l = m.update;
+                    else if (m.create !== undefined) l = m.create;
+                    else if (m.delete !== undefined) l = m.delete;
+                    else if (m.edit !== undefined) l = m.edit;
+
+                    l = Tools.msgCreator.fromObjectToList(l);
+                    user = Tools.msgCreator.fromObjectToUser(m.user);
+                    //On ajoute l'utilisateur si il n'est pas dans la liste de nos utilisateurs
+                    if (Tools.users.getUser(user.getSocket()) === -1) {
+                        console.log(user.getName() + " a été ajouté.");
+                        Tools.users.addUser(user);
+                        Tools.page.addUserSelect(user);
+                    }
+                    if (Tools.me.getList(l) === undefined && l.isSharedWith(Tools.me)) {
+                        console.log("shared");
+                        Tools.notify("shared", user, l);
+                        Tools.me.createList(l);
+                    } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l) !== undefined) {
+                        console.log("update");
+                        Tools.page.notify("update", user, l);
+                        Tools.me.updateList(l);
+                    } else if (l.isBeingEdited) {
+                        console.log("edit");
+                        if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
+                            Tools.notify("edit", user);
+                        }
+                    } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined) { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
+                        var i = Tools.me.getList(l);
+                        if (i > -1) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager
+                            Tools.page.notify("unshared", user, l);
+                            var l = Tools.me.getList(l.getId());
+                            Tools.page.removeList(l);
+                            Tools.me.deleteList(list);
+                        } //Cas impossible
+
+                    } else {
+                        console.log("Cas impossible!");
+                        console.log(message.message);
+                    }
+                    /*else if (m.left) {
+                                       user = Tools.msgCreator.getUser(m.left);
+                                       Tools.notify("left", user);
+                                       Tools.users.removeUser(user);
+                                   }*/
+
+                } //Le type du message est inconnu.
+                else if (message.message) {
+                    // Message reçu, je le traite
+                    console.log(message.message);
+                }
+            }
         }
 
-        cobra.clientLeftRoomCallback = function (data){
-          for(i in arguments.length)
-          console.log(arguments[i]);
+        cobra.clientJoinedRoomCallback = function (data) {
+            // Un autre client a rejoint la room
+            //            console.log(arguments);
+            //            Tools.notify(data.id, "join");
         }
-      </script>
+
+        cobra.clientLeftRoomCallback = function (data) {
+            // Un client a quitté la room
+            //            console.log(arguments);
+            var u = Tools.users.getUser(data.id);
+
+            if (u !== undefined) {
+                Tools.notify("left", u);
+                Tools.users.removeUser(u);
+                Tools.page.removeUserFromSelect(u);
+            }
+        }
+    </script>
 </head>
+
 <body onload="start();">
-    <div class="modal_add_window">
+    <div class="content">
+        <div class="connection">
 
-    </div>
-
-  <div class="content" style="display: block;">
-    <div class="mdl-layout mdl-js-layout">
-        <header class="mdl-layout__header">
-            <div class="mdl-layout__header-row">
-                <!-- Title -->
-                <span class="mdl-layout-title">Title</span>
-                <!-- Add spacer, to align navigation to the right -->
-                <div class="mdl-layout-spacer"></div>
-                <!-- Navigation -->
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                </nav>
-            </div>
-        </header>
-        <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Title</span>
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-            </nav>
         </div>
-        <main class="" style="display:flex; flex-wrap: wrap; align-items: flex-start; flex-direction: row; justify-content:flex-start; align-content: flex-start">
-          <fieldset class="card">
-            <legend>Title</legend>
-            <!-- <div class="card__thumb"></div> -->
-            <div class="card__add">
-                <button type="button" name="">+</button>
+        <div class="disconnect">
+            Se deconnecter
+        </div>
+        <div class="notifs">
+
+        </div>
+        <!-- Modal One -->
+        <div class="modal">
+            <input class="modal-open" id="modal-one" type="checkbox" hidden>
+            <div class="modal-wrap" aria-hidden="true" role="dialog">
+                <label class="modal-overlay" for="modal-one"></label>
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <input id="edit__title" type="text" disabled placeholder="Nouvelle liste" value="">
+                        <!--Titre-->
+                        </input>
+                        <label class="btn-close" for="modal-one" aria-hidden="true">×</label>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="" id="edit__desc" placeholder="Décrivez la liste ici." cols="105" rows="6" style="resize: none;"></textarea>
+                        <p class="card__products" style="margin-top:5px; margin-bottom:5px;">
+                        </p>
+                        <p class="card__users">
+                            <select id="sel__users" multiple>
+                                <option value="0" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
             </div>
-            <div class="card__body">
-              <div class="card__subtitle">Description</div>
-              <p class="card__description">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-              <p class="card__products">
-              </p>
+        </div>
+
+        <div class="mdl-layout__container main">
+            <div class="mdl-layout mdl-js-layout has-drawer is-upgraded">
+                <header class="mdl-layout__header is-casting-shadow">
+                    <div class="mdl-layout__header-row">
+                        <!-- Title -->
+                        <span class="mdl-layout-title menu__title">Bienvenue!</span>
+                        <!-- Add spacer, to align navigation to the right -->
+                        <div class="mdl-layout-spacer"></div>
+                        <!-- Navigation -->
+                        <nav class="mdl-navigation">
+                            <a class="mdl-navigation__link" href="">Link</a>
+                            <a class="mdl-navigation__link" href="">Link</a>
+                            <a class="mdl-navigation__link" href="">Link</a>
+                            <a class="mdl-navigation__link" href="">Link</a>
+                        </nav>
+                    </div>
+                </header>
+                <div class="mdl-layout__drawer">
+                    <span class="mdl-layout-title">Title</span>
+                    <nav class="mdl-navigation">
+                        <a class="mdl-navigation__link" href="">Link</a>
+                        <a class="mdl-navigation__link" href="">Link</a>
+                        <a class="mdl-navigation__link" href="">Link</a>
+                        <a class="mdl-navigation__link" href="">Link</a>
+                    </nav>
+                </div>
+                <main class="main__content">
+                    <!-- Fieldset to add a new list                   -->
+                    <fieldset class="card__add">
+                        <label class="btn" for="modal-one" onclick="Tools.editList();">
+                            <div class="flex">
+                                <div>
+                                    Add a list
+                                    <button class="mdl-button mdl-js-button mdl-button--fab">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </label>
+                    </fieldset>
+
+                    <!--
+                    <fieldset id="test" class="card">
+                        <legend>Title</legend>
+                        <div class="card__edit">
+                            <label class="btn" for="modal-one" onclick="Tools.editList(Tools.test);">EDIT</<label>
+                        </div>
+                        <div class="card__body">
+                            <div class="card__subtitle">Description</div>
+                            <p class="card__description">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <p class="card__products">
+                                <span class="prod">Sucre</span>
+                                <span class="prod">Farine</span>
+                                <span class="prod">Oeuf</span>
+                                <span class="prod">Levure</span>
+                                <span class="prod">Chocolate</span>
+                            </p>
+
+                        </div>
+                    </fieldset>
+-->
+                </main>
+                <div class="mdl-layout__drawer-button"><i class="material-icons">menu</i>
+                </div>
+                <div class="mdl-layout__obfuscator"></div>
             </div>
-          </fieldset>
-        </main>
+        </div>
     </div>
-  </div>
 </body>
-</html>
+<script src="media/script/Start.js" type="text/javascript"></script>
+
+<head>
