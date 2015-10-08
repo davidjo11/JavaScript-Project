@@ -1,6 +1,6 @@
 function start() {
     Tools.connect();
-    Tools.initialize();
+    Tools.msgCreator.initialize();
     Tools.page.initializeElements();
     Tools.page.toggleConnection();
 }

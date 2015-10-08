@@ -190,7 +190,21 @@ Tools = {
     },
     
     connect: function (){
-        
+        cobra.connect('http://cobra-framework.com:8080');
+    },
+
+    controlConnection: function (username){
+        var res = { error : ""};
+        if(username.length < 6 || username.match(/[A-Za-z0-9_]*/)[0] !== username){
+            res.error += "Votre pseudo doit contenir 6 caractères ou plus de cet ensemble: [A-Za-z0-9_].\n";
+        }
+        else if (!Tools.users.isAvailable(username)){
+            res.error += "Le pseudo que vous avez choisi est indisponible.\n";
+        }
+        else if(arguments[1] !== undefined && password.length < 8){
+            res.error += "Votre mot de passe doit contenir au moins 8 caractères.";
+        }
+        return res;
     },
 
     originTime: "2015-10-07",

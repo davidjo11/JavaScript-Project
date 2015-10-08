@@ -1,0 +1,198 @@
+body {
+  font-family: Open Sans;
+  background-color: lightgray;
+  font-size: 16px; }
+
+.content {
+  background-color: inherit;
+  display: block;
+  margin: 0;
+  height: 100%;
+  width: 100%; }
+
+.connection {
+  padding: 25px;
+  background-color: white;
+  color: black;
+  text-align: 'center';
+  display: none;
+  color: darkslategray;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 25px;
+  box-shadow: 5px 11px 30px darkgray;
+  border-radius: 6px;
+  transform: translate(-50%, -50%); }
+  .connection input[type=date] {
+    display: none; }
+  .connection button:hover {
+    cursor: pointer; }
+
+.main {
+  display: none; }
+
+.main__content {
+  top: 64px;
+  display: flex;
+  background-color: lightgray;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
+  margin: 0; }
+  .main__content > fieldset {
+    box-sizing: border-box;
+    border-radius: 3px;
+    height: 370px;
+    width: 300px;
+    padding: 10px;
+    max-height: 370px;
+    width: 320px;
+    position: relative;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-direction: forwards; }
+
+.card__add {
+  border: dashed 6px #595959;
+  margin: 30px; }
+  .card__add div.flex {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    background-color: lightgray;
+    height: 100%; }
+    .card__add div.flex > div {
+      height: 60px;
+      width: auto;
+      font-size: 40px;
+      color: #808080; }
+
+.card__add:hover {
+  background-color: #808080;
+  cursor: pointer; }
+  .card__add:hover:hover div {
+    background-color: #808080;
+    color: darkgray;
+    cursor: pointer; }
+
+.card {
+  background-color: whitesmoke;
+  border-top: solid 8px black;
+  margin: 20px; }
+  .card > .card__edit {
+    position: absolute;
+    bottom: 25px;
+    right: 10px;
+    display: none;
+    text-align: center;
+    z-index: 50;
+    background-color: transparent;
+    border-radius: 50%; }
+    .card > .card__edit > label {
+      border-radius: 50%;
+      background-color: blue;
+      padding: 18px 6px;
+      color: ghostwhite;
+      font-size: 20px; }
+  .card:hover {
+    box-shadow: 7px 11px 23px darkgray; }
+    .card:hover > .card__edit {
+      display: block; }
+      .card:hover > .card__edit:hover > label {
+        cursor: pointer;
+        box-shadow: 6px 6px 30px darkgray; }
+  .card > legend {
+    font-weight: bolder;
+    font-size: 22px;
+    border-radius: 6px;
+    background-color: black;
+    color: whitesmoke;
+    margin-left: 10px;
+    padding: 15px; }
+
+.card__description {
+  color: darkgray;
+  line-height: 27px;
+  font-size: 14px;
+  width: auto;
+  min-height: 30%;
+  height: auto;
+  max-height: 53%;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.card__users {
+  background-color: white;
+  color: black;
+  border: solid 1px #595959;
+  border-radius: 2px;
+  box-sizing: content-box;
+  min-height: 10%;
+  height: auto;
+  max-height: 30%;
+  overflow: auto; }
+
+.card__products {
+  background-color: white;
+  color: black;
+  border: solid 1px #595959;
+  border-radius: 2px;
+  box-sizing: content-box;
+  min-height: 10%;
+  height: auto;
+  max-height: 30%;
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: space-between;
+  overflow: auto; }
+  .card__products > span {
+    box-shadow: 2px 2px 6px lightgray;
+    border-radius: 4px;
+    background-color: darkgray;
+    color: black;
+    padding: 5px;
+    margin: 2px 2px; }
+
+.btn {
+  cursor: pointer; }
+
+@keyframes appear {
+  0% {
+    display: flex;
+    opacity: 0; }
+  25% {
+    opacity: 2.5; }
+  50% {
+    opacity: 5; }
+  75% {
+    opacity: 7.5; }
+  100% {
+    opacity: 1; } }
+@keyframes disappear {
+  0% {
+    opacity: 1; }
+  25% {
+    opacity: 7.5; }
+  50% {
+    opacity: 5; }
+  75% {
+    opacity: 2.5; }
+  100% {
+    opacity: 0;
+    display: none; } }
+
+/*# sourceMappingURL=global.css.map */

@@ -29,12 +29,12 @@
     border-color: seagreen;
     background-color: #e0fde0;
     color: limegreen; }
-  .notifs .notif__left {
+  .notifs .notif__left, .notifs .notif__unshared {
     @extends .notif
     border-color: red;
     background-color: #ffb2b2;
     color: red; }
-  .notifs .notif__shared {
+  .notifs .notif__shared, .notifs notif__update {
     @extends .notif
     border-color: blue;
     color: blue;
