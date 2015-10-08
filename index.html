@@ -46,26 +46,26 @@
                 complete: function (result, status) {
                         console.log("complete");
                         var r = result.responseJSON.Events;
-                        var m = undefined,
-                            time = undefined;
                         var i = r.length - 1;
-                        do {
+                            var m = (JSON.parse(r[i].content)).message;
+                            var time = r[i].timestamp.substring(0, 9);
+                        while (Tools.isDateSupToOriginDate(time) && i >= 0) {
                             m = (JSON.parse(r[i].content)).message;
                             time = r[i].timestamp.substring(0, 9);
                             if (m !== null && m !== undefined && m !== {} && Tools.msgCreator.validateMessage(m)) {
                                 Tools.listEvents.push(m);
                             }
-                            i++;
+                            i--;
                         }
-                        while (Tools.isDateSupToOriginDate(time)) 
-//                        {
-//                                                    var time = r[r.length - i - 1].timestamp;
-//                                                    console.log(r[i].content);
-//                                                        console.log(JSON.parse(r[i].content));
-//                                                        console.log(m);
-//                            Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
-//
-//                        }
+                        Tools.listEvents.reverse();
+                        //                        {
+                        //                                                    var time = r[r.length - i - 1].timestamp;
+                        //                                                    console.log(r[i].content);
+                        //                                                        console.log(JSON.parse(r[i].content));
+                        //                                                        console.log(m);
+                        //                            Filtrage des messages pré-connexion correspondants à notre syntaxe (bref les messages qui nous conviennent).
+                        //
+                        //                        }
                     }
                     //                    Tools.listTodayEvents.reverse();
 

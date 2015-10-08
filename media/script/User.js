@@ -1,7 +1,7 @@
-function User(username, socket, password) {
+function User(username, socket) {
     this.socketId = socket;
     this.name = username;
-    this.password = Tools.crypted(password,this.username.length);
+    this.password = undefined;
     this.color = undefined;
     this.lm = new ListManager();
     this.id = Tools.getRandomString(25);
@@ -76,7 +76,8 @@ User.prototype = {
     *@param user: l'utilisateur à supprimer de la liste de partage de la liste list
     *@return true si ça a fonctionné false sinon
     */
-    removeUserFromList: function (list, user) {
+    removeUserFromList: function
+        (list, user) {
         if (this.getList(list) !== undefined && list.getProprietor().equals(this) && list.isSharedWith(user)) {
             list.removeUser(user);
             return true;

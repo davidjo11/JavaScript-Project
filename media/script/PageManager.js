@@ -15,7 +15,7 @@ PageManager.prototype = {
 
         /* Partie connexion*/
         this.divDisconnect = document.getElementsByClassName("disconnect")[0];
-        
+
         this.divConnection = this.body.getElementsByClassName("connection")[0];
         Tools.ajouterTexte(this.divConnection, "Entrez votre pseudo");
 
@@ -24,6 +24,7 @@ PageManager.prototype = {
             "margin-bottom", "5px",
             "font-size", "22px");
         Tools.assignAttributes(inputPseudo,
+            'id', "pseudo",
             "class", "input_pseudo",
             "type", "text",
             "placeholder", "Your pseudo",
@@ -34,18 +35,15 @@ PageManager.prototype = {
             'title', "Votre pseudo doit uniquement contenir les caractères suivants: [A-Za-z0-9_].");
         Tools.ajouterBalise(this.divConnection, inputPseudo);
 
-        var inputDate = Tools.createStyledElement("input",
-            "margin-top", "15px",
-            "margin-bottom", "5px",
-            "font-size", "22px");
-        Tools.assignAttributes(inputDate,
-            "id", "date",
-            "type", "date",
-            "placeholder", Tools.getToday(),
-            "min", "2015-09-01",
-            "max", Tools.getToday(),
-            "title", "Une date antérieure à aujourd'hui.");
-        Tools.ajouterBalise(this.divConnection, inputDate);
+//        var inputPwd = Tools.createStyledElement("input",
+//            "margin-top", "15px",
+//            "margin-bottom", "5px",
+//            "font-size", "22px");
+//        Tools.assignAttributes(inputPwd,
+//            "id", "pwd",
+//            "type", "password",
+//            "title", "Votre mot de passe doit contenir 8 caractères ou plus.");
+//        Tools.ajouterBalise(this.divConnection, inputPwd);
 
         var button = Tools.createStyledElement("button",
             "color", "white",
@@ -81,13 +79,11 @@ PageManager.prototype = {
             var valider = this.divConnection.getElementsByTagName("button")[0];
             var self = this;
             valider.addEventListener("click", function () {
-                var inputPseudo = self.divConnection.getElementsByTagName("input")[0];
-                                var inputPwd = this.divConnection.getElementById("password");
-                if (inputPseudo.value.length >= 6 && inputPseudo.value.match(/[A-Za-z0-9_]{6,}/) && Tools.users.isAvailable(inputPseudo.value) && Tools) {
-                    //                    this.date = inputDate.value;
-                    //Tant que le client ne connait pas l'id de sa socket, on attend...
-                    //                    Tools.date = this.date.split('-');
-                    cobra.connect('http://cobra-framework.com:8080');
+                var inputPseudo = document.getElementById("pseudo");
+//                var inputPwd = document.getElementById("pwd");
+                var error = Tools.controlConnection(inputPseudo.value).error;
+
+                if (error === "" ) {
                     setTimeout(function () {
                         Tools.me = new User(inputPseudo.value, socketId);
                         Tools.users.addUser(Tools.me);
@@ -100,7 +96,7 @@ PageManager.prototype = {
                         document.onkeypress = Tools.fkey;
                         document.onkeyup = Tools.fkey;
                     }, 750);
-                } else alert('Votre pseudo doit contenir au moins 6 caractères et ne peut être composé que des caractères suivants:\n A-Z-a-z0-9_.');
+                } else alert(error);
             }, false);
         } else {
             var valider = this.divConnection.getElementsByTagName("button")[0];
@@ -110,22 +106,21 @@ PageManager.prototype = {
     },
 
     toggleContent: function () {
-        if (this.divContent.style.display == "none" || this.divContent.style.display === ""){
+        if (this.divContent.style.display == "none" || this.divContent.style.display === "") {
             this.divContent.style.display = "block";
             this.toggleDisconnect();
-        }
-        else{
+        } else {
             this.divContent.style.display = "none";
             this.toggleDisconnect();
-        } 
+        }
     },
 
-    toggleDisconnect: function (){
-      if(this.divDisconnect.style.display === "none" || this.divDisconnect.style.display === "")  
-          this.divDisconnect.style.display = "block";
+    toggleDisconnect: function () {
+        if (this.divDisconnect.style.display === "none" || this.divDisconnect.style.display === "")
+            this.divDisconnect.style.display = "block";
         else this.divDisconnect.style.display = "none";
     },
-    
+
     createNotif: function (evt, user) {
         var notif = document.createElement("div");
         Tools.assignAttributes(notif, "class", "notif");
