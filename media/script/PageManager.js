@@ -35,15 +35,15 @@ PageManager.prototype = {
             'title', "Votre pseudo doit uniquement contenir les caractères suivants: [A-Za-z0-9_].");
         Tools.ajouterBalise(this.divConnection, inputPseudo);
 
-//        var inputPwd = Tools.createStyledElement("input",
-//            "margin-top", "15px",
-//            "margin-bottom", "5px",
-//            "font-size", "22px");
-//        Tools.assignAttributes(inputPwd,
-//            "id", "pwd",
-//            "type", "password",
-//            "title", "Votre mot de passe doit contenir 8 caractères ou plus.");
-//        Tools.ajouterBalise(this.divConnection, inputPwd);
+        //        var inputPwd = Tools.createStyledElement("input",
+        //            "margin-top", "15px",
+        //            "margin-bottom", "5px",
+        //            "font-size", "22px");
+        //        Tools.assignAttributes(inputPwd,
+        //            "id", "pwd",
+        //            "type", "password",
+        //            "title", "Votre mot de passe doit contenir 8 caractères ou plus.");
+        //        Tools.ajouterBalise(this.divConnection, inputPwd);
 
         var button = Tools.createStyledElement("button",
             "color", "white",
@@ -80,16 +80,17 @@ PageManager.prototype = {
             var self = this;
             valider.addEventListener("click", function () {
                 var inputPseudo = document.getElementById("pseudo");
-//                var inputPwd = document.getElementById("pwd");
+                //                var inputPwd = document.getElementById("pwd");
                 var error = Tools.controlConnection(inputPseudo.value).error;
 
-                if (error === "" ) {
+                if (error === "") {
                     setTimeout(function () {
                         Tools.me = new User(inputPseudo.value, socketId);
                         Tools.users.addUser(Tools.me);
                         self.toggleConnection();
                         cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
-                        self.toggleContent();
+                        if (self.divContent.style.display === "none" || self.divContent.style.display === "")
+                            self.toggleContent();
                     }, 750);
                 } else alert(error);
             }, false);
@@ -130,21 +131,21 @@ PageManager.prototype = {
         var notif = document.createElement("div");
         Tools.assignAttributes(notif, "class", "notif");
         if (evt === "join") {
-            notif.classList.add = "notif__join";
+            notif.classList.add("notif__join");
             Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
         } else if (evt === "left") {
-            notif.classList.add = "notif__left";
+            notif.classList.add("notif__left");
             Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
         } else if ("shared" === evt) {
             //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
             var l = arguments[2];
-            notif.classList.add = "notif__shared";
+            notif.classList.add("notif__shared");
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé la liste " + l.getName() + " avec vous.");
             this.createList(l);
         } else if ("unshared" === evt) {
             var l = arguments[2];
             this.removeList(l);
-            notif.classList.add = "notif__unshared";
+            notif.classList.add("notif__unshared");
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager cette liste" + l.getName() + "avec vous.");
         } else if ("update" === evt) {
             var l = arguments[2];
@@ -162,7 +163,7 @@ PageManager.prototype = {
 
     removeUserFromSelect: function (user) {
         var select = document.getElementById("sel__users");
-        var opts = select.getElementsByTagName('option');
+        var opts = select.options;
         for (var i = 0; i < opts.length; i++) {
             var opt = opts[i];
             if (opt.value === user.getSocket()) {
@@ -194,7 +195,7 @@ PageManager.prototype = {
         //Pour eviter des problèmes avec les eventListener (voir le code ci-dessous), on recrée les elements select et les boutons.
         //        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
         var select = document.getElementById("sel__users");
-        select.innerHTML = "<option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option>";
+        select.innerHTML = 
 
         var products = this.divEdit.getElementsByClassName("card__products")[0];
         //pour éviter de conserver des valeurs non validées
@@ -238,26 +239,23 @@ PageManager.prototype = {
 
                 //On remplit le select
                 var ownIt = l.getProprietor().equals(Tools.me);
-                for (var i = 0; i < Tools.users.getNbUser(); i++) {
-                    var u = Tools.users.getUser(i);
-                    if (!u.equals(Tools.me)) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
-                        var opt = Tools.createStyledElement("option");
-                        Tools.assignAttributes(opt, "value", u.getSocket());
-                        //opt.innerText = u.getName()
-                        opt.text = u.getName();
+                for (var i = 1; i < select.options.length; i++) {
+                    var opt = select.options[i];
+                    var u = Tools.users.getUser(opt.value);
+                    if (u.getid() !== Tools.me.getId()) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
                         if (l.isSharedWith(u))
                             opt.selected = true;
                         else opt.selected = false;
                         if (!ownIt) { //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
-                            opt.addEventListener('click', function () {
+                            opt.addEventListener('mousedown', function () {
                                 alert('Vous devez être propriétaire de la liste pour gérer le partage.');
                             }, false);
                             opt.disabled = true;
                         } else {
-                            opt.addEventListener('mousedown', function (e) {
-                                this.selected = !this.selected;
-                                e.preventDefault();
-                            }, false);
+//                            opt.addEventListener('mousedown', function (e) {
+//                                this.selected = !this.selected;
+//                                e.preventDefault();
+//                            }, false);
                         }
                     }
                 }
@@ -265,10 +263,10 @@ PageManager.prototype = {
                 btn_validate.addEventListener('click', function () {
                     l.setDescription(texta.value);
                     if (ownIt) { //... sinon on contrôle.
-                        l.sharedWith = [];
                         var tu = select.options;
                         for (var i = 1; i < tu.length; i++) {
                             var u = tu[i];
+                            u.removeEventListener('mousedown', function () {}, false);
                             if (u.selected) {
                                 l.addUser(Tools.users.getUser(u.value));
                             }
@@ -278,26 +276,13 @@ PageManager.prototype = {
                         l.addProduct(textProd[i]);
                     }
                     setTimeout(function () {
-                        //                        //On retire de la page l'ancienne liste...
-                        //                        self.removeList(l);
-                        //                        //... on y met la nouvelle.
-                        //                        self.createList(l);
-                        //                        //On update le listeManager.
-                        ////                        Tools.me.updateList(l);
-                        //                        //On partage.
-                        //                        fieldset.innerHTML = l.innerHTML;
                         self.updateList(l);
                         cobra.sendMessage(Tools.msgCreator.updateListMsg(l), room, false);
                     }, 1000);
                 }, false);
 
                 btn_delete.addEventListener('click', function () {
-<<<<<<< HEAD
-                    var l = Tools.me.getList(lid); 
-=======
-                    console.log("deleteList");
                     var l = Tools.me.getList(lid);
->>>>>>> dd43e6a21ccb6da689699fbd797b31a74077e325
                     l = Tools.me.deleteList(l);
                     setTimeout(function () {
                         self.removeList(l);
@@ -311,20 +296,16 @@ PageManager.prototype = {
             btn_delete.style.display = "none";
 
             //On remplit le select
-            for (var i = 0; i < Tools.users.getNbUser(); i++) {
-                var u = Tools.users.getUser(i);
+            for (var i = 1; i < select.options.length; i++) {
+                var opt = select.options[i];
+                var u = Tools.users.getUser(opt.value);
                 if (!u.equals(Tools.me)) {
-                    var opt = Tools.createStyledElement("option");
-                    Tools.assignAttributes(opt, "value", u.getSocket());
-                    //opt.innerText = u.getName()
-                    opt.text = u.getName();
                     opt.selected = false;
                     opt.disabled = false;
-                    opt.addEventListener('mousedown', function (e) {
-                        this.selected = !this.selected;
-                        e.preventDefault();
-                    }, false);
-                    Tools.ajouterBalise(select, opt);
+//                    opt.addEventListener('mousedown', function (e) {
+//                        this.selected = !this.selected;
+//                        e.preventDefault();
+//                    }, false);
                 }
             }
 
@@ -340,6 +321,7 @@ PageManager.prototype = {
                 var tu = select.options;
                 for (var i = 1; i < tu.length; i++) {
                     var u = tu[i];
+                    u.removeEventListener('mousedown', function () {}, false);
                     if (u.selected) {
                         l_new.addUser(Tools.users.getUser(u.value));
                     }
@@ -411,10 +393,6 @@ PageManager.prototype = {
     removeList: function (list) {
         var l = this.getList(list);
         l.style.animationName = "disappear";
-<<<<<<< HEAD
-=======
-        console.log(l);
->>>>>>> dd43e6a21ccb6da689699fbd797b31a74077e325
         var self = this;
         setTimeout(function () {
             self.divContent.removeChild(l);

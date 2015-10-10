@@ -46,12 +46,11 @@
                 complete: function (result, status) {
                         console.log("complete");
 
-                        var r = result.responseJSON.Events;
                     for (var i = 0; i < result.responseJSON.Events.length; i++) {
-                        var content = result.responseJSON.Events[i].content;
-                        // recuperer les infos contenues dans les messages
-                        console.log(content);
-                    }
+                     var content = result.responseJSON.Events[i].content;
+                     // recuperer les infos contenues dans les messages
+                     console.log(content);
+                  }
 //                        var i = r.length - 1;
 //                            var m = (JSON.parse(r[i].content)).message;
 //                            var time = r[i].timestamp.substring(0, 9);
@@ -114,15 +113,15 @@
                     else if (m.create !== undefined) l = m.create;
                     else if (m.delete !== undefined) l = m.delete;
                     else if (m.edit !== undefined) l = m.edit;
-                    console.log(l);
+
                     l = Tools.msgCreator.fromObjectToList(l);
                     user = Tools.msgCreator.fromObjectToUser(m.user);
                     //On ajoute l'utilisateur si il n'est pas dans la liste de nos utilisateurs
-                    if (Tools.users.getUser(user.getSocket()) === -1) {
-                        console.log(user.getName() + " a été ajouté.");
-                        Tools.users.addUser(user);
-                        Tools.page.addUserSelect(user);
-                    }
+//                    if (Tools.users.getUser(user.getSocket()) === -1) {
+//                        console.log(user.getName() + " a été ajouté.");
+//                        Tools.users.addUser(user);
+//                        Tools.page.addUserToSelect(user);
+//                    }
                     if (Tools.me.getList(l) === undefined && l.isSharedWith(Tools.me)) {
                         console.log("shared");
                         Tools.notify("shared", user, l);

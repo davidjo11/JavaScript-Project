@@ -5,11 +5,12 @@ function ListManager() {
 
 ListManager.prototype = {
     /*Ajoute la nouvelle liste list en détectant les listes ayant le même nom.
-    *Ex: S'il y a déjà une liste qui porte le même nom alors celle-ci apparaitra avec "(2)" à côté de son nom, "(3)" s'il y en a 2 etc...
-    */
+     *Ex: S'il y a déjà une liste qui porte le même nom alors celle-ci apparaitra avec "(2)" à côté de son nom, "(3)" s'il y en a 2 etc...
+     */
     createList: function (list) {
         'use strict';
-        var i = this.getListName(list, 0), j = 0;
+        var i = this.getListName(list, 0),
+            j = 0;
         while (i !== -1 && i < this.lists.length) {
             console.log(i);
             i++;
@@ -26,13 +27,13 @@ ListManager.prototype = {
     },
 
     /*PErmet de rechercher une liste pourtant le même nom.
-    *Il est possible de rechercher cette liste à partir d'un indice à passer en 2ème param. .
-    */
+     *Il est possible de rechercher cette liste à partir d'un indice à passer en 2ème param. .
+     */
     getListName: function (list) {
         //Chercher à partir d'un indice aux dans le tableau de List
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
-        for (var i = aux;i<this.lists.length; i++) {
+        for (var i = aux; i < this.lists.length; i++) {
             var l = this.lists[i];
             if (l.getName() === list.getName() && l.getId() !== list.getId())
                 return i;
@@ -41,9 +42,9 @@ ListManager.prototype = {
     },
 
     /*Retourne la position de la liste list dans le tableau this.lists.
-    *Le param. peut être un objet List ou un identifiant.
-    *@return la position de la liste, -1 si la liste n'est pas répertoriée.
-    */
+     *Le param. peut être un objet List ou un identifiant.
+     *@return la position de la liste, -1 si la liste n'est pas répertoriée.
+     */
     getListPosition: function (list) {
         'use strict';
 
@@ -69,20 +70,20 @@ ListManager.prototype = {
     },
 
     /*Retourne l'objet List dans le tableau de liste.
-    *@param list: un objet List ou un identifiant.
-    */
-    getList: function (list){
-          if (typeof list === "object") {
+     *@param list: un objet List ou un identifiant.
+     */
+    getList: function (list) {
+        if (typeof list === "object") {
             //Chercher à partir d'un indice aux dans la liste des listes
 
-            for (var i = 0; this.lists.length; i++) {
+            for (var i = 0; i < this.lists.length; i++) {
                 var l = this.lists[i];
                 if (l.equals(list))
                     return l;
             }
             return undefined;
 
-        } else if (typeof list === "string") {//l'id de la liste
+        } else if (typeof list === "string") { //l'id de la liste
             for (var i = 0; this.lists.length; i++) {
                 var l = this.lists[i];
                 if (l.getId() === list)
@@ -91,11 +92,11 @@ ListManager.prototype = {
             return undefined;
         }
     },
-    
+
     /*Supprime la liste passée en param. (objet ou identifiant).
-    *@param list: un objet List ou un identifiant.
-    *@return la liste supprimée ou undefined si la liste n'est répertoriée.
-    */
+     *@param list: un objet List ou un identifiant.
+     *@return la liste supprimée ou undefined si la liste n'est répertoriée.
+     */
     deleteList: function (list) {
         var i = this.getListPosition(list);
         if (i > -1) {
@@ -105,9 +106,9 @@ ListManager.prototype = {
     },
 
     /*Remplace la liste ayant le même identifiant dans this.lists par celle passée en param. .
-    *@param list: un objet List ou un identifiant.
-    *@return la nouvelle liste, undefined si la liste n'est pas répertoriée.
-    */
+     *@param list: un objet List ou un identifiant.
+     *@return la nouvelle liste, undefined si la liste n'est pas répertoriée.
+     */
     updateList: function (list) {
         var i = this.getListPosition(list);
         if (i > -1) {
@@ -118,8 +119,8 @@ ListManager.prototype = {
     },
 
     /*Retourne true si la liste list est partagée avec l'utilisateur user.
-    *
-    */
+     *
+     */
     isSharedWith: function (list, user) {
         var i = this.getListPosition(list);
         if (i > -1) {
