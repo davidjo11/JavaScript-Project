@@ -95,7 +95,7 @@
                 socketId = message.socketId;
             } else if (Tools.msgCreator.validateMessage(message.message)) {
                 var m = message.message;
-                var user = undefined;
+                var user = undefined, l = undefined;
                 if (m.join) {
                     user = Tools.msgCreator.fromObjectToUser(m.join);
                     Tools.notify("join", user);
@@ -106,12 +106,20 @@
                     Tools.notify("left", user);
                     Tools.users.removeUser(user);
                     Tools.page.removeUserFromSelect(user);
-                } else if (m.update || m.create || m.delete || m.edit) {
+                } else if(m.delete) {
+                    console.log("delete");
+                    user = Tools.msgCreator.fromObjectToUser(m.user);
+                    l = Tools.msgCreator.fromObjectToList(m.delete);
+                    if(Tools.me.getList(l) !== undefined){
+                        Tools.notify("delete", user, l);
+                        Tools.me.deleteList(l);
+                        Tools.page.removeList(l);
+                    }
+                } else if (m.update || m.create || m.edit) {
                     console.log("CRUD");
-                    var l = undefined;
+                    l = undefined;
                     if (m.update !== undefined) l = m.update;
                     else if (m.create !== undefined) l = m.create;
-                    else if (m.delete !== undefined) l = m.delete;
                     else if (m.edit !== undefined) l = m.edit;
 
                     l = Tools.msgCreator.fromObjectToList(l);
@@ -122,15 +130,20 @@
 //                        Tools.users.addUser(user);
 //                        Tools.page.addUserToSelect(user);
 //                    }
+                    //Un utilisateur a créé ou update une liste en m'ajoutant dans la liste de partage de cette liste.
                     if (Tools.me.getList(l) === undefined && l.isSharedWith(Tools.me)) {
                         console.log("shared");
                         Tools.notify("shared", user, l);
                         Tools.me.createList(l);
-                    } else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l) !== undefined) {
+                        Tools.page.createList(l);
+                    } //Un utilisateur a mis à jour une liste que je possède.
+                    else if ((l.isSharedWith(Tools.me) || Tools.me.equals(l.getProprietor())) && Tools.me.getList(l) !== undefined) {
                         console.log("update");
-                        Tools.page.notify("update", user, l);
+                        Tools.notify("update", user, l);
                         Tools.me.updateList(l);
-                    } else if (l.isBeingEdited) {
+                        Tools.page.updateList(l);
+                    } //Un  utilisateur est en train de modifier une liste (il a cliqué sur "edit").
+                    else if (l.isBeingEdited) {
                         console.log("edit");
                         if (l.getProprietor().equals(Tools.me) || l.isSharedWith(Tools.me)) {
                             Tools.notify("edit", user);
@@ -138,7 +151,7 @@
                     } else if (!l.isSharedWith(Tools.me) && Tools.me.getList(l) !== undefined) { //J'ai été supprimé de la liste users ayant accès à cette liste l par le proprio.
                         var deleted = Tools.me.getList(l);
                         if (deleted !== undefined) { //Si la liste est dans la listeManager du client alors le propriétaire de la liste ne souhaite plus la partager avec l'utilisateur
-                            Tools.page.notify("unshared", user, deleted);
+                            Tools.notify("unshared", user, deleted);
                             Tools.page.removeList(deleted);
                             Tools.me.deleteList(deleted);
                         } //Cas impossible
@@ -186,7 +199,7 @@
         <div class="connection">
 
         </div>
-        <div class="disconnect" style="visibility: hidden;">
+        <div class="disconnect" style="visibility: hidden;display:none;">
             Se deconnecter
         </div>
         <div class="notifs" style="display: none;">

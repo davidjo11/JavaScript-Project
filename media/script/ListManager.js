@@ -17,7 +17,6 @@ ListManager.prototype = {
             i = this.getListName(list, i);
             j++;
         }
-        console.log(j);
         //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
         list.notAlone = j;
         //        var lg = this.lists.length;

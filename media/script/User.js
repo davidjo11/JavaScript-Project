@@ -76,8 +76,7 @@ User.prototype = {
     *@param user: l'utilisateur à supprimer de la liste de partage de la liste list
     *@return true si ça a fonctionné false sinon
     */
-    removeUserFromList: function
-        (list, user) {
+    removeUserFromList: function (list, user) {
         if (this.getList(list) !== undefined && list.getProprietor().equals(this) && list.isSharedWith(user)) {
             list.removeUser(user);
             return true;

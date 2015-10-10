@@ -10,18 +10,6 @@ body {
   height: 100%;
   width: 100%; }
 
-.disconnect {
-    background-color: red;
-    color: white;
-    font-size: 20px;
-    border: outset whitesmoke 2px;
-    position: fixed;
-    top: 20x;
-    bottom: 20px;
-    border-radius: 3px;
-    display: none;
-}
-
 .connection {
   padding: 25px;
   background-color: white;
@@ -67,7 +55,7 @@ body {
     max-height: 370px;
     width: 320px;
     position: relative;
-    animation-duration: 5s;
+    animation-duration: 4s;
     animation-iteration-count: 1;
     animation-direction: forwards; }
 
@@ -196,8 +184,8 @@ body {
     opacity: 1; } }
 @keyframes disappear {
   0% {
-    opacity: 1; }
-  25% {
+    opacity: 9; }
+  20% {
     opacity: 7.5; }
   50% {
     opacity: 5; }

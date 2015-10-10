@@ -34,8 +34,7 @@
     color: limegreen;
 }
 
-.notif__left,
-.notif__unshared {
+.notif__left {
     @extend .notif;
     border-color: red;
     background-color: #ffb2b2;
@@ -43,7 +42,9 @@
 }
 
 .notif__shared,
-.notif__update {
+.notif__update,
+.notif__unshared,
+.notif__delete {
     @extend .notif;
     border-color: blue;
     color: blue;

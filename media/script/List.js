@@ -94,6 +94,7 @@ List.prototype = {
     */
     removeUser: function (user) {
         if (this.isSharedWith(user)) {
+            var aux = this.getUser(user);
             this.sharedWith.splice(aux, 1);
             return true;
         }

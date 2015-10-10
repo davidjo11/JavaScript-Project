@@ -14,9 +14,10 @@
   background: transparent;
   left: 40%; }
 
-.notif, .notif__join, .notif__left,
-.notif__unshared, .notif__shared,
-.notif__update {
+.notif, .notif__join, .notif__left, .notif__shared,
+.notif__update,
+.notif__unshared,
+.notif__delete {
   border: solid 2px;
   padding: 10px 8px;
   border-radius: 4px;
@@ -32,14 +33,15 @@
   background-color: #e0fde0;
   color: limegreen; }
 
-.notif__left,
-.notif__unshared {
+.notif__left {
   border-color: red;
   background-color: #ffb2b2;
   color: red; }
 
 .notif__shared,
-.notif__update {
+.notif__update,
+.notif__unshared,
+.notif__delete {
   border-color: blue;
   color: blue;
   background-color: #ccccff; }
