@@ -195,7 +195,7 @@ PageManager.prototype = {
         //Pour eviter des problèmes avec les eventListener (voir le code ci-dessous), on recrée les elements select et les boutons.
         //        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
         var select = document.getElementById("sel__users");
-        select.innerHTML = 
+        select.innerHTML = "<option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option>";
 
         var products = this.divEdit.getElementsByClassName("card__products")[0];
         //pour éviter de conserver des valeurs non validées

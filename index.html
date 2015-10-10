@@ -24,7 +24,7 @@
         var room = "listecourse";
         var socketId;
         var apiUrl = 'http://cobra-framework.com:3000/api/events/' + room;
-        //        cobra.connect('http://cobra-framework.com:8080');
+        //cobra.connect('http://cobra-framework.com:8080');
 
         cobra.connectionCallback = function () {
             cobra.joinRoom(room);
@@ -44,8 +44,8 @@
                 },
 
                 complete: function (result, status) {
-                        console.log("complete");
-
+                    console.log("complete");
+                    console.log(result);
                     for (var i = 0; i < result.responseJSON.Events.length; i++) {
                      var content = result.responseJSON.Events[i].content;
                      // recuperer les infos contenues dans les messages

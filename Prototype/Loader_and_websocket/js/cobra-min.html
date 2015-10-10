@@ -5,8 +5,8 @@
     <title>Cobra minimal</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="js/socket.io.js"></script>
-    <script src="js/cobra.js"></script>
+    <script src="socket.io.js"></script>
+    <script src="cobra.js"></script>
 
     <script>
         var cobra = new Cobra();
@@ -34,6 +34,7 @@
 
               complete: function (result, status) {
                   console.log("complete");
+                  console.log(result);
                   for (var i = 0; i < result.responseJSON.Events.length; i++) {
                      var content = result.responseJSON.Events[i].content;
                      // recuperer les infos contenues dans les messages
@@ -41,7 +42,7 @@
                   }
                   
                   // Pour envoyer un message dans toute la room
-                  cobra.sendMessage({content : "test"}, room, true);
+                  //cobra.sendMessage({content : "test"}, room, true);
 
                   // Pour envoyer un message dans toute la room excepté soi
                   // cobra.sendMessage({content : "test"}, room, false);
