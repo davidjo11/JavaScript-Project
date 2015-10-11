@@ -46,11 +46,33 @@
                 complete: function (result, status) {
                     console.log("complete");
                     console.log(result);
-                    for (var i = 0; i < result.responseJSON.Events.length; i++) {
-                     var content = result.responseJSON.Events[i].content;
-                     // recuperer les infos contenues dans les messages
-                     console.log(content);
-                  }
+                    /**
+                     * A tester quand cobra fonctionnera, l'idée ici c'est de lire les anciens messages
+                     * Si on tombe sur un join, on ajoute l'utilisateur à la liste, si on tombe sur un
+                     * left, on le supprime.
+                     * Attention avec cette méthode à bien quitter la room pour envoyer le message left.
+                     *
+                     * Si on a des utilisateurs qui ne sont pas connectés, on changera de room pour la démo.
+                     */
+                    /*for (var i = 0; i < result.responseJSON.Events.length; i++) {
+                        var message = result.responseJSON.Events[i].content;
+                        // recuperer les infos contenues dans les messages
+                        console.log(message);
+                        var m = message.message;
+                        var user = undefined;
+                        if (m.join) {
+                            user = Tools.msgCreator.fromObjectToUser(m.join);
+                            Tools.users.addUser(user);
+                            Tools.page.addUserToSelect(user);
+                        } else if (m.left) {
+                            user = Tools.msgCreator.fromObjectToUser(m.left);
+                            Tools.users.removeUser(user);
+                            Tools.page.removeUserFromSelect(user);
+                        }
+                    }*/
+                    /**
+                     * Fin persistance utilisateurs
+                     */
 //                        var i = r.length - 1;
 //                            var m = (JSON.parse(r[i].content)).message;
 //                            var time = r[i].timestamp.substring(0, 9);
