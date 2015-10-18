@@ -31,6 +31,7 @@ PageManager.prototype = {
             "placeholder", "Your pseudo",
             "pattern", "[A-Za-z0-9]{6,}",
             "onkeydown", "Tools.alphaOnly(event);",
+
             "required", "",
             "autofocus", "",
             'title', "Votre pseudo doit uniquement contenir les caractères suivants: [A-Za-z0-9_].");
@@ -80,8 +81,10 @@ PageManager.prototype = {
         if (this.divConnection.style.display === "none" || this.divConnection.style.display === "") {
             this.divConnection.style.display = "flex";
             var valider = this.divConnection.getElementsByTagName("button")[0];
+            var pseudo = this.divConnection.getElementsByTagName("input")[0];
             var self = this;
-            valider.addEventListener("click", function () {
+
+            function connexion(){
                 var inputPseudo = document.getElementById("pseudo");
                 //                var inputPwd = document.getElementById("pwd");
                 var error = Tools.controlConnection(inputPseudo.value).error;
@@ -96,12 +99,19 @@ PageManager.prototype = {
                             self.toggleContent();
                     }, 750);
                 } else alert(error);
-            }, false);
+            }
+
+            valider.addEventListener("click", connexion, false);
+            pseudo.addEventListener("keypress", function (event){
+                if(event.keyCode == 13)
+                    connexion();
+            });
+
         } else {
             var valider = this.divConnection.getElementsByTagName("button")[0];
             valider.removeEventListener('click', function () {}, false);
             this.divConnection.style.display = "none";
-        };
+        }
     },
 
     toggleContent: function () {

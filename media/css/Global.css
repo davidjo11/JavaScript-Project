@@ -196,3 +196,7 @@ body {
     display: none; } }
 
 /*# sourceMappingURL=global.css.map */
+
+body .mdl-layout__header-row{
+  padding: 0 20px;
+}

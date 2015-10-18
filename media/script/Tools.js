@@ -129,7 +129,7 @@ Tools = {
     fkey: function (e) {
         e = e || window.event;
 
-        if (e.keyCode == 116) {
+        if (e.keyCode === 116 && e.charCode === 0) {
             var response = prompt("Vous avez pressez la touche f5.\nVous risquez de vous déconnecter, voulez-vous continuer?(o/n)");
             if ((response !== "o" && response !== "O")){
                 e.preventDefault();
@@ -224,7 +224,7 @@ Tools = {
     me: undefined,
 
     usedColors: "#0000FF,#A9A9A9,#000000,#F5F5F5,#FFFFFF"
-}
+};
 
 var wasPressed = false;
 
