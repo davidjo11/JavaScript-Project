@@ -10,12 +10,6 @@ function MessageManager() {
 */
 MessageManager.prototype = {
 
-    /*Analyse l'ensemble des events ayant eu lieu pendant l'absence de l'utilisateur (update des listes, utilisateurs connectés, etc...)
-    */
-    initialize: function (events){
-        
-    },
-    
     joinMsg: function () {
         return {
             join: Tools.me.forJSON()
@@ -26,42 +20,43 @@ MessageManager.prototype = {
         return {
             create: list.forJSON(),
             user: Tools.me.forJSON()
-        }
+        };
     },
 
     updateListMsg: function (list) {
         return {
             update: list.forJSON(),
             user: Tools.me.forJSON()
-        }
+        };
     },
 
     deleteListMsg: function (list) {
         return {
             delete: list.forJSON(),
             user: Tools.me.forJSON()
-        }
+        };
     },
     
     leftMsg: function(){
         return {
             left: Tools.me,
             lists: Tools.me.lists
-        }
+        };
     },
 
     editListMsg: function (list) {
         return {
             edit: list.forJSON(),
             user: Tools.me.forJSON()
-        }
+        };
     },
 
     /**Fonction permettant de vérifier le contenu du message.
     *
     */
     validateMessage: function (msg) {
-        if (((msg.edit || msg.update || msg.delete || msg.create) && msg.user) || msg.join) {
+        var crud = (msg.edit || msg.update || msg.delete || msg.create);
+        if ((crud && msg.user) || msg.join) {
             return true;
         }
         return false;
@@ -71,6 +66,8 @@ MessageManager.prototype = {
     *Analyse le message reçu et retourne les objets User et List correspondants.
     */
     fromObjectToList: function (object) {
+        var i = 0;
+        var u = undefined;
         //Traitement de la liste
         var list = undefined,
             list_b = object;
@@ -85,21 +82,21 @@ MessageManager.prototype = {
         //isBeingEdited
         list.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
-        for (var i = 0; i < list_b.sharedWith.length; i++) {
-            var u = this.fromObjectToUser(list_b.sharedWith[i]);
+        for (i = 0; i < list_b.sharedWith.length; i++) {
+            u = this.fromObjectToUser(list_b.sharedWith[i]);
             list.addUser(u);
             Tools.users.addUser(u);
         }
         //Produits
-        for (var i = 0; i < list_b.products.length; i++) {
-            var u = list_b.products[i];
+        for (i = 0; i < list_b.products.length; i++) {
+            u = list_b.products[i];
             list.addProduct(u);
         }
         //Description
         list.description = list_b.description;
         //Facultatif.
         list.notAlone = list_b.notAlone;
-        
+
         return list;
     },
 
@@ -111,14 +108,5 @@ MessageManager.prototype = {
         u.setColor(object.color);
         u.id = object.id;
         return u;
-    },
-    
-
-    //La fonction de MICKAEL
-    /*A mon avis(david): Cette fonction devrait retirer les produits du site et retourner l'ensemble des produits sous la forme d'un tableau de String.
-    *
-    */
-    getProfuctsFromURL: function (URL) {
-
     }
 };

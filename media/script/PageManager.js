@@ -75,7 +75,7 @@ PageManager.prototype = {
             var pseudo = this.divConnection.getElementsByTagName("input")[0];
             var self = this;
 
-            var conn = function connexion(){
+            var fun = function (){
                 var inputPseudo = document.getElementById("pseudo");
                 var error = Tools.controlConnection(inputPseudo.value).error;
 
@@ -89,7 +89,9 @@ PageManager.prototype = {
                             self.toggleContent();
                     }, 750);
                 } else alert(error);
-            }
+            };
+
+            fun();
 
             valider.addEventListener("click", connexion, false);
             pseudo.addEventListener("keypress", function (event){
@@ -154,7 +156,7 @@ PageManager.prototype = {
         } else if ("update" === evt) {
             l = arguments[2];
             notif.classList.add("notif__update");
-            Tools.ajouterTexte(notif, user.getName() + " a modifié la liste \""+ l.getName() +"\".")
+            Tools.ajouterTexte(notif, user.getName() + " a modifié la liste \""+ l.getName() +"\".");
         } else return;
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
@@ -170,7 +172,7 @@ PageManager.prototype = {
         var opts = select.options;
         var removeEvt = function (element) {
             element.removeEventListener('mousedown', function () {}, false);
-        }
+        };
         for (var i = 0; i < opts.length; i++) {
             var opt = opts[i];
             if (opt.value === user.getSocket()) {
@@ -216,6 +218,7 @@ PageManager.prototype = {
         var btn_delete = this.divEdit.getElementsByClassName("btn-delete")[0];
 
         var l = undefined;
+        var u = undefined;
         var i = 0;
         //Cas modification:
         //arguments (voir Tools.editList): liste id, titre, description, produits (tableau d'éléments span)
@@ -239,7 +242,7 @@ PageManager.prototype = {
                         products.removeChild(this);
                     }
                 }, false);
-            }
+            };
             for (i = 0; i < tabProducts.length; i++) {
                 var p = tabProducts[i];
                 var p_new = Tools.createStyledElement("span", "cursor", "pointer");
@@ -254,23 +257,27 @@ PageManager.prototype = {
                 var ownIt = l.getProprietor().equals(Tools.me);
                 for (i = 1; i < select.options.length; i++) {
                     var opt = select.options[i];
-                    var u = Tools.users.getUser(opt.value);
-                    if (!u.equals(Tools.me)) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
+                    u = Tools.users.getUser(opt.value);
+                    if (!u.equals(Tools.me)) { 
+                    //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
                         if (l.isSharedWith(u))
                             opt.selected = true;
                         else opt.selected = false;
-                        if (!ownIt) //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
+                        if (!ownIt) 
+                        //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
                             opt.disabled = true;
                     }
                 }
 
                 btn_validate.addEventListener('click', function () {
                     l.setDescription(texta.value);
-                    if (ownIt) { //... sinon on contrôle.
+                    if (ownIt) { 
+                    //... sinon on contrôle.
                         var tu = select.options;
                         for (i = 1; i < tu.length; i++) {
-                            var u = tu[i];
-                            if (u.selected) //Ou Tools.me.removeUserFromList(l.getId(), Tools.users.getUser(u.value))
+                            u = tu[i];
+                            if (u.selected) 
+                            //Ou Tools.me.removeUserFromList(l.getId(), Tools.users.getUser(u.value))
                                 l.addUser(Tools.users.getUser(u.value));
                             else l.removeUser(Tools.users.getUser(u.value));
                         }
@@ -294,17 +301,18 @@ PageManager.prototype = {
                         }, 1000);
                     }, false);
                 }
-        } else if (arguments.length === 0) { //Cas création d'une new liste:
+        } else if (arguments.length === 0) { 
+        //Cas création d'une new liste:
             input.disabled = false;
             btn_delete.style.display = "none";
 
             //On remplit le select
             for (i = 1; i < select.options.length; i++) {
-                var opt = select.options[i];
-                var u = Tools.users.getUser(opt.value);
+                var op = select.options[i];
+                u = Tools.users.getUser(op.value);
                 if (!u.equals(Tools.me)) {
-                    opt.selected = false;
-                    opt.disabled = false;
+                    op.selected = false;
+                    op.disabled = false;
                 }
             }
 
@@ -317,9 +325,12 @@ PageManager.prototype = {
                 Tools.me.createList(l_new);
                 //Users
                 var tu = select.options;
+                var remvEvt = function (element){
+                    element.removeEventListener('mousedown', function () {}, false);
+                };
                 for (i = 1; i < tu.length; i++) {
-                    var u = tu[i];
-                    u.removeEventListener('mousedown', function () {}, false);
+                    u = tu[i];
+                    remvEvt(u);
                     if (u.selected) 
                         l_new.addUser(Tools.users.getUser(u.value));
                 }
@@ -334,12 +345,13 @@ PageManager.prototype = {
         var add = Tools.createStyledElement("span");
         add.addEventListener('click', function () {
             var t = prompt("Entrez le nom du nouveau produit (vous pouvez en mettre plusieurs en les séparant par des virgules):");
+            var sp = undefined;
             if (t !== null && t.indexOf(',') > -1) {
                 var tab_p = t.split(",");
                 for (i = 0; i < tab_p.length; i++) {
                     var p = tab_p[i].trim();
                     if (textProd.indexOf(p) === -1 && p !== "" && p.match(/[A-Za-z ]*/g)) {
-                        var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                        sp = Tools.createStyledElement("span", "cursor", "pointer");
                         Tools.assignAttributes(sp, "classList", "prod");
                         sp.innerText = p;
                         sp.addEventListener('click', function () {
@@ -356,7 +368,7 @@ PageManager.prototype = {
             } else if (t !== "" && t !== null) {
                 t = t.trim();
                 if (textProd.indexOf(t) === -1 && t !== "" && t.match(/[A-Za-z ]*/g)) {
-                    var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                    sp = Tools.createStyledElement("span", "cursor", "pointer");
                     Tools.assignAttributes(sp, "classList", "prod");
                     sp.innerText = t;
                     sp.addEventListener('click', function () {

@@ -1,5 +1,4 @@
 function ListManager() {
-    'use strict';
     this.lists = [];
 }
 
@@ -8,19 +7,15 @@ ListManager.prototype = {
      *Ex: S'il y a déjà une liste qui porte le même nom alors celle-ci apparaitra avec "(2)" à côté de son nom, "(3)" s'il y en a 2 etc...
      */
     createList: function (list) {
-        'use strict';
         var i = this.getListName(list, 0),
             j = 0;
         while (i !== -1 && i < this.lists.length) {
-            console.log(i);
             i++;
             i = this.getListName(list, i);
             j++;
         }
         //Si il existe déjà une liste avec le même nom, on ajoute un numéro indiquant le nombre de listes avec le même nom déjà présentes
         list.notAlone = j;
-        //        var lg = this.lists.length;
-        //        return this.lists.push(list) === (lg + 1);
         this.lists.push(list);
         return true;
     },
@@ -45,22 +40,22 @@ ListManager.prototype = {
      *@return la position de la liste, -1 si la liste n'est pas répertoriée.
      */
     getListPosition: function (list) {
-        'use strict';
-
+        var i = 0;
+        var l = undefined;
         if (typeof list === "object") {
             //Chercher à partir d'un indice aux dans la liste des listes
             var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
-            for (var i = aux; i < this.lists.length; i++) {
-                var l = this.lists[i];
+            for (i = aux; i < this.lists.length; i++) {
+                l = this.lists[i];
                 if (l.equals(list))
                     return i;
             }
             return -1;
 
         } else if (typeof list === "string") {
-            for (var i = 0; i < this.lists.length; i++) {
-                var l = this.lists[i];
+            for (i = 0; i < this.lists.length; i++) {
+                l = this.lists[i];
                 if (l.getId() === list)
                     return i;
             }
@@ -72,19 +67,23 @@ ListManager.prototype = {
      *@param list: un objet List ou un identifiant.
      */
     getList: function (list) {
+        var i = 0;
+        var l = undefined;
+        var length = this.lists.length;
         if (typeof list === "object") {
             //Chercher à partir d'un indice aux dans la liste des listes
 
-            for (var i = 0; i < this.lists.length; i++) {
-                var l = this.lists[i];
+            for (i = 0; i < length; i++) {
+                l = this.lists[i];
                 if (l.equals(list))
                     return l;
             }
             return undefined;
 
-        } else if (typeof list === "string") { //l'id de la liste
-            for (var i = 0; this.lists.length; i++) {
-                var l = this.lists[i];
+        } else if (typeof list === "string") { 
+        //l'id de la liste
+            for (i = 0; i < length; i++) {
+                l = this.lists[i];
                 if (l.getId() === list)
                     return l;
             }
