@@ -75,10 +75,10 @@ pageManager.prototype = {
             var pseudo = this.divConnection.getElementsByTagName("input")[0];
             var self = this;
 
-            var fun = function (){
+            var conn = function (){
                 var inputPseudo = document.getElementById("pseudo");
                 var error = Tools.controlConnection(inputPseudo.value).error;
-
+                console.log(inputPseudo)
                 if (error === "") {
                     setTimeout(function () {
                         Tools.me = new user(inputPseudo.value, socketId);
@@ -91,12 +91,10 @@ pageManager.prototype = {
                 } else alert(error);
             };
 
-            fun();
-
-            valider.addEventListener("click", connexion, false);
+            valider.addEventListener("click", conn, false);
             pseudo.addEventListener("keypress", function (event){
                 if(event.keyCode === 13)
-                    connexion();
+                    conn();
             });
 
         } else {
@@ -137,7 +135,7 @@ pageManager.prototype = {
         var evtText = "";
         Tools.assignAttributes(notif, "class", "notif");
 
-        if(arguments.length >= 2)
+        if(arguments.length >= 3)
             l = arguments[2];
 
         if (evt === "join") {

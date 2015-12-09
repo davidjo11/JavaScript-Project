@@ -8,8 +8,9 @@ listManager.prototype = {
      */
     createList: function (list) {
         var i = this.getListName(list, 0),
-            j = 0;
-        while (i !== -1 && i < this.lists.length) {
+            j = 0,
+            length = this.lists.length;
+        while (i !== -1 && i < length) {
             i++;
             i = this.getListName(list, i);
             j++;
@@ -26,8 +27,8 @@ listManager.prototype = {
     getListName: function (list) {
         //Chercher à partir d'un indice aux dans le tableau de List
         var aux = arguments[1] !== undefined ? arguments[1] : 0;
-
-        for (var i = aux; i < this.lists.length; i++) {
+        var length = this.lists.length;
+        for (var i = aux; i < length; i++) {
             var l = this.lists[i];
             if (l.getName() === list.getName() && l.getId() !== list.getId())
                 return i;

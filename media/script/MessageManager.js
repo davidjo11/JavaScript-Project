@@ -69,35 +69,35 @@ messageManager.prototype = {
         var i = 0;
         var u = undefined;
         //Traitement de la liste
-        var list = undefined,
+        var liste = undefined,
             list_b = object;
 
         //Proprio
         var proprietor = this.fromObjectToUser(list_b.proprietor);
 
-        list = new list(list_b.name, proprietor);
+        liste = new list(list_b.name, proprietor);
 
         //Id
-        list.id = list_b.id;
+        liste.id = list_b.id;
         //isBeingEdited
-        list.isBeingEdited = list_b.isBeingEdited;
+        liste.isBeingEdited = list_b.isBeingEdited;
         //SharedWith
         for (i = 0; i < list_b.sharedWith.length; i++) {
             u = this.fromObjectToUser(list_b.sharedWith[i]);
-            list.addUser(u);
+            liste.addUser(u);
             Tools.users.addUser(u);
         }
         //Produits
         for (i = 0; i < list_b.products.length; i++) {
             u = list_b.products[i];
-            list.addProduct(u);
+            liste.addProduct(u);
         }
         //Description
-        list.description = list_b.description;
+        liste.description = list_b.description;
         //Facultatif.
-        list.notAlone = list_b.notAlone;
+        liste.notAlone = list_b.notAlone;
 
-        return list;
+        return liste;
     },
 
     /*Analyse l'objet Object reçu en param. et retourne l'objet User correspondant.

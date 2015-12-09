@@ -229,9 +229,9 @@ Tools.include('media/script/PageManager.js', function () {
     Tools.page = new pageManager();
 });
 Tools.include('media/script/UserManager.js', function () {
-    Tools.users = new UserManager();
+    Tools.users = new userManager();
     Tools.users.initialize(100);
 });
 Tools.include('media/script/MessageManager.js', function () {
-    Tools.msgCreator = new MessageManager();
+    Tools.msgCreator = new messageManager();
 });
