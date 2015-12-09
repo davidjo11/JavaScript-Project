@@ -32,7 +32,7 @@ Tools = {
     },
 
     assignAttributes: function (balise) {
-        for (i = 1; i < arguments.length; i++) {
+        for (var i = 1; i < arguments.length; i++) {
             if (arguments[i] === "classList") {
                 i++;
                 var cl = arguments[i].split(" ");
@@ -53,23 +53,21 @@ Tools = {
     },
 
     // il est possible de passer des attributs et leur valeur en param�tres � l'infini
-    // ex : ajouterBalise (document.getElementById("i0"),"P","align","center","valign","middle");
     creerBalise: function (nomBalise) {
         var newBalise = document.createElement(nomBalise);
-        for (i = 1; i < arguments.length; i++)
+        for (var i = 1; i < arguments.length; i++)
             newBalise.setAttribute(arguments[i++], arguments[i]);
         return newBalise;
     },
 
     // ajoute (et renvoie) une balise textuelle � balise
-    // ex : ajouterBalise (document.getElementById("i0"),"bonjour");
     ajouterTexte: function (balise, texte) {
         var text = document.createTextNode(texte);
         balise.appendChild(text);
     },
 
     getRandomColors: function (nbColors) {
-        var colors = "";
+        var colors = "", color = "";
         var letters = '0123456789ABCDEF'.split('');
         for (var i = 0; i < nbColors; i) {
             color = '#';
@@ -95,17 +93,14 @@ Tools = {
     },
 
     notify: function (evt, user) {
-        //var username = users.getUser(message);
-        //if(users.exists(socketId))
-        //  page.createNotif(username, "l");
-        //else page.createNotif(username, "j");
         Tools.page.createNotif(evt, user, arguments[2]);
     },
 
     getToday: function () {
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
+        var mm = today.getMonth() + 1; 
+        //January is 0!
         var yyyy = today.getFullYear();
 
         if (dd < 10) {
@@ -123,7 +118,9 @@ Tools = {
 
     alphaOnly: function (event) {
         var key = event.keyCode;
-        return ((key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8);
+        var az = (key >= 65 && key <= 90);
+        var AZ = (key >= 96 && key <= 105);
+        return ( az || AZ || key === 8);
     },
 
     fkey: function (e) {
@@ -133,8 +130,6 @@ Tools = {
             var response = prompt("Vous avez pressez la touche f5.\nVous risquez de vous déconnecter, voulez-vous continuer?(o/n)");
             if ((response !== "o" && response !== "O")){
                 e.preventDefault();
-                console.log(e.keyCode);
-//                console.log(response !== "o");
             }
             else {
                 cobra.sendMessage(Tools.msgCreator.leftMsg(), room, false);
@@ -145,14 +140,15 @@ Tools = {
     crypted: function (s, size) {
         var letters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_-,;^!$£*µ§~#[|`\]()='.split("");
         var scrypted = "";
-        for (var i = 0; i < s.length; i++) {
-            for (var j = 0; j < size; j++) {
+        var i = 0, j = 0;
+        for (i = 0; i < s.length; i++) {
+            for (j = 0; j < size; j++) {
                 scrypted += letters[Math.floor(Math.random() * letters.length)];
 
             }
-            scryted += s.charAt(i);
+            scrypted += s.charAt(i);
         }
-        for (var j = 0; j < size; j++) {
+        for (j = 0; j < size; j++) {
             scrypted += letters[Math.floor(Math.random() * letters.length)];
         }
         return scrypted;
@@ -173,22 +169,20 @@ Tools = {
             Tools.page.fillEdit(fieldset);
         } else Tools.page.fillEdit();
     },
-    
+
     /*Compare la date (yyyy-mm-dd) passée en param. à la date d'origine Tools.originTime
     *@return 0 si égalité, 1 si supérieure, -1 si inférieure
     */
     isDateSupToOriginDate: function (stringDate){
         var date = stringDate.split('-');
         var ot = Tools.originTime.split('-');
-        if(parseInt(date[0]) < parseInt(ot[0]))
-            return false;
-        else if(parseInt(date[1]) < parseInt(ot[1]))
-            return false;
-        else if(parseInt(date[2]) < parseInt(ot[2]))
-            return false;
-        else return true;
+        var res = [];
+        res[0] = (parseInt(date[0]) < parseInt(ot[0]));
+        res[1] = (parseInt(date[1]) < parseInt(ot[1]));
+        res[2] = (parseInt(date[2]) < parseInt(ot[2]));
+        return (!res[0] || !res[1] || !res[2]) === false;
     },
-    
+
     connect: function (){
         cobra.connect('http://cobra-framework.com:8080');
     },
@@ -208,7 +202,7 @@ Tools = {
     },
 
     originTime: "2015-10-07",
-    
+
     listEvents: [],
 
     test: "test",
@@ -229,21 +223,15 @@ Tools = {
 var wasPressed = false;
 
 Tools.include('media/script/List.js', function () {});
-Tools.include("media/script/ListManager.js", function () {
-    //    Tools.lm = new ListManager();
-    //        console.log("ListManager chargé: " + Tools.lm);
-});
+Tools.include("media/script/ListManager.js", function () {});
 Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/PageManager.js', function () {
     Tools.page = new PageManager();
-    //        console.log("PageManager chargé: " + Tools.page);
 });
 Tools.include('media/script/UserManager.js', function () {
     Tools.users = new UserManager();
     Tools.users.initialize(100);
-    //        console.log('UsersManager chargé: ' + Tools.users);
 });
 Tools.include('media/script/MessageManager.js', function () {
     Tools.msgCreator = new MessageManager();
-    //        console.log('MessageManager chargé: ' + Tools.msgCreator)
 });

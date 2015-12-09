@@ -51,7 +51,7 @@ ListManager.prototype = {
             //Chercher à partir d'un indice aux dans la liste des listes
             var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
-            for (var i = aux; this.lists.length; i++) {
+            for (var i = aux; i < this.lists.length; i++) {
                 var l = this.lists[i];
                 if (l.equals(list))
                     return i;
@@ -59,7 +59,7 @@ ListManager.prototype = {
             return -1;
 
         } else if (typeof list === "string") {
-            for (var i = 0; this.lists.length; i++) {
+            for (var i = 0; i < this.lists.length; i++) {
                 var l = this.lists[i];
                 if (l.getId() === list)
                     return i;

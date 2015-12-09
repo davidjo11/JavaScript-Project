@@ -37,16 +37,6 @@ PageManager.prototype = {
             'title', "Votre pseudo doit uniquement contenir les caractères suivants: [A-Za-z0-9_].");
         Tools.ajouterBalise(this.divConnection, inputPseudo);
 
-        //        var inputPwd = Tools.createStyledElement("input",
-        //            "margin-top", "15px",
-        //            "margin-bottom", "5px",
-        //            "font-size", "22px");
-        //        Tools.assignAttributes(inputPwd,
-        //            "id", "pwd",
-        //            "type", "password",
-        //            "title", "Votre mot de passe doit contenir 8 caractères ou plus.");
-        //        Tools.ajouterBalise(this.divConnection, inputPwd);
-
         var button = Tools.createStyledElement("button",
             "color", "white",
             "margin", "10px",
@@ -78,15 +68,15 @@ PageManager.prototype = {
     },
 
     toggleConnection: function () {
+        var valider = null;
         if (this.divConnection.style.display === "none" || this.divConnection.style.display === "") {
             this.divConnection.style.display = "flex";
-            var valider = this.divConnection.getElementsByTagName("button")[0];
+            valider = this.divConnection.getElementsByTagName("button")[0];
             var pseudo = this.divConnection.getElementsByTagName("input")[0];
             var self = this;
 
-            function connexion(){
+            var conn = function connexion(){
                 var inputPseudo = document.getElementById("pseudo");
-                //                var inputPwd = document.getElementById("pwd");
                 var error = Tools.controlConnection(inputPseudo.value).error;
 
                 if (error === "") {
@@ -103,19 +93,19 @@ PageManager.prototype = {
 
             valider.addEventListener("click", connexion, false);
             pseudo.addEventListener("keypress", function (event){
-                if(event.keyCode == 13)
+                if(event.keyCode === 13)
                     connexion();
             });
 
         } else {
-            var valider = this.divConnection.getElementsByTagName("button")[0];
+            valider = this.divConnection.getElementsByTagName("button")[0];
             valider.removeEventListener('click', function () {}, false);
             this.divConnection.style.display = "none";
         }
     },
 
     toggleContent: function () {
-        if (this.divContent.style.display == "none" || this.divContent.style.display === "") {
+        if (this.divContent.style.display === "none" || this.divContent.style.display === "") {
             this.divContent.style.display = "block";
             this.divNotif.style.display = "flex";
             var titre = this.divContent.getElementsByClassName('menu__title')[0];
@@ -123,14 +113,12 @@ PageManager.prototype = {
             document.onkeydown = Tools.fkey;
             document.onkeypress = Tools.fkey;
             document.onkeyup = Tools.fkey;
-//            this.toggleDisconnect();
         } else {
             this.divContent.style.display = "none";
             this.divNotif.style.display = "none";
             document.onkeydown = undefined;
             document.onkeypress = undefined;
             document.onkeyup = undefined;
-//            this.toggleDisconnect();
         }
     },
 
@@ -142,6 +130,7 @@ PageManager.prototype = {
 
     createNotif: function (evt, user) {
         var notif = document.createElement("div");
+        var l = null ;
         Tools.assignAttributes(notif, "class", "notif");
         if (evt === "join") {
             notif.classList.add("notif__join");
@@ -151,19 +140,19 @@ PageManager.prototype = {
             Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
         } else if ("shared" === evt) {
             //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
-            var l = arguments[2];
+            l = arguments[2];
             notif.classList.add("notif__shared");
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste \"" + l.getName() + "\" avec vous.");
         } else if ("unshared" === evt) {
-            var l = arguments[2];
+            l = arguments[2];
             notif.classList.add("notif__unshared");
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager sa liste \"" + l.getName() + "\" avec vous.");
         } else if("delete" === evt) {
-            var l = arguments[2];
+            l = arguments[2];
             notif.classList.add("notif__delete");
             Tools.ajouterTexte(notif, l.getProprietor().getName() + " a supprimé la liste \""+ l.getName() +"\".");
         } else if ("update" === evt) {
-            var l = arguments[2];
+            l = arguments[2];
             notif.classList.add("notif__update");
             Tools.ajouterTexte(notif, user.getName() + " a modifié la liste \""+ l.getName() +"\".")
         } else return;
@@ -179,10 +168,13 @@ PageManager.prototype = {
     removeUserFromSelect: function (user) {
         var select = document.getElementById("sel__users");
         var opts = select.options;
+        var removeEvt = function (element) {
+            element.removeEventListener('mousedown', function () {}, false);
+        }
         for (var i = 0; i < opts.length; i++) {
             var opt = opts[i];
             if (opt.value === user.getSocket()) {
-                opt.removeEventListener('mousedown', function () {}, false);
+                removeEvt(opt);
                 select.removeChild(opt);
                 return;
             }
@@ -209,13 +201,9 @@ PageManager.prototype = {
         var texta = document.getElementById("edit__desc");
         //pour éviter de conserver des valeurs non validées
         texta.value = "";
-        //users
-        var p__users = this.divEdit.getElementsByClassName("card__users")[0];
 
         //Pour eviter des problèmes avec les eventListener (voir le code ci-dessous), on recrée les elements select et les boutons.
-        //        p__users.innerHTML = "<select id=\"sel__users\" multiple><option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option><\/select>"
         var select = document.getElementById("sel__users");
-//        select.innerHTML = "<option value=\"0\" disabled>Choisissez les utilisateurs avec lesquels vous souhaitez partager la liste.<\/option>";
 
         var products = this.divEdit.getElementsByClassName("card__products")[0];
         //pour éviter de conserver des valeurs non validées
@@ -228,6 +216,7 @@ PageManager.prototype = {
         var btn_delete = this.divEdit.getElementsByClassName("btn-delete")[0];
 
         var l = undefined;
+        var i = 0;
         //Cas modification:
         //arguments (voir Tools.editList): liste id, titre, description, produits (tableau d'éléments span)
         if (arguments.length === 1 && arguments[0] !== undefined) {
@@ -242,39 +231,36 @@ PageManager.prototype = {
             btn_validate.style.display = "inline";
             input.value = titre.innerText;
             texta.value = desc.innerText;
-            for (var i = 0; i < tabProducts.length; i++) {
+            var addEvtPrompt = function (element){
+                element.addEventListener('click', function () {
+                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
+                    if (res === "o") {
+                        textProd.splice(textProd.indexOf(element.innerText), 1);
+                        products.removeChild(this);
+                    }
+                }, false);
+            }
+            for (i = 0; i < tabProducts.length; i++) {
                 var p = tabProducts[i];
                 var p_new = Tools.createStyledElement("span", "cursor", "pointer");
                 Tools.assignAttributes(p_new, "classList", "prod");
                 p_new.innerText = p.innerText;
-                p_new.addEventListener('click', function () {
-                    var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
-                    if (res === "o") {
-                        textProd.splice(textProd.indexOf(p_new.innerText), 1);
-                        products.removeChild(this);
-                    }
-                }, false);
+                addEvtPrompt(p_new);
                 textProd.push(p.innerText);
                 Tools.ajouterBalise(products, p_new);
             }
 
                 //On remplit le select
                 var ownIt = l.getProprietor().equals(Tools.me);
-                for (var i = 1; i < select.options.length; i++) {
+                for (i = 1; i < select.options.length; i++) {
                     var opt = select.options[i];
                     var u = Tools.users.getUser(opt.value);
                     if (!u.equals(Tools.me)) { //condition: u est différent de moi (le nom de l'utilisateur ne doit pas figuré dans la liste)
                         if (l.isSharedWith(u))
                             opt.selected = true;
                         else opt.selected = false;
-                        if (!ownIt) { //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
-//                            opt.addEventListener('mousedown', function () {
-//                                alert('Vous devez être propriétaire de la liste pour gérer le partage.');
-//                            }, false);
+                        if (!ownIt) //si je ne suis pas le proprio alors, je ne peux pas choisir qui a le droit de partager la liste
                             opt.disabled = true;
-                        } else {
-
-                        }
                     }
                 }
 
@@ -282,12 +268,10 @@ PageManager.prototype = {
                     l.setDescription(texta.value);
                     if (ownIt) { //... sinon on contrôle.
                         var tu = select.options;
-                        for (var i = 1; i < tu.length; i++) {
+                        for (i = 1; i < tu.length; i++) {
                             var u = tu[i];
-                            if (u.selected) {
-                                //Ou Tools.me.removeUserFromList(l.getId(), Tools.users.getUser(u.value))
+                            if (u.selected) //Ou Tools.me.removeUserFromList(l.getId(), Tools.users.getUser(u.value))
                                 l.addUser(Tools.users.getUser(u.value));
-                            }
                             else l.removeUser(Tools.users.getUser(u.value));
                         }
                     }
@@ -302,7 +286,7 @@ PageManager.prototype = {
 
                 if(ownIt){
                     btn_delete.addEventListener('click', function () {
-                        var l = Tools.me.getList(lid);
+                        l = Tools.me.getList(lid);
                         l = Tools.me.deleteList(l)[0];
                         setTimeout(function () {
                             self.removeList(l);
@@ -315,13 +299,12 @@ PageManager.prototype = {
             btn_delete.style.display = "none";
 
             //On remplit le select
-            for (var i = 1; i < select.options.length; i++) {
+            for (i = 1; i < select.options.length; i++) {
                 var opt = select.options[i];
                 var u = Tools.users.getUser(opt.value);
                 if (!u.equals(Tools.me)) {
                     opt.selected = false;
                     opt.disabled = false;
-
                 }
             }
 
@@ -329,18 +312,16 @@ PageManager.prototype = {
                 var l_new = new List((input.value ? input.value : input.placeholder), Tools.me);
                 l_new.setDescription(texta.value);
                 //Products
-                for (var i = 0; i < textProd.length; i++) {
+                for (i = 0; i < textProd.length; i++)
                     l_new.addProduct(textProd[i]);
-                }
                 Tools.me.createList(l_new);
                 //Users
                 var tu = select.options;
-                for (var i = 1; i < tu.length; i++) {
+                for (i = 1; i < tu.length; i++) {
                     var u = tu[i];
                     u.removeEventListener('mousedown', function () {}, false);
-                    if (u.selected) {
+                    if (u.selected) 
                         l_new.addUser(Tools.users.getUser(u.value));
-                    }
                 }
                 setTimeout(function () {
                     //... on y met la nouvelle.
@@ -355,7 +336,7 @@ PageManager.prototype = {
             var t = prompt("Entrez le nom du nouveau produit (vous pouvez en mettre plusieurs en les séparant par des virgules):");
             if (t !== null && t.indexOf(',') > -1) {
                 var tab_p = t.split(",");
-                for (var i = 0; i < tab_p.length; i++) {
+                for (i = 0; i < tab_p.length; i++) {
                     var p = tab_p[i].trim();
                     if (textProd.indexOf(p) === -1 && p !== "" && p.match(/[A-Za-z ]*/g)) {
                         var sp = Tools.createStyledElement("span", "cursor", "pointer");
