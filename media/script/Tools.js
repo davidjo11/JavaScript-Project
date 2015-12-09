@@ -226,7 +226,7 @@ Tools.include('media/script/List.js', function () {});
 Tools.include("media/script/ListManager.js", function () {});
 Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/PageManager.js', function () {
-    Tools.page = new PageManager();
+    Tools.page = new pageManager();
 });
 Tools.include('media/script/UserManager.js', function () {
     Tools.users = new UserManager();

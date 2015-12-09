@@ -1,4 +1,4 @@
-function PageManager() {
+function pageManager() {
     this.body = Tools.getBody();
     this.divConnection = undefined;
     this.divContent = undefined;
@@ -10,7 +10,7 @@ function PageManager() {
 
 /*Cette classe gère l'ensemble des animations et autres à faire sur la page index.html (étant donné que l'on utilise qu'une page HTML).
  */
-PageManager.prototype = {
+pageManager.prototype = {
 
     initializeElements: function () {
 
@@ -81,7 +81,7 @@ PageManager.prototype = {
 
                 if (error === "") {
                     setTimeout(function () {
-                        Tools.me = new User(inputPseudo.value, socketId);
+                        Tools.me = new user(inputPseudo.value, socketId);
                         Tools.users.addUser(Tools.me);
                         self.toggleConnection();
                         cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);
@@ -133,31 +133,36 @@ PageManager.prototype = {
     createNotif: function (evt, user) {
         var notif = document.createElement("div");
         var l = null ;
+        var evtType = "";
+        var evtText = "";
         Tools.assignAttributes(notif, "class", "notif");
+
+        if(arguments.length >= 2)
+            l = arguments[2];
+
         if (evt === "join") {
-            notif.classList.add("notif__join");
-            Tools.ajouterTexte(notif, user.getName() + " vient de rejoindre la salle.");
+            evtType = "notif__join";
+            evtText = user.getName() + " vient de rejoindre la salle.";
         } else if (evt === "left") {
-            notif.classList.add("notif__left");
-            Tools.ajouterTexte(notif, user.getName() + " a quitté la salle.");
+            evtType = "notif__left";
+            evtText = user.getName() + " a quitté la salle.";
         } else if ("shared" === evt) {
             //Si il s'agit d'un message de partage alors on attend un 3ème param.: la liste.
-            l = arguments[2];
-            notif.classList.add("notif__shared");
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a partagé sa liste \"" + l.getName() + "\" avec vous.");
+            evtType = "notif__shared";
+            evtText = l.getProprietor().getName() + " a partagé sa liste \"" + l.getName() + "\" avec vous.";
         } else if ("unshared" === evt) {
-            l = arguments[2];
-            notif.classList.add("notif__unshared");
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " ne souhaite plus partager sa liste \"" + l.getName() + "\" avec vous.");
+            evtType = "notif__unshared";
+            evtText = l.getProprietor().getName() + " ne souhaite plus partager sa liste \"" + l.getName() + "\" avec vous.";
         } else if("delete" === evt) {
-            l = arguments[2];
-            notif.classList.add("notif__delete");
-            Tools.ajouterTexte(notif, l.getProprietor().getName() + " a supprimé la liste \""+ l.getName() +"\".");
+            evtType = "notif__delete";
+            evtText = l.getProprietor().getName() + " a supprimé la liste \""+ l.getName() +"\".";
         } else if ("update" === evt) {
-            l = arguments[2];
-            notif.classList.add("notif__update");
-            Tools.ajouterTexte(notif, user.getName() + " a modifié la liste \""+ l.getName() +"\".");
+            evtType = "notif__update";
+            evtText = user.getName() + " a modifié la liste \""+ l.getName() +"\".";
         } else return;
+
+        Tools.ajouterTexte(notif, evtText);
+        notif.classList.add(evtType);
         Tools.ajouterBalise(this.divNotif, notif);
         notif.animationName = "fadeNotif";
         //une fois l'animation terminée, on la supprime (elle dure 15s voir Notification.scss)
@@ -317,7 +322,7 @@ PageManager.prototype = {
             }
 
             btn_validate.addEventListener('click', function () {
-                var l_new = new List((input.value ? input.value : input.placeholder), Tools.me);
+                var l_new = new list((input.value ? input.value : input.placeholder), Tools.me);
                 l_new.setDescription(texta.value);
                 //Products
                 for (i = 0; i < textProd.length; i++)

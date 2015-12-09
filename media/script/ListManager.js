@@ -1,8 +1,8 @@
-function ListManager() {
+function listManager() {
     this.lists = [];
 }
 
-ListManager.prototype = {
+listManager.prototype = {
     /*Ajoute la nouvelle liste list en détectant les listes ayant le même nom.
      *Ex: S'il y a déjà une liste qui porte le même nom alors celle-ci apparaitra avec "(2)" à côté de son nom, "(3)" s'il y en a 2 etc...
      */
@@ -42,11 +42,12 @@ ListManager.prototype = {
     getListPosition: function (list) {
         var i = 0;
         var l = undefined;
+        var length = this.lists.length;
         if (typeof list === "object") {
             //Chercher à partir d'un indice aux dans la liste des listes
             var aux = arguments[1] !== undefined ? arguments[1] : 0;
 
-            for (i = aux; i < this.lists.length; i++) {
+            for (i = aux; i < length; i++) {
                 l = this.lists[i];
                 if (l.equals(list))
                     return i;
@@ -54,7 +55,7 @@ ListManager.prototype = {
             return -1;
 
         } else if (typeof list === "string") {
-            for (i = 0; i < this.lists.length; i++) {
+            for (i = 0; i < length; i++) {
                 l = this.lists[i];
                 if (l.getId() === list)
                     return i;
