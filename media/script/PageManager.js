@@ -90,7 +90,7 @@ pageManager.prototype = {
           valider = this.divConnection.getElementsByTagName("button")[0];
           var pseudo = this.divConnection.getElementsByTagName("input")[0];
           var self = this;
-          valider.addEventListener("click", conn, false);
+          valider.addEventListener("click", this.conn, false);
           pseudo.addEventListener("keypress", function (event){
             if(event.keyCode === 13)
             self.conn();
