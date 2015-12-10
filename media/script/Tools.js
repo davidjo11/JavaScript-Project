@@ -1,6 +1,6 @@
 //Lancer les traitements après le chargement de la page de sorte à pouvoir
 // récupérer le body (faire onload() sur body).
-Tools = {
+var Tools = {
     include: function (url, callback) {
 
         /* on crée une balise<script type="text/javascript"></script> */
@@ -99,16 +99,16 @@ Tools = {
     getToday: function () {
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth() + 1; 
+        var mm = today.getMonth() + 1;
         //January is 0!
         var yyyy = today.getFullYear();
 
         if (dd < 10) {
-            dd = '0' + dd
+            dd = '0' + dd;
         }
 
         if (mm < 10) {
-            mm = '0' + mm
+            mm = '0' + mm;
         }
 
         today = yyyy + '-' + mm + '-' + dd;

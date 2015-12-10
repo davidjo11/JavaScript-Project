@@ -44,25 +44,13 @@ listManager.prototype = {
         var i = 0;
         var l = undefined;
         var length = this.lists.length;
-        if (typeof list === "object") {
-            //Chercher à partir d'un indice aux dans la liste des listes
-            var aux = arguments[1] !== undefined ? arguments[1] : 0;
-
-            for (i = aux; i < length; i++) {
-                l = this.lists[i];
-                if (l.equals(list))
-                    return i;
-            }
-            return -1;
-
-        } else if (typeof list === "string") {
-            for (i = 0; i < length; i++) {
-                l = this.lists[i];
-                if (l.getId() === list)
-                    return i;
-            }
-            return -1;
+        var aux = arguments[1] !== undefined ? arguments[1] : 0;
+        for (i = aux; i < length; i++) {
+            l = this.lists[i];
+            if ((typeof list === "object" && l.equals(list)) || (typeof list === "string" && l.getId() === list))
+                return i;
         }
+        return -1;
     },
 
     /*Retourne l'objet List dans le tableau de liste.
@@ -72,25 +60,12 @@ listManager.prototype = {
         var i = 0;
         var l = undefined;
         var length = this.lists.length;
-        if (typeof list === "object") {
-            //Chercher à partir d'un indice aux dans la liste des listes
-
-            for (i = 0; i < length; i++) {
-                l = this.lists[i];
-                if (l.equals(list))
-                    return l;
-            }
-            return undefined;
-
-        } else if (typeof list === "string") { 
-        //l'id de la liste
-            for (i = 0; i < length; i++) {
-                l = this.lists[i];
-                if (l.getId() === list)
-                    return l;
-            }
-            return undefined;
+        for (i = 0; i < length; i++) {
+            l = this.lists[i];
+            if ((typeof list === "object" && l.equals(list)) || (typeof list === "string" && l.getId() === list))
+                return l;
         }
+        return undefined;
     },
 
     /*Supprime la liste passée en param. (objet ou identifiant).

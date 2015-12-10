@@ -127,8 +127,8 @@ list.prototype = {
             spans += "" + "<span class=\"prod\">" + this.products[i] + "<\/span>";
         }
 
-        l.innerHTML = "<legend title=\"" + legend + "\" style=\"background-color: " + this.proprietor.getColor() + ";\">" + legend + "<\/legend>" + "<div class=\"card__edit\">" + "<label class=\"btn\" for=\"modal-one\" onclick=\"Tools.editList('" + this.id.trim() + "');\">EDIT<\/label>" + "<\/div>" + "<div class=\"card__body\">" + "<div class=\"card__subtitle\">Description<\/div>" + "<p class=\"card__description\">" + this.description + "<\/p>" + "<div class=\"card__subtitle\">Produits<\/div>" + "<p class=\"card__products\">" + spans + "<\/p>" + "<\/div>"
-        
+        l.innerHTML = "<legend title=\"" + legend + "\" style=\"background-color: " + this.proprietor.getColor() + ";\">" + legend + "<\/legend>" + "<div class=\"card__edit\">" + "<label class=\"btn\" for=\"modal-one\" onclick=\"Tools.editList('" + this.id.trim() + "');\">EDIT<\/label>" + "<\/div>" + "<div class=\"card__body\">" + "<div class=\"card__subtitle\">Description<\/div>" + "<p class=\"card__description\">" + this.description + "<\/p>" + "<div class=\"card__subtitle\">Produits<\/div>" + "<p class=\"card__products\">" + spans + "<\/p>" + "<\/div>";
+
         return l;
     },
 
@@ -154,4 +154,4 @@ list.prototype = {
 
         return res;
     }
-}
+};

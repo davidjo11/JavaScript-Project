@@ -39,22 +39,12 @@ userManager.prototype = {
         var  i = 0;
         var u = undefined;
         var length = this.users.length;
-        if (typeof user === "object") {
-            for (i = 0; i < length; i++) {
-                u = this.users[i];
-                if (u.equals(user))
-                    return i;
-            }
-            return -1;
-        } else if (typeof user === "string") { 
-        //socketid
-            for (i = 0; i < length; i++) {
-                u = this.users[i];
-                if (u.getSocket() === user)
-                    return i;
-            }
-            return -1;
+        for (i = 0; i < length; i++) {
+            u = this.users[i];
+            if ((typeof user === "object" && u.equals(user)) || (typeof user === "string" && u.getSocket() === user))
+                return i;
         }
+        return -1;
     },
 
     /*Retourne l'objet de type User correspondant à la socket de l'utilisateur ou à sa position dans this.users.
@@ -63,7 +53,7 @@ userManager.prototype = {
     getUser: function (id) {
         var  i = 0;
         var u = undefined;
-        if (typeof id === "string") { 
+        if (typeof id === "string") {
         //param.: socketId
             for (i = 0; i < this.users.length; i++) {
                 u = this.users[i];
@@ -71,7 +61,7 @@ userManager.prototype = {
                     return u;
             }
             return undefined;
-        } else if (typeof id === "number") { 
+        } else if (typeof id === "number") {
         //Param.: indice dans le tableau this.users
             return this.users[id];
         }
@@ -92,4 +82,4 @@ userManager.prototype = {
     isAvailable: function (pseudo){
         return this.unavailablePseudo.indexOf(pseudo) === -1;
     }
-}
+};
