@@ -94,7 +94,7 @@ body {
     position: absolute;
     bottom: 25px;
     right: 10px;
-    display: none;
+    display: block; #à modifier pour avoir un bouton hover
     text-align: center;
     z-index: 50;
     background-color: transparent;
