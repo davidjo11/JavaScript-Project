@@ -13,7 +13,7 @@ messageManager.prototype = {
     joinMsg: function () {
         return {
             join: Tools.me.forJSON()
-        }
+        };
     },
 
     newListMsg: function (list) {
@@ -31,12 +31,12 @@ messageManager.prototype = {
     },
 
     deleteListMsg: function (list) {
-        return {
+      return {
             delete: list.forJSON(),
             user: Tools.me.forJSON()
         };
     },
-    
+
     leftMsg: function(){
         return {
             left: Tools.me,
