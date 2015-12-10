@@ -358,18 +358,18 @@ PageManager.prototype = {
                 for (var i = 0; i < tab_p.length; i++) {
                     var p = tab_p[i].trim();
                     if (textProd.indexOf(p) === -1 && p !== "" && p.match(/[A-Za-z ]*/g)) {
-                        var sp = Tools.createStyledElement("span", "cursor", "pointer");
-                        Tools.assignAttributes(sp, "classList", "prod");
-                        sp.innerText = p;
-                        sp.addEventListener('click', function () {
-                            var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
-                            if (res === "o") {
-                                textProd.splice(textProd.indexOf(sp.innerText), 1);
-                                products.removeChild(this);
-                            }
-                        }, false);
-                        products.insertBefore(sp, this);
-                        textProd.push(sp.innerText);
+                      var sp = Tools.createStyledElement("span", "cursor", "pointer");
+                      Tools.assignAttributes(sp, "classList", "prod");
+                      sp.innerHTML = p;
+                      sp.addEventListener('click', function () {
+                          var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
+                          if (res === "o") {
+                              textProd.splice(textProd.indexOf(sp.innerHTML), 1);
+                              products.removeChild(this);
+                          }
+                      }, false);
+                      products.insertBefore(sp, this);
+                      textProd.push(sp.innerHTML);
                     }
                 }
             } else if (t !== "" && t !== null) {
@@ -377,25 +377,26 @@ PageManager.prototype = {
                 if (textProd.indexOf(t) === -1 && t !== "" && t.match(/[A-Za-z ]*/g)) {
                     var sp = Tools.createStyledElement("span", "cursor", "pointer");
                     Tools.assignAttributes(sp, "classList", "prod");
-                    sp.innerText = t;
+                    sp.innerHTML = t;
                     sp.addEventListener('click', function () {
                         var res = prompt("Voulez-vous supprimer ce produit?(o/n)");
                         if (res === "o") {
-                            textProd.splice(textProd.indexOf(sp.innerText), 1);
+                            textProd.splice(textProd.indexOf(sp.innerHTML), 1);
                             products.removeChild(this);
                         }
                     }, false);
                     products.insertBefore(sp, this);
-                    textProd.push(sp.innerText);
+                    textProd.push(sp.innerHTML);
                 }
             }
         }, false);
-        add.innerText = "+";
+        add.innerHTML = "+";
         add.title = "Cliquer pour ajouter un produit.";
         add.style.paddingRight = "15px";
         add.style.paddingLeft = "15px";
         add.style.color = "whitesmoke";
         add.style.cursor = "pointer";
+        add.style.fontSize = "20px";
         add.style.backgroundColor = "green";
         Tools.ajouterBalise(products, add);
     },
