@@ -226,12 +226,12 @@ Tools.include('media/script/List.js', function () {});
 Tools.include("media/script/ListManager.js", function () {});
 Tools.include('media/script/User.js', function () {});
 Tools.include('media/script/PageManager.js', function () {
-    Tools.page = new pageManager();
+    Tools.page = new PageManager();
 });
 Tools.include('media/script/UserManager.js', function () {
-    Tools.users = new userManager();
+    Tools.users = new UserManager();
     Tools.users.initialize(100);
 });
 Tools.include('media/script/MessageManager.js', function () {
-    Tools.msgCreator = new messageManager();
+    Tools.msgCreator = new MessageManager();
 });

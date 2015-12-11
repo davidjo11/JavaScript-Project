@@ -1,8 +1,8 @@
-function listManager() {
+function ListManager() {
     this.lists = [];
 }
 
-listManager.prototype = {
+ListManager.prototype = {
     /*Ajoute la nouvelle liste list en détectant les listes ayant le même nom.
      *Ex: S'il y a déjà une liste qui porte le même nom alors celle-ci apparaitra avec "(2)" à côté de son nom, "(3)" s'il y en a 2 etc...
      */

@@ -1,4 +1,4 @@
-function list(title, prop) {
+function List(title, prop) {
     //inutile pour l'instant
     this.isBeingEdited = false;
     this.name = title;
@@ -13,7 +13,7 @@ function list(title, prop) {
     this.id = Tools.getRandomString();
 }
 
-list.prototype = {
+List.prototype = {
 
     getId: function () {
         return this.id;

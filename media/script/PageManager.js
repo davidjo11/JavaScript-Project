@@ -1,4 +1,4 @@
-function pageManager() {
+function PageManager() {
   this.body = Tools.getBody();
   this.divConnection = undefined;
   this.divContent = undefined;
@@ -10,7 +10,7 @@ function pageManager() {
 
 /*Cette classe gère l'ensemble des animations et autres à faire sur la page index.html (étant donné que l'on utilise qu'une page HTML).
 */
-pageManager.prototype = {
+PageManager.prototype = {
 
   initializeElements: function () {
 
@@ -73,7 +73,7 @@ pageManager.prototype = {
         var self = this;
         if (error === "") {
           setTimeout(function () {
-            Tools.me = new user(inputPseudo.value, socketId);
+            Tools.me = new User(inputPseudo.value, socketId);
             Tools.users.addUser(Tools.me);
             self.toggleConnection();
             cobra.sendMessage(Tools.msgCreator.joinMsg(), room, false);

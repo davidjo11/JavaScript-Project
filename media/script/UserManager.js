@@ -1,4 +1,4 @@
-function userManager() {
+function UserManager() {
     this.doc = "Association socketId (key) - name (value) for all clients in the room.\n";
     //Tableau d'objets de type User
     this.users = [];
@@ -11,7 +11,7 @@ function userManager() {
 /*Cette classe permet de répertorier l'ensemble des utilisateurs présents dans la room.
 *Dès qu'un message est reçu, si l'envoyeur n'est pas dans l'objet l'UserManager alors on l'ajoute.
 */
-userManager.prototype = {
+UserManager.prototype = {
 
     initialize: function (i) {
         this.colors = Tools.getRandomColors(i);

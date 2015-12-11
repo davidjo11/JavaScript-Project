@@ -1,13 +1,13 @@
-function user(username, socket) {
+function User(username, socket) {
     this.socketId = socket;
     this.name = username;
     this.password = undefined;
     this.color = undefined;
-    this.lm = new listManager();
+    this.lm = new ListManager();
     this.id = Tools.getRandomString(25);
 }
 
-user.prototype = {
+User.prototype = {
     getName: function () {
         return this.name;
     },
